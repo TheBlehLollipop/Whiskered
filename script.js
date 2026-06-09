@@ -59,11 +59,10 @@
 
     'horror': [
       { label: "Baldi's Basics Plus", url: "https://html-classic.itch.zone/html/17618752/index.html?v=1779328465" },
-      { label: 'Granny', url: 'https://html-classic.itch.zone/html/17861467/Granny-main/index.html?v=1780978127' },
       { label: 'Slender', url: 'https://html-classic.itch.zone/html/17129783/index.html?v=1775929482' },
       { label: 'Iron Lung', url: 'https://html-classic.itch.zone/html/17121628/iron-lung-main/index.html?v=1775858719' },
       { label: 'The Deadseat (broken)', url: 'https://html-classic.itch.zone/html/17123849/index.html?v=1775877699' },
-      { label: 'Five Nights at Epstein's', url: 'https://html-classic.itch.zone/html/17122772/fnae-main/index.html?v=1775866888' },
+      { label: 'Five Nights at Epstein’s', url: 'https://html-classic.itch.zone/html/17122772/fnae-main/index.html?v=1775866888' },
       { label: 'A Bite at Freddy\'s', url: 'https://html-classic.itch.zone/html/17555938/index.html?v=1778890468' }
     ],
 
@@ -120,13 +119,13 @@
       { label: 'Deepest Sword', url: 'https://html-classic.itch.zone/html/4017918/index.html' }
     ],
     
-    'goon': [
-      { label: 'My Buddy Did Something Weird And Now I Have Feelings For Him??!?!?', url: 'https://html-classic.itch.zone/html/17040654/index.html?v=1775235621' },
-      { label: 'OVERD0SE', url: 'https://html-classic.itch.zone/html/17203420/index.html?v=1776470531' },
-      { label: 'Heartstop Tour', url: 'https://html-classic.itch.zone/html/14235865/index.html' },
-      { label: 'Contract Demon', url: 'https://html-classic.itch.zone/html/9819526/index.html?v=1732313590' }
-    ]
-  };
+ 'goon': [
+     { label: 'My Buddy Did Something Weird And Now I Have Feelings For Him??!?!?', url: 'https://html-classic.itch.zone/html/17040654/index.html?v=1775235621' },
+     { label: 'OVERD0SE', url: 'https://html-classic.itch.zone/html/17203420/index.html?v=1776470531' },
+    { label: 'Heartstop Tour', url: 'https://html-classic.itch.zone/html/14235865/index.html' },
+    { label: 'Contract Demon', url: 'https://html-classic.itch.zone/html/9819526/index.html?v=1732313590' }
+  ]
+};
 
 
 
@@ -305,7 +304,6 @@
     buildItchioView();
     buildWebsitesView();
     bindEvents();
-    initModal();
   }
 
   /* ---- Inject links button + back link into every panel ---- */
@@ -668,24 +666,6 @@
     }
   }
 
-  /* ---- Modal controller ------------------------------------ */
-  function initModal() {
-    var modal = document.getElementById('changelog-modal');
-    var closeBtn = document.getElementById('close-changelog');
-
-    if (!modal || !closeBtn) return;
-
-    /* Show modal after a short delay to not block buttons */
-    setTimeout(function () {
-      modal.classList.add('show');
-    }, 500);
-
-    /* Close modal */
-    closeBtn.addEventListener('click', function () {
-      modal.classList.remove('show');
-    });
-  }
-
   /* ---- Start ----------------------------------------------- */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -694,3 +674,18 @@
   }
 
 }());
+
+window.addEventListener("load", () => {
+  const modal = document.getElementById("changelog-modal");
+  modal.style.pointerEvents = "auto";
+  modal.style.opacity = "1";
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.getElementById("close-changelog");
+  const modal = document.getElementById("changelog-modal");
+
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+});
