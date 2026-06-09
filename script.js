@@ -59,6 +59,7 @@
 
     'horror': [
       { label: 'A Bite at Freddy\'s', url: 'https://html-classic.itch.zone/html/17555938/index.html?v=1778890468' },
+      { label: 'Go to Sleep', url: 'https://html-classic.itch.zone/html/17866232/index.html?v=1781016689' },
       { label: "Baldi's Basics Plus", url: "https://html-classic.itch.zone/html/17618752/index.html?v=1779328465" },
       { label: 'Granny', url: 'https://html-classic.itch.zone/html/17861467/Granny-main/index.html?v=1780978127' },
       { label: 'Slender', url: 'https://html-classic.itch.zone/html/17129783/index.html?v=1775929482' },
