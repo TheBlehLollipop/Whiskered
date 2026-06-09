@@ -120,7 +120,7 @@
       { label: 'Deepest Sword', url: 'https://html-classic.itch.zone/html/4017918/index.html' }
     ],
     
-  'goon': [
+    'goon': [
       { label: 'My Buddy Did Something Weird And Now I Have Feelings For Him??!?!?', url: 'https://html-classic.itch.zone/html/17040654/index.html?v=1775235621' },
       { label: 'OVERD0SE', url: 'https://html-classic.itch.zone/html/17203420/index.html?v=1776470531' },
       { label: 'Heartstop Tour', url: 'https://html-classic.itch.zone/html/14235865/index.html' },
@@ -676,17 +676,20 @@
 
 }());
 
-window.addEventListener("load", () => {
-  const modal = document.getElementById("changelog-modal");
-  modal.style.pointerEvents = "auto";
-  modal.style.opacity = "1";
-});
+/* ---- Modal controller (runs after IIFE) ---- */
+document.addEventListener('DOMContentLoaded', function () {
+  var modal = document.getElementById('changelog-modal');
+  var closeBtn = document.getElementById('close-changelog');
 
-document.addEventListener("DOMContentLoaded", () => {
-  const closeBtn = document.getElementById("close-changelog");
-  const modal = document.getElementById("changelog-modal");
+  if (!modal || !closeBtn) return;
 
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
+  /* Show modal on load */
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+
+  /* Close modal */
+  closeBtn.addEventListener('click', function () {
+    modal.style.opacity = '0';
+    modal.style.pointerEvents = 'none';
   });
 });
