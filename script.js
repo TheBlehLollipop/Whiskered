@@ -305,6 +305,7 @@
     buildItchioView();
     buildWebsitesView();
     bindEvents();
+    initModal();
   }
 
   /* ---- Inject links button + back link into every panel ---- */
@@ -667,6 +668,24 @@
     }
   }
 
+  /* ---- Modal controller ------------------------------------ */
+  function initModal() {
+    var modal = document.getElementById('changelog-modal');
+    var closeBtn = document.getElementById('close-changelog');
+
+    if (!modal || !closeBtn) return;
+
+    /* Show modal after a short delay to not block buttons */
+    setTimeout(function () {
+      modal.classList.add('show');
+    }, 500);
+
+    /* Close modal */
+    closeBtn.addEventListener('click', function () {
+      modal.classList.remove('show');
+    });
+  }
+
   /* ---- Start ----------------------------------------------- */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -675,21 +694,3 @@
   }
 
 }());
-
-/* ---- Modal controller (runs after IIFE) ---- */
-document.addEventListener('DOMContentLoaded', function () {
-  var modal = document.getElementById('changelog-modal');
-  var closeBtn = document.getElementById('close-changelog');
-
-  if (!modal || !closeBtn) return;
-
-  /* Show modal on load */
-  modal.style.opacity = '1';
-  modal.style.pointerEvents = 'auto';
-
-  /* Close modal */
-  closeBtn.addEventListener('click', function () {
-    modal.style.opacity = '0';
-    modal.style.pointerEvents = 'none';
-  });
-});
