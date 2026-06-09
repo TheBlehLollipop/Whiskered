@@ -48,8 +48,8 @@
         <ol>
           <li>Open <strong>script.google.com</strong> and create a new project.</li>
           <li>Go to <em>File &rarr; New &rarr; HTML file</em> and create three files: <code>index</code>, <code>styles</code>, and <code>script</code>.</li>
-          <li>Paste the contents of <code>index.html</code> into <code>index.html</code>. For <code>styles.html</code>, wrap the CSS in <code>&lt;style&gt;&hellip;&lt;/style&gt;</code>. For <code>[...]
-          <li>In <code>index.html</code>, replace the <code>&lt;link&gt;</code> tag with <code>&lt;?!= include('styles') ?&gt;</code> and the <code>&lt;script src="script.js"&gt;</code> tag with <[...]
+          <li>Paste the contents of <code>index.html</code> into <code>index.html</code>. For <code>styles.html</code>, wrap the CSS in <code>&lt;style&gt;&hellip;&lt;/style&gt;</code>. For <code>script.html</code>, wrap the JS in <code>&lt;script&gt;&hellip;&lt;/script&gt;</code>.</li>
+          <li>In <code>index.html</code>, replace the <code>&lt;link&gt;</code> tag with <code>&lt;?!= include('styles') ?&gt;</code> and the <code>&lt;script src="script.js"&gt;</code> tag with <code>&lt;?!= include('script') ?&gt;</code>.</li>
           <li>In <code>Code.gs</code>, add a <code>doGet</code> function:<br>
             <code>function doGet() { return HtmlService.createTemplateFromFile('index').evaluate().setTitle('Whiskered').setSandboxMode(HtmlService.SandboxMode.IFRAME); }</code>
           </li>
@@ -57,297 +57,922 @@
           <li>Go to <em>Deploy &rarr; New deployment</em>, choose <em>Web App</em>, configure access, then click <em>Deploy</em>.</li>
         </ol>
         <h3>Customizing Tab Order</h3>
-        <p>In <code>script.js</code>, find the <code>SITES</code> array near the top. Each entry has an <code>id</code>, <code>label</code>, <code>icon</code>, and <code>tagline</code>. Reorder or[...]
+        <p>In <code>script.js</code>, find the <code>SITES</code> array near the top. Each entry has an <code>id</code>, <code>label</code>, <code>icon</code>, and <code>tagline</code>. Reorder or rename entries freely — the HTML tab list, panels, and side panel all stay in sync automatically.</p>
         <h3>Customizing Colors</h3>
-        <p>In <code>styles.css</code>, the <code>:root</code> block at the top contains <code>--clr-light-orange</code> and <code>--clr-orange</code>. Changing these two values recolors the entire[...]
+        <p>In <code>styles.css</code>, the <code>:root</code> block at the top contains <code>--clr-light-orange</code> and <code>--clr-orange</code>. Changing these two values recolors the entire theme. Fine-tune <code>--clr-orange-dark</code>, <code>--clr-orange-mid</code>, and <code>--clr-orange-pale</code> for more control.</p>
         <h3>Customizing Animations</h3>
-        <p>The <code>:root</code> block also exposes <code>--dur-fast</code> (180ms), <code>--dur-med</code> (280ms), and <code>--dur-slow</code> (350ms) for transition durations, plus <code>--eas[...]
+        <p>The <code>:root</code> block also exposes <code>--dur-fast</code> (180ms), <code>--dur-med</code> (280ms), and <code>--dur-slow</code> (350ms) for transition durations, plus <code>--ease-out</code> and <code>--ease-spring</code> for easing curves. Increase values for slower, more deliberate motion; decrease for snappier feedback.</p>
       </section>
     </div>
 
-  </main>
+</main>
+<div id="changelog-modal" class="changelog-modal">
+  <div class="changelog-box">
 
-  <div id="changelog-modal" class="changelog-modal">
-    <div class="changelog-box">
-      <button id="close-changelog" class="links-btn">Close</button>
-      <h2>Changelog</h2>
-      <p class="panel-description">Recent updates and improvements to Whiskered.</p>
-      <hr class="link-divider">
-      <div class="link-row">
-        <span class="link-badge">Link Update</span>
-        <span class="site-link">Added some more links</span>
+    <button id="close-changelog" class="links-btn">Close</button>
+
+    <h2 class="changelog-box">Changelog</h2>
+    <p class="panel-description">Recent updates and improvements to Whiskered.</p>
+        <hr class="link-divider">
+
+        <div class="link-row">
+          <span class="link-badge">Link Update</span>
+          <span class="site-link">Added some more links</span>
+        </div>
+        <hr class="link-divider">
+
       </div>
-      <hr class="link-divider">
+
     </div>
+
   </div>
 
-  <section id="panel-cherri" class="content-panel" role="tabpanel" aria-labelledby="tab-cherri" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Cherri</h2><button class="open-sites-btn" aria-label="View all sites" data-site="cherri">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Cherri illustration"></div>
-      <p class="panel-description">Cherri V2 is a customizable, feature-rich platform designed for entertainment, browsing, and social interaction, wrapped in a clean pink-themed interface. It o[...]
-      <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Browser Games</span><span class="panel-tag">Free</span></div>
-      <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">450+</span></div><div class="meta-item"><span class="meta-label">Daily Players<[...]
-      <div class="links-section">
-        <a href="https://dog.pupface.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://dog.pupface.com/</a>
-        <hr class="link-divider">
-        <a href="https://larp.zinets.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://larp.zinets.ca/</a>
-        <hr class="link-divider">
-        <a href="http://technology.teacher.chemistry.drama.algebra.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.teacher.chemistry.dram[...]
-        <hr class="link-divider">
-        <a href="http://homework.grammar.teacher.writing.lecture.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.grammar.teacher.writing.lecture.arcloud[...]
-        <hr class="link-divider">
-        <a href="http://library.computer.music.vocabulary.student.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.computer.music.vocabulary.student.zing[...]
-        <hr class="link-divider">
-        <a href="http://classroom.geometry.campus.assignment.learning.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.geometry.campus.assignm[...]
-        <hr class="link-divider">
-        <a href="http://literature.campus.classroom.english.seminar.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.campus.classroom.engl[...]
-        <hr class="link-divider">
-        <a href="http://homework.math.music.classroom.history.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.math.music.classroom.history.arcloud.pl/</[...]
-        <hr class="link-divider">
-        <a href="http://technology.art.history.computer.seminar.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.art.history.computer.seminar.zinga77.[...]
-        <hr class="link-divider">
-        <a href="http://literature.science.geography.music.project.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.science.geography.music.p[...]
-        <hr class="link-divider">
-        <a href="http://science.chemistry.engineering.biology.student.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://science.chemistry.engineering.[...]
-        <hr class="link-divider">
-        <a href="http://engineering.classroom.seminar.chemistry.campus.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://engineering.classroom.seminar.chemistry.ca[...]
-        <hr class="link-divider">
-        <a href="http://assignment.engineering.calculus.music.english.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://assignment.engineering.calculus.music.engl[...]
-        <hr class="link-divider">
-        <a href="http://homework.engineering.library.project.math.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.engineering.library.project.[...]
-        <hr class="link-divider">
-        <a href="http://calculus.writing.geography.studying.geometry.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.geography.studying.geometry[...]
-        <hr class="link-divider">
-        <a href="http://programming.drama.campus.history.teacher.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.campus.history.te[...]
-        <hr class="link-divider">
-        <a href="http://lecture.engineering.english.seminar.calculus.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://lecture.engineering.english.seminar.calculu[...]
-        <hr class="link-divider">
-        <a href="http://programming.computer.learning.physics.campus.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.computer.learning.phys[...]
-        <hr class="link-divider">
-        <a href="http://geography.reading.computer.student.grammar.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://geography.reading.computer.student.grammar.arc[...]
-        <hr class="link-divider">
-        <a href="http://computer.calculus.lecture.assignment.history.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.calculus.lecture.assig[...]
-        <hr class="link-divider">
-        <a href="http://library.programming.classroom.science.literature.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.programming.classroom.science.l[...]
-        <hr class="link-divider">
-        <a href="http://technology.campus.calculus.programming.english.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.campus.calculus.progr[...]
-        <hr class="link-divider">
-        <a href="http://project.art.drama.vocabulary.reading.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://project.art.drama.vocabulary.reading.resursecs2.ro</a>
-        <hr class="link-divider">
-        <a href="http://student.history.studying.music.english.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://student.history.studying.music.english.domn.net</a>
-        <hr class="link-divider">
-        <a href="http://calculus.writing.technology.engineering.biology.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.technology.engineering.bio[...]
-        <hr class="link-divider">
-        <a href="http://science.physics.teacher.classroom.english.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://science.physics.teacher.classroom.english.ericlebaron[...]
-        <hr class="link-divider">
-        <a href="http://physics.reading.algebra.project.seminar.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.algebra.project.seminar.robertbagany.c[...]
-        <hr class="link-divider">
-        <a href="http://vocabulary.library.engineering.programming.chemistry.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.library.engineering.programming.che[...]
-        <hr class="link-divider">
-        <a href="http://campus.computer.lecture.grammar.calculus.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.computer.lecture.grammar.calculus.resursecs2.ro</[...]
-        <hr class="link-divider">
-        <a href="http://chemistry.calculus.geometry.studying.vocabulary.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://chemistry.calculus.geometry.studying.vocabulary.domn.n[...]
-        <hr class="link-divider">
-        <a href="http://calculus.project.technology.student.music.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.project.technology.student.music.sicadim[...]
-        <hr class="link-divider">
-        <a href="http://teacher.campus.calculus.classroom.computer.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.campus.calculus.classroom.computer.ericlebar[...]
-        <hr class="link-divider">
-        <a href="http://teacher.chemistry.library.literature.geography.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.chemistry.library.literature.geography.res[...]
-        <hr class="link-divider">
-        <a href="http://classroom.english.math.music.geometry.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.english.math.music.geometry.domn.net</a>
-        <hr class="link-divider">
-        <a href="http://drama.art.seminar.reading.assignment.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.art.seminar.reading.assignment.robertbagany.com</a>
-        <hr class="link-divider">
-        <a href="http://physics.reading.calculus.programming.learning.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.calculus.programming.learning.hollowe[...]
-        <hr class="link-divider">
-        <a href="http://programming.drama.classroom.seminar.algebra.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.classroom.seminar.algebra.sic[...]
-        <hr class="link-divider">
-        <a href="http://english.teacher.reading.technology.engineering.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://english.teacher.reading.technology.engineering.e[...]
-        <hr class="link-divider">
-        <a href="http://algebra.project.science.literature.reading.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://algebra.project.science.literature.reading.domn.net</a>
-        <hr class="link-divider">
-        <a href="http://computer.writing.library.engineering.music.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.writing.library.engineering.music.resursecs2.[...]
-        <hr class="link-divider">
-        <a href="http://calculus.grammar.teacher.chemistry.art.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.grammar.teacher.chemistry.art.robertbagany.com[...]
-        <hr class="link-divider">
-        <a href="http://calculus.reading.drama.grammar.vocabulary.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.reading.drama.grammar.vocabulary.hollowed.io</a>
+    <section id="panel-cherri" class="content-panel" role="tabpanel" aria-labelledby="tab-cherri" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Cherri</h2><button class="open-sites-btn" aria-label="View all sites" data-site="cherri">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Cherri illustration"></div>
+        <p class="panel-description">Cherri V2 is a customizable, feature-rich platform designed for entertainment, browsing, and social interaction, wrapped in a clean pink-themed interface. It offers access to a large library of over 3,500 games, along with cloud save support so users can sync progress across devices.</p>
+        <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Browser Games</span><span class="panel-tag">Free</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">450+</span></div><div class="meta-item"><span class="meta-label">Daily Players</span><span class="meta-value">12K</span></div><div class="meta-item"><span class="meta-label">Genres</span><span class="meta-value">25</span></div></div>
+        <div class="links-section">
+          <a href="https://dog.pupface.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://dog.pupface.com/</a>
+          <hr class="link-divider">
+          <a href="https://larp.zinets.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://larp.zinets.ca/</a>
+          <hr class="link-divider">
+          <a href="http://technology.teacher.chemistry.drama.algebra.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.teacher.chemistry.drama.algebra.astroarquetipica.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://homework.grammar.teacher.writing.lecture.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.grammar.teacher.writing.lecture.arcloud.pl/</a>
+          <hr class="link-divider">
+          <a href="http://library.computer.music.vocabulary.student.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.computer.music.vocabulary.student.zinga77.net/</a>
+          <hr class="link-divider">
+          <a href="http://classroom.geometry.campus.assignment.learning.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.geometry.campus.assignment.learning.leonbenasayag.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://literature.campus.classroom.english.seminar.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.campus.classroom.english.seminar.astroarquetipica.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://homework.math.music.classroom.history.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.math.music.classroom.history.arcloud.pl/</a>
+          <hr class="link-divider">
+          <a href="http://technology.art.history.computer.seminar.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.art.history.computer.seminar.zinga77.net/</a>
+          <hr class="link-divider">
+          <a href="http://literature.science.geography.music.project.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.science.geography.music.project.leonbenasayag.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://science.chemistry.engineering.biology.student.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://science.chemistry.engineering.biology.student.astroarquetipica.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://engineering.classroom.seminar.chemistry.campus.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://engineering.classroom.seminar.chemistry.campus.arcloud.pl/</a>
+          <hr class="link-divider">
+          <a href="http://assignment.engineering.calculus.music.english.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://assignment.engineering.calculus.music.english.zinga77.net/</a>
+          <hr class="link-divider">
+          <a href="http://homework.engineering.library.project.math.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.engineering.library.project.math.leonbenasayag.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://calculus.writing.geography.studying.geometry.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.geography.studying.geometry.arcloud.pl/</a>
+          <hr class="link-divider">
+          <a href="http://programming.drama.campus.history.teacher.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.campus.history.teacher.astroarquetipica.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://lecture.engineering.english.seminar.calculus.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://lecture.engineering.english.seminar.calculus.zinga77.net/</a>
+          <hr class="link-divider">
+          <a href="http://programming.computer.learning.physics.campus.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.computer.learning.physics.campus.leonbenasayag.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://geography.reading.computer.student.grammar.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://geography.reading.computer.student.grammar.arcloud.pl/</a>
+          <hr class="link-divider">
+          <a href="http://computer.calculus.lecture.assignment.history.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.calculus.lecture.assignment.history.astroarquetipica.com.ar/</a>
+          <hr class="link-divider">
+          <a href="http://library.programming.classroom.science.literature.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.programming.classroom.science.literature.zinga77.net/</a>
+          <hr class="link-divider">
+          <a href="http://technology.campus.calculus.programming.english.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.campus.calculus.programming.english.leonbenasayag.com.ar/</a>
+          <hr class="link-divider">
+<a href="http://project.art.drama.vocabulary.reading.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://project.art.drama.vocabulary.reading.resursecs2.ro</a>
+
+<hr class="link-divider">
+<a href="http://student.history.studying.music.english.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://student.history.studying.music.english.domn.net</a>
+
+<hr class="link-divider">
+<a href="http://calculus.writing.technology.engineering.biology.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.technology.engineering.biology.sicadimoveis.com.br</a>
+
+<hr class="link-divider">
+<a href="http://science.physics.teacher.classroom.english.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://science.physics.teacher.classroom.english.ericlebaron.com</a>
+
+<hr class="link-divider">
+<a href="http://physics.reading.algebra.project.seminar.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.algebra.project.seminar.robertbagany.com</a>
+
+<hr class="link-divider">
+<a href="http://vocabulary.library.engineering.programming.chemistry.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.library.engineering.programming.chemistry.hollowed.io</a>
+
+<hr class="link-divider">
+<a href="http://campus.computer.lecture.grammar.calculus.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.computer.lecture.grammar.calculus.resursecs2.ro</a>
+
+<hr class="link-divider">
+<a href="http://chemistry.calculus.geometry.studying.vocabulary.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://chemistry.calculus.geometry.studying.vocabulary.domn.net</a>
+
+<hr class="link-divider">
+<a href="http://calculus.project.technology.student.music.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.project.technology.student.music.sicadimoveis.com.br</a>
+
+<hr class="link-divider">
+<a href="http://teacher.campus.calculus.classroom.computer.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.campus.calculus.classroom.computer.ericlebaron.com</a>
+
+<hr class="link-divider">
+<a href="http://teacher.chemistry.library.literature.geography.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.chemistry.library.literature.geography.resursecs2.ro</a>
+
+<hr class="link-divider">
+<a href="http://classroom.english.math.music.geometry.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.english.math.music.geometry.domn.net</a>
+
+<hr class="link-divider">
+<a href="http://drama.art.seminar.reading.assignment.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.art.seminar.reading.assignment.robertbagany.com</a>
+
+<hr class="link-divider">
+<a href="http://physics.reading.calculus.programming.learning.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.calculus.programming.learning.hollowed.io</a>
+
+<hr class="link-divider">
+<a href="http://programming.drama.classroom.seminar.algebra.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.classroom.seminar.algebra.sicadimoveis.com.br</a>
+
+<hr class="link-divider">
+<a href="http://english.teacher.reading.technology.engineering.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://english.teacher.reading.technology.engineering.ericlebaron.com</a>
+
+<hr class="link-divider">
+<a href="http://algebra.project.science.literature.reading.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://algebra.project.science.literature.reading.domn.net</a>
+
+<hr class="link-divider">
+<a href="http://computer.writing.library.engineering.music.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.writing.library.engineering.music.resursecs2.ro</a>
+
+<hr class="link-divider">
+<a href="http://calculus.grammar.teacher.chemistry.art.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.grammar.teacher.chemistry.art.robertbagany.com</a>
+
+<hr class="link-divider">
+<a href="http://calculus.reading.drama.grammar.vocabulary.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.reading.drama.grammar.vocabulary.hollowed.io</a>
+
+<hr class="link-divider">
+<a href="http://chemistry.grammar.campus.biology.homework.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://chemistry.grammar.campus.biology.homework.ericlebaron.com</a>
+
+<hr class="link-divider">
+<a href="http://reading.math.history.learning.science.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://reading.math.history.learning.science.sicadimoveis.com.br</a>
+
+<hr class="link-divider">
+<a href="http://physics.math.grammar.studying.lecture.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.math.grammar.studying.lecture.resursecs2.ro</a>
+
+<hr class="link-divider">
+<a href="http://calculus.math.project.technology.computer.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.math.project.technology.computer.hollowed.io</a>
+
+<hr class="link-divider">
+<a href="http://music.writing.technology.teacher.biology.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://music.writing.technology.teacher.biology.robertbagany.com</a>
+
+<hr class="link-divider">
+<a href="http://reading.computer.homework.assignment.seminar.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://reading.computer.homework.assignment.seminar.ericlebaron.com</a>
+
+<hr class="link-divider">
+<a href="http://biology.student.teacher.programming.literature.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.student.teacher.programming.literature.sicadimoveis.com.br</a>
+
+<hr class="link-divider">
+<a href="http://science.classroom.algebra.technology.drama.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://science.classroom.algebra.technology.drama.domn.net</a>
+
+<hr class="link-divider">
+<a href="http://vocabulary.seminar.student.calculus.learning.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.seminar.student.calculus.learning.hollowed.io</a>
+
+<hr class="link-divider">
+<a href="http://biology.literature.studying.lecture.science.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.literature.studying.lecture.science.robertbagany.com</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-gn-math" class="content-panel" role="tabpanel" aria-labelledby="tab-gn-math" tabindex="-1" hidden>
+  <div class="panel-inner">
+
+    <div class="panel-header">
+      <h2>GN‑Math</h2>
+      <button class="open-sites-btn" aria-label="View all sites" data-site="gn-math">View All Sites</button>
+    </div>
+
+    <div class="panel-image-placeholder" role="img" aria-label="GN‑Math illustration"></div>
+
+    <p class="panel-description">
+      GN‑Math is a collection of math‑focused game sites, logic puzzles, and interactive number challenges. It’s designed for students, puzzle‑solvers, and anyone who enjoys sharpening their mind while playing.
+    </p>
+
+    <div class="panel-tags">
+      <span class="panel-tag">Unblocked</span>
+      <span class="panel-tag">Browser Games</span>
+      <span class="panel-tag">Math</span>
+    </div>
+
+    <div class="panel-meta">
+      <div class="meta-item">
+        <span class="meta-label">Games</span>
+        <span class="meta-value">50+</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Daily Players</span>
+        <span class="meta-value">3.2K</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Genres</span>
+        <span class="meta-value">Math / Logic / Puzzle</span>
       </div>
     </div>
-  </section>
 
-  <section id="panel-gn-math" class="content-panel" role="tabpanel" aria-labelledby="tab-gn-math" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>GN‑Math</h2><button class="open-sites-btn" aria-label="View all sites" data-site="gn-math">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="GN-Math illustration"></div>
-      <p class="panel-description">GN-Math placeholder[...]</p>
-      <div class="panel-tags"><span class="panel-tag">Math</span><span class="panel-tag">Education</span></div>
-      <div class="panel-meta"><div class="meta-item"><span class="meta-label">Resources</span><span class="meta-value">100+</span></div></div>
-      <div class="links-section"></div>
+    <div class="links-section">
+      <a href="https://a2174-99533489.cluster40.canvas-user-content.com/users/2174~344930/files/2174~99533489/my%20files/gnmath.html?download=1&inline=1&sf_verifier=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoiMjE3NDAwMDAwMDAzNDQ5MzAiLCJhdHRhY2htZW50X2lkIjoiMjE3NDAwMDAwOTk1MzM0ODkiLCJwZXJtaXNzaW9uIjpbInJlYWQiLCJkb3dubG9hZCJdLCJyb290X2FjY291bnRfaWQiOiIyMTc0MDAwMDAwMDAwMDAwMSIsIm9hdXRoX2hvc3QiOiJrYXR5aXNkLmluc3RydWN0dXJlLmNvbSIsInJldHVybl91cmwiOm51bGwsImZhbGxiYWNrX3VybCI6Imh0dHBzOi8va2F0eWlzZC5pbnN0cnVjdHVyZS5jb20vZmlsZXMvOTk1MzM0ODkvZG93bmxvYWQ_dmVyaWZpZXI9OTE4ZU5iaVdzR2dmMnN6c05KV2hLWTJRQ1RDTk4wZExJNkhiVDJZM1x1MDAyNmZhbGxiYWNrX3RzPTE3ODAxMTE3MzkiLCJqdGkiOiI3YThhYTJlZC0xMTc3LTQ3NWMtOTJiYS1hM2QzZDA0YmEzOTAiLCJleHAiOjE3ODAxMTIwMzl9.ctQD2ZCAPjhFE_i2GRc8dUkSDbHZesVgkLQko3R_0FQoalLYWu9BNwIWyBG_6gaR5VLjsswqieSxtWJoNfrv-Q&verifier=918eNbiWsGgf2szsNJWhKY2QCTCNN0dLI6HbT2Y3/" class="site-link" target="_blank" rel="noopener noreferrer">God Link (will not get blocked)</a>
+      <hr class="link-divider">
     </div>
-  </section>
 
-  <section id="panel-nexora" class="content-panel" role="tabpanel" aria-labelledby="tab-nexora" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Nexora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="nexora">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Nexora illustration"></div>
-      <p class="panel-description">Nexora placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <section id="panel-overcloaked" class="content-panel" role="tabpanel" aria-labelledby="tab-overcloaked" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Overcloaked</h2><button class="open-sites-btn" aria-label="View all sites" data-site="overcloaked">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Overcloaked illustration"></div>
-      <p class="panel-description">Overcloaked placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-nexora" class="content-panel" role="tabpanel" aria-labelledby="tab-nexora" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Nexora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="nexora">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Nexora illustration"></div>
+        <p class="panel-description">Nexora is a sleek, modern unblocked gaming hub known for its carefully curated library of high-quality browser games. Fast loads, zero downloads, and always accessible — even on restricted school or work networks.</p>
+        <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Curated</span><span class="panel-tag">No Download</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">320</span></div><div class="meta-item"><span class="meta-label">Daily Active</span><span class="meta-value">8K</span></div><div class="meta-item"><span class="meta-label">Rating</span><span class="meta-value">4.8★</span></div></div>
+        <div class="links-section">
+          <a href="https://noterplusfire40.firebaseapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplusfire40.firebaseapp.com/</a>
+          <hr class="link-divider">
+          <a href="https://noterplusbunny1528.b-cdn.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplusbunny1528.b-cdn.net/</a>
+          <hr class="link-divider">
+          <a href="https://noterplus-207.firebaseapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplus-207.firebaseapp.com/</a>
+          <hr class="link-divider">
+          <a href="https://noterplusfire127.firebaseapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplusfire127.firebaseapp.com/</a>
+          <hr class="link-divider">
+          <a href="https://noterplustworiverssoftware2937.tworiverssoftware.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplustworiverssoftware2937.tworiverssoftware.com/</a>
+          <hr class="link-divider">
+          <a href="https://jihtsnexoraplan.pagostepeapulco.gob.mx/" class="site-link" target="_blank" rel="noopener noreferrer">https://jihtsnexoraplan.pagostepeapulco.gob.mx/</a>
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-void-network" class="content-panel" role="tabpanel" aria-labelledby="tab-void-network" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Void Network</h2><button class="open-sites-btn" aria-label="View all sites" data-site="void-network">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Void Network illustration"></div>
-      <p class="panel-description">Void Network placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-overcloaked" class="content-panel" role="tabpanel" aria-labelledby="tab-overcloaked" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Overcloaked</h2><button class="open-sites-btn" aria-label="View all sites" data-site="overcloaked">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Overcloaked illustration"></div>
+        <p class="panel-description">OverCloaked is a lightweight access hub designed to provide instant entry to unblocked websites and a wide selection of online entertainment. It features a large collection of games, giving users hundreds of options to play directly in the browser.</p>
+        <div class="panel-tags"><span class="panel-tag">Proxy</span><span class="panel-tag">Bypass Filters</span><span class="panel-tag">Always Up</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">500+</span></div><div class="meta-item"><span class="meta-label">Uptime</span><span class="meta-value">99.7%</span></div><div class="meta-item"><span class="meta-label">Mirrors</span><span class="meta-value">6</span></div></div>
+        <div class="links-section">
+          <a href="https://digitallearninghelp.onlidigital.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://digitallearninghelp.onlidigital.com/</a>
+          <hr class="link-divider">
+          <a href="https://rykstests.1.ryk.infinityfreeapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://rykstests.1.ryk.infinityfreeapp.com/</a>
+          <hr class="link-divider">
+          <a href="https://s3.amazonaws.com/sadddwasffwaaaasf/https://overyourmom.turbo-education.com/overyourmom.turbo-education.com/index.html" class="site-link" target="_blank" rel="noopener noreferrer">https://s3.amazonaws.com/sadddwasffwaaaasf/https://overyourmom.turbo-education.com/overyourmom.turbo-education.com/index.html</a>
+          <hr class="link-divider">
+          <a href="https://paukenschlag-blog.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://paukenschlag-blog.org/</a>
+          <hr class="link-divider">
+          <a href="http://technology.art.english.student.homework.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.art.english.student.homework.tokeslaszlo.eu/</a>
+          <hr class="link-divider">
+          <a href="http://grammar.reading.lecture.engineering.drama.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://grammar.reading.lecture.engineering.drama.tokeslaszlo.eu/</a>
+          <hr class="link-divider">
+          <a href="http://library.homework.reading.student.computer.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.homework.reading.student.computer.tokeslaszlo.eu/</a>
+          <hr class="link-divider">
+          <a href="http://classroom.technology.writing.engineering.programming.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.technology.writing.engineering.programming.tokeslaszlo.eu/</a>
+          <hr class="link-divider">
+          <a href="http://science.library.calculus.algebra.english.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://science.library.calculus.algebra.english.tokeslaszlo.eu/</a>
+          <a href="http://vocabulary.chemistry.physics.music.homework.saltbush.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.chemistry.physics.music.homework.saltbush.com/</a>
+          <hr class="link-divider">
+          <a href="http://homework.geography.grammar.studying.project.jetzt-reichts.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.geography.grammar.studying.project.jetzt-reichts.ch/</a>
+          <hr class="link-divider">
+          <a href="http://physics.music.engineering.grammar.geometry.litescripts.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.music.engineering.grammar.geometry.litescripts.com/</a>
+          <hr class="link-divider">
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-galaxy" class="content-panel" role="tabpanel" aria-labelledby="tab-galaxy" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Galaxy</h2><button class="open-sites-btn" aria-label="View all sites" data-site="galaxy">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Galaxy illustration"></div>
-      <p class="panel-description">Galaxy placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-void-network" class="content-panel" role="tabpanel" aria-labelledby="tab-void-network" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Void Network</h2><button class="open-sites-btn" aria-label="View all sites" data-site="void-network">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Void Network illustration"></div>
+        <p class="panel-description">Void Network is a dark-themed unblocked gaming network running across multiple mirrors for maximum availability. Known for hosting rare and obscure browser titles you won't find elsewhere. But the downside of using Void Network is that it has SO many advertisments.</p>
+        <div class="panel-tags"><span class="panel-tag">Multi-Mirror</span><span class="panel-tag">Ad-Free</span><span class="panel-tag">Underground</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">280</span></div><div class="meta-item"><span class="meta-label">Mirrors</span><span class="meta-value">12</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">5K</span></div></div>
+        <div class="links-section">
+          <a href="https://voidnrtowkr93urridudi.geetabasyal.com.np/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnrtowkr93urridudi.geetabasyal.com.np/</a>
+          <hr class="link-divider">
+          <a href="https://callmathsmallpls.4.riesgocrediticio.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://callmathsmallpls.4.riesgocrediticio.com/</a>
+          <hr class="link-divider">
+          <a href="https://i.eat.refrigerator.obiteljski-dom-pticek.hr/" class="site-link" target="_blank" rel="noopener noreferrer">https://i.eat.refrigerator.obiteljski-dom-pticek.hr/</a>
+          <hr class="link-divider">
+          <a href="https://alanthegoatmakeslinks.unicoridor.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://alanthegoatmakeslinks.unicoridor.ru/</a>
+          <hr class="link-divider">
+          <a href="https://africa.is.decent.obiteljski-dom-pticek.hr/" class="site-link" target="_blank" rel="noopener noreferrer">https://africa.is.decent.obiteljski-dom-pticek.hr/</a>
+          <hr class="link-divider">
+          <a href="https://voidnetwork2.railway.web.id/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnetwork2.railway.web.id/</a>
+          <hr class="link-divider">
+          <a href="https://learning.kthru12.bsmart-solutions.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://learning.kthru12.bsmart-solutions.com/</a>
+          <hr class="link-divider">
+          <a href="https://history-is-fun.for-everyone.bazaarhalloffame.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://history-is-fun.for-everyone.bazaarhalloffame.com/</a>
+          <hr class="link-divider">
+          <a href="https://wearealllostnowweregone.thejeremybecker.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://wearealllostnowweregone.thejeremybecker.com/</a>
+          <hr class="link-divider">
+          <a href="https://voidnetwork5.railway.web.id/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnetwork5.railway.web.id/</a>
+          <hr class="link-divider">
+          <a href="https://mathcodingames.30.riesgocrediticio.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://mathcodingames.30.riesgocrediticio.com/</a>
+          <hr class="link-divider">
+          <a href="https://mythostesting.meteotodi.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://mythostesting.meteotodi.com/</a>
+          <hr class="link-divider">
+          <a href="https://edu.ucecom-craiova.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://edu.ucecom-craiova.ro/</a>
+          <hr class="link-divider">
+          <a href="https://friedchicken.pjfox.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://friedchicken.pjfox.xyz/</a>
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-fern" class="content-panel" role="tabpanel" aria-labelledby="tab-fern" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Fern</h2><button class="open-sites-btn" aria-label="View all sites" data-site="fern">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Fern illustration"></div>
-      <p class="panel-description">Fern placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-galaxy" class="content-panel" role="tabpanel" aria-labelledby="tab-galaxy" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Galaxy</h2><button class="open-sites-btn" aria-label="View all sites" data-site="galaxy">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Galaxy illustration"></div>
+        <p class="panel-description">Galaxy is a space-themed unblocked games portal with a stunning UI and a massive catalog of browser games. Features community leaderboards, weekly game spotlights, and a huge selection of io and action titles.</p>
+        <div class="panel-tags"><span class="panel-tag">Space Theme</span><span class="panel-tag">Leaderboards</span><span class="panel-tag">Community</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">600+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">20K</span></div><div class="meta-item"><span class="meta-label">Top Score</span><span class="meta-value">&#8734;</span></div></div>
+        <div class="links-section">
+          <a href="https://bubbles.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://bubbles.redbubbles.org.my/</a>
+          <hr class="link-divider">
+          <a href="https://salonn.suzannesorganicssalon.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://salonn.suzannesorganicssalon.com/</a>
+          <hr class="link-divider">
+          <a href="https://save-whales.alexkrav.se/" class="site-link" target="_blank" rel="noopener noreferrer">https://save-whales.alexkrav.se/</a>
+          <hr class="link-divider">
+          <a href="https://hubert.hubretro.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://hubert.hubretro.com/</a>
+          <hr class="link-divider">
+          <a href="http://save-whales.alexkrav.se/" class="site-link" target="_blank" rel="noopener noreferrer">http://save-whales.alexkrav.se/</a>
+          <hr class="link-divider">
+          <a href="https://geography.indormost.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://geography.indormost.ru/</a>
+          <hr class="link-divider">
+          <a href="https://red.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://red.redbubbles.org.my/</a>
+          <hr class="link-divider">
+          <a href="https://bubbles-red.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://bubbles-red.redbubbles.org.my/</a>
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-axis" class="content-panel" role="tabpanel" aria-labelledby="tab-axis" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Axis</h2><button class="open-sites-btn" aria-label="View all sites" data-site="axis">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Axis illustration"></div>
-      <p class="panel-description">Axis placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-fern" class="content-panel" role="tabpanel" aria-labelledby="tab-fern" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Fern</h2><button class="open-sites-btn" aria-label="View all sites" data-site="fern">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Fern illustration"></div>
+        <p class="panel-description">Fern is a calm, nature-aesthetic unblocked games site favored for its relaxing selection of puzzle and idle games, but with plenty of fast-paced action titles too. Clean layout, no pop-ups, no nonsense.</p>
+        <div class="panel-tags"><span class="panel-tag">Puzzle</span><span class="panel-tag">Idle Games</span><span class="panel-tag">Chill</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">200</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">4K</span></div><div class="meta-item"><span class="meta-label">Puzzle Games</span><span class="meta-value">80</span></div></div>
+        <div class="links-section">
+          <a href="https://talesfiction.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://talesfiction.com/</a>
+        </div>
+      </div>
+    </section>
 
-  <section id="panel-xylora" class="content-panel" role="tabpanel" aria-labelledby="tab-xylora" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Xylora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="xylora">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Xylora illustration"></div>
-      <p class="panel-description">Xylora placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+    <section id="panel-axis" class="content-panel" role="tabpanel" aria-labelledby="tab-axis" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Axis</h2><button class="open-sites-btn" aria-label="View all sites" data-site="axis">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Axis illustration"></div>
+        <p class="panel-description">Axis is a lightweight, fast-access hub designed to provide regularly updated unblocked links in a clean and simple interface. The platform focuses on ease of use and quick navigation, offering a large and growing library of games along with additional media content.</p>
+        <div class="panel-tags"><span class="panel-tag">Fast</span><span class="panel-tag">Minimal</span><span class="panel-tag">School-Safe</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">390</span></div><div class="meta-item"><span class="meta-label">Load Time</span><span class="meta-value">&lt;1s</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">15K</span></div></div>
+        <div class="links-section">
+          <a href="https://math.vocabulary.project.student.art.dm-sch09.org.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://math.vocabulary.project.student.art.dm-sch09.org.ru/</a>
+          <hr class="link-divider">
+          <a href="https://project.reading.assignment.math.technology.badgerpile.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://project.reading.assignment.math.technology.badgerpile.net/</a>
+          <hr class="link-divider">
+          <a href="https://teacher.library.learning.programming.seminar.miservidor.mx/" class="site-link" target="_blank" rel="noopener noreferrer">https://teacher.library.learning.programming.seminar.miservidor.mx/</a>
+          <hr class="link-divider">
+          <a href="https://math.english.chemistry.seminar.literature.sandi.web.id/" class="site-link" target="_blank" rel="noopener noreferrer">https://math.english.chemistry.seminar.literature.sandi.web.id/</a>
+          <hr class="link-divider">
+          <a href="https://science.geography.assignment.campus.vocabulary.myapl.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.geography.assignment.campus.vocabulary.myapl.org/</a>
+          <hr class="link-divider">
+          <a href="https://writing.classroom.lecture.programming.music.engramtech.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://writing.classroom.lecture.programming.music.engramtech.com/</a>
+          <hr class="link-divider">
+          <a href="https://lecture.vocabulary.geography.programming.campus.hauta.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://lecture.vocabulary.geography.programming.campus.hauta.net/</a>
+          <hr class="link-divider">
+          <a href="https://music.lecture.grammar.geometry.algebra.thequitter.info/" class="site-link" target="_blank" rel="noopener noreferrer">https://music.lecture.grammar.geometry.algebra.thequitter.info/</a>
+          <hr class="link-divider">
+          <a href="https://homework.algebra.teacher.assignment.chemistry.eandeoptics.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://homework.algebra.teacher.assignment.chemistry.eandeoptics.com/</a>
+          <hr class="link-divider">
+          <a href="https://studying.programming.project.geometry.engineering.openbox.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://studying.programming.project.geometry.engineering.openbox.cl/</a>
+          <hr class="link-divider">
+          <a href="https://teacher.calculus.programming.library.learning.mabest.ch/" class="site-link" target="_blank" rel="noopener noreferrer">https://teacher.calculus.programming.library.learning.mabest.ch/</a>
+          <hr class="link-divider">
+<a href="https://axismath.braumach.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://axismath.braumach.com.au/</a>
 
-  <section id="panel-quasar" class="content-panel" role="tabpanel" aria-labelledby="tab-quasar" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Quasar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="quasar">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Quasar illustration"></div>
-      <p class="panel-description">Quasar placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
 
-  <section id="panel-infamous" class="content-panel" role="tabpanel" aria-labelledby="tab-infamous" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Infamous</h2><button class="open-sites-btn" aria-label="View all sites" data-site="infamous">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Infamous illustration"></div>
-      <p class="panel-description">Infamous placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<hr class="link-divider">
+<a href="https://axisfrench.cazaresulina.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://axisfrench.cazaresulina.ro/</a>
 
-  <section id="panel-truffled" class="content-panel" role="tabpanel" aria-labelledby="tab-truffled" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Truffled</h2><button class="open-sites-btn" aria-label="View all sites" data-site="truffled">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Truffled illustration"></div>
-      <p class="panel-description">Truffled placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<hr class="link-divider">
+<a href="https://axischurch.ldeazevedo.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://axischurch.ldeazevedo.com/</a>
+<a href="http://geometry.learning.homework.calculus.algebra.pvfb.org.nz/" class="site-link" target="_blank" rel="noopener noreferrer">http://geometry.learning.homework.calculus.algebra.pvfb.org.nz/</a>
+<hr class="link-divider">
 
-  <section id="panel-uniub" class="content-panel" role="tabpanel" aria-labelledby="tab-uniub" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>UniUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="uniub">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="UniUB illustration"></div>
-      <p class="panel-description">UniUB placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://campus.geometry.computer.learning.chemistry.sumako.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.geometry.computer.learning.chemistry.sumako.ch/</a>
+<hr class="link-divider">
 
-  <section id="panel-dogeub" class="content-panel" role="tabpanel" aria-labelledby="tab-dogeub" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>DogeUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="dogeub">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="DogeUB illustration"></div>
-      <p class="panel-description">DogeUB placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://biology.vocabulary.studying.student.grammar.pvfb.org.nz/" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.vocabulary.studying.student.grammar.pvfb.org.nz/</a>
+<hr class="link-divider">
 
-  <section id="panel-lunar" class="content-panel" role="tabpanel" aria-labelledby="tab-lunar" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Lunar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="lunar">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Lunar illustration"></div>
-      <p class="panel-description">Lunar placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://classroom.homework.music.art.calculus.sumako.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.homework.music.art.calculus.sumako.ch/</a>
+<hr class="link-divider">
 
-  <section id="panel-frogies-arcade" class="content-panel" role="tabpanel" aria-labelledby="tab-frogies-arcade" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Frogies arcade</h2><button class="open-sites-btn" aria-label="View all sites" data-site="frogies-arcade">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Frogies arcade illustration"></div>
-      <p class="panel-description">Frogies arcade placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://drama.physics.history.geometry.teacher.eastshoresmokehouse.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.physics.history.geometry.teacher.eastshoresmokehouse.com/</a>
+<hr class="link-divider">
 
-  <section id="panel-interstellar" class="content-panel" role="tabpanel" aria-labelledby="tab-interstellar" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Interstellar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="interstellar">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Interstellar illustration"></div>
-      <p class="panel-description">Interstellar placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://music.english.calculus.computer.teacher.sumako.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://music.english.calculus.computer.teacher.sumako.ch/</a>
+<hr class="link-divider">
 
-  <section id="panel-shadow" class="content-panel" role="tabpanel" aria-labelledby="tab-shadow" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Shadow</h2><button class="open-sites-btn" aria-label="View all sites" data-site="shadow">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Shadow illustration"></div>
-      <p class="panel-description">Shadow placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://library.programming.art.campus.drama.pvfb.org.nz/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.programming.art.campus.pvfb.org.nz/</a>
+<hr class="link-divider">
 
-  <section id="panel-selenite" class="content-panel" role="tabpanel" aria-labelledby="tab-selenite" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Selenite</h2><button class="open-sites-btn" aria-label="View all sites" data-site="selenite">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Selenite illustration"></div>
-      <p class="panel-description">Selenite placeholder[...]</p>
-      <div class="links-section"></div>
-    </div>
-  </section>
+<a href="http://music.assignment.classroom.math.biology.eastshoresmokehouse.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://music.assignment.classroom.math.biology.eastshoresmokehouse.com/</a>
+<hr class="link-divider">
 
-  <section id="panel-duckmath" class="content-panel" role="tabpanel" aria-labelledby="tab-duckmath" tabindex="-1" hidden>
-    <div class="panel-inner">
-      <div class="panel-header"><h2>Duckmath</h2><button class="open-sites-btn" aria-label="View all sites" data-site="duckmath">View All Sites</button></div>
-      <div class="panel-image-placeholder" role="img" aria-label="Duckmath illustration"></div>
-      <p class="panel-description">Duckmath placeholder[...]</p>
-      <div class="links-section"></div>
+<a href="http://programming.art.lecture.teacher.seminar.joshbblock.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.art.lecture.teacher.seminar.joshbblock.com/</a>
+<hr class="link-divider">
+
+<a href="http://drama.chemistry.calculus.library.art.pvfb.org.nz/" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.chemistry.calculus.library.art.pvfb.org.nz/</a>
+<hr class="link-divider">
+
+<a href="http://english.homework.learning.computer.programming.sumako.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://english.homework.learning.computer.programming.sumako.ch/</a>
+<hr class="link-divider">
+
+<a href="http://reading.math.writing.campus.seminar.eastshoresmokehouse.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://reading.math.writing.campus.seminar.eastshoresmokehouse.com/</a>
+<hr class="link-divider">
+
+<a href="http://algebra.vocabulary.math.chemistry.physics.joshbblock.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://algebra.vocabulary.math.chemistry.physics.joshbblock.com/</a>
+<hr class="link-divider">
+
+<a href="http://campus.learning.art.project.english.pvfb.org.nz/" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.learning.art.project.english.pvfb.org.nz/</a>
+<hr class="link-divider">
+
+<a href="http://seminar.project.technology.math.writing.sumako.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://seminar.project.technology.math.writing.sumako.ch/</a>
+<hr class="link-divider">
+
+<a href="http://lecture.geography.grammar.project.reading.eastshoresmokehouse.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://lecture.geography.grammar.project.reading.eastshoresmokehouse.com/</a>
+<hr class="link-divider">
+
+<a href="http://english.seminar.literature.music.geography.eastshoresmokehouse.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://english.seminar.literature.music.geography.eastshoresmokehouse.com/</a>
+<hr class="link-divider">
+
+<a href="http://programming.literature.vocabulary.grammar.physics.joshbblock.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.literature.vocabulary.grammar.physics.joshbblock.com/</a>
+<hr class="link-divider">
+
+<a href="http://studying.grammar.classroom.chemistry.english.joshbblock.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://studying.grammar.classroom.chemistry.english.joshbblock.com/</a>
+<hr class="link-divider">
+
+<a href="http://campus.science.lecture.computer.geometry.joshbblock.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.science.lecture.computer.geometry.joshbblock.com/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-xylora" class="content-panel" role="tabpanel" aria-labelledby="tab-xylora" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Xylora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="xylora">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Xylora illustration"></div>
+        <p class="panel-description">Xylora is a creative-focused unblocked games site featuring drawing games, sandbox experiences, and artistic browser titles. Built for players who want to make something, not just play something.</p>
+        <div class="panel-tags"><span class="panel-tag">Creative</span><span class="panel-tag">Sandbox</span><span class="panel-tag">Drawing Games</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">150</span></div><div class="meta-item"><span class="meta-label">Creations</span><span class="meta-value">44K</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">7K</span></div></div>
+        <div class="links-section">
+        <hr class="link-divider">
+          <a href="https://xylora.god.domain.2660010.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.god.domain.2660010.com/</a>
+          <a href="https://xylora.studenteducationfund.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.studenteducationfund.org/</a>
+          <hr class="link-divider">
+          <a href="https://veessa.glenoriebakery.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://veessa.glenoriebakery.com.au/</a>
+          <hr class="link-divider">
+          <a href="https://vcsa.math.lumbinifashion.com.np/" class="site-link" target="_blank" rel="noopener noreferrer">https://vcsa.math.lumbinifashion.com.np/</a>
+          <hr class="link-divider">
+          <a href="https://vcsa.easternstamps.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://vcsa.easternstamps.com/</a>
+          <hr class="link-divider">
+          <a href="https://bria.i.own.xylora.nealmonroe.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://bria.i.own.xylora.nealmonroe.com/</a>
+          <hr class="link-divider">
+          <a href="https://xylora-on.top.thenookfactory.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora-on.top.thenookfactory.com/</a>
+<hr class="link-divider">
+<a href="https://xylora.vta-international.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.vta-international.com/</a>
+<hr class="link-divider">
+<a href="https://xylora.org.hoohaamelbourne.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.org.hoohaamelbourne.com.au/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.co.ldeazevedo.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.co.ldeazevedo.com/</a>
+<hr class="link-divider">
+<a href="https://join.mizumath.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://join.mizumath.babypos.hk/</a>
+
+<hr class="link-divider">
+<a href="https://play.nation.xylora.beltfrog.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://play.nation.xylora.beltfrog.com/</a>
+
+<hr class="link-divider">
+<a href="https://playnation.xylora.cravat-club.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://playnation.xylora.cravat-club.com/</a>
+
+<hr class="link-divider">
+<a href="http://sub.to.playernation.xylora.renaca.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://sub.to.playernation.xylora.renaca.com/</a>
+
+<hr class="link-divider">
+<a href="https://veryeducationalwebsite1.hoohaamelbourne.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://veryeducationalwebsite1.hoohaamelbourne.com.au/</a>
+<hr class="link-divider">
+<a href="https://xylora.notariamelipilla.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.notariamelipilla.cl/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.bdyoutube.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.overlijdenscentrum.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.overlijdenscentrum.com/</a>
+<hr class="link-divider">
+<a href="https://xylora.vs.everest.vs.mizumath.srivaishnavam.org.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.vs.everest.vs.mizumath.srivaishnavam.org.au/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.triatlonpacense.es/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.triatlonpacense.es/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.tvlinux.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.tvlinux.com/</a>
+<hr class="link-divider">
+<a href="https://repeating.xylora.webinfo.tw/" class="site-link" target="_blank" rel="noopener noreferrer">https://repeating.xylora.webinfo.tw/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.read.about.willy.cat/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.read.about.willy.cat/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.research.about.dogs.valor.ar/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.research.about.dogs.valor.ar/</a>
+
+<hr class="link-divider">
+<a href="https://xy.lora.grahammurryinsuranceagency.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xy.lora.grahammurryinsuranceagency.com/</a>
+
+<hr class="link-divider">
+<a href="https://days.delia-derbyshire.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://days.delia-derbyshire.net/</a>
+
+<hr class="link-divider">
+<a href="https://resting.cazaresulina.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://resting.cazaresulina.ro/</a>
+
+<hr class="link-divider">
+<a href="https://fishes.colloky.com.pe/" class="site-link" target="_blank" rel="noopener noreferrer">https://fishes.colloky.com.pe/</a>
+
+<hr class="link-divider">
+<a href="https://testing.notariamelipilla.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://testing.notariamelipilla.cl/</a>
+
+<hr class="link-divider">
+<a href="https://exam.grahammurryinsuranceagency.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://exam.grahammurryinsuranceagency.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.math.science.heidibranlund.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.math.science.heidibranlund.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.rust.rusticrivergear.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.rust.rusticrivergear.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.testout.repuestoslibertad.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.testout.repuestoslibertad.cl/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.countertops.kwgranitecountertops.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.countertops.kwgranitecountertops.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.searching.dirtchicvt.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.searching.dirtchicvt.com/</a>
+<hr class="link-divider">
+<a href="https://veessa.glenoriebakery.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://veessa.glenoriebakery.com.au/</a>
+
+<hr class="link-divider">
+<a href="https://vcsa.math.lumbinifashion.com.np/" class="site-link" target="_blank" rel="noopener noreferrer">https://vcsa.math.lumbinifashion.com.np/</a>
+
+<hr class="link-divider">
+<a href="https://vcsa.easternstamps.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://vcsa.easternstamps.com/</a>
+
+<hr class="link-divider">
+<a href="https://bria.i.own.xylora.nealmonroe.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://bria.i.own.xylora.nealmonroe.com/</a>
+
+<hr class="link-divider">
+<a href="https://tester.user.ixl.clever.com.goguardian.site.ultradec.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://tester.user.ixl.clever.com.goguardian.site.ultradec.com/</a>
+<hr class="link-divider">
+<a href="https://test.lumbinifashion.com.np/" class="site-link" target="_blank" rel="noopener noreferrer">https://test.lumbinifashion.com.np/</a>
+<hr class="link-divider">
+<a href="https://vcsa.xylora.beltfrog.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://vcsa.xylora.beltfrog.com/</a>
+
+<hr class="link-divider">
+<a href="https://briaisahotmess.lastarria43.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://briaisahotmess.lastarria43.cl/</a>
+
+<hr class="link-divider">
+<a href="https://this.link.is.protected.xylora.edgarskitespot.co.za/" class="site-link" target="_blank" rel="noopener noreferrer">https://this.link.is.protected.xylora.edgarskitespot.co.za/</a>
+<hr class="link-divider">
+<a href="https://science.experiment.steveeagle.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.steveeagle.com/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.tracsa.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.evilbs.com/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.enlanube.com.ve/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.allyteam.ru/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.allyteam.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.allyteam.ru/</a>
+<hr class="link-divider">
+<a href="https://science.experiment.braumach.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.braumach.com.au/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.mbservicios.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.mbservicios.com.ar/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.vervaecke-hub.be/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.vervaecke-hub.be/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.anostudio.info/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.anostudio.info/</a>
+
+<hr class="link-divider">
+<a href="https://science.experiment.silentcomponents.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://science.experiment.silentcomponents.com/</a>
+<hr class="link-divider">
+<a href="https://xylora.aviarampatzis.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.aviarampatzis.com/</a>
+<hr class="link-divider">
+<a href="https://xylora.bananaworld.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.bananaworld.com.ar/</a>
+
+<hr class="link-divider">
+<a href="https://xyloraa.brgv-os.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://xyloraa.brgv-os.ro/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.customiseta.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.customiseta.com/</a>
+
+<hr class="link-divider">
+<a href="https://xylora.tabulasync.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.tabulasync.com/</a>
+
+<hr class="link-divider">
+<a href="https://intermedia.litro.linewize.interlections.speeds.of.1902.2.dab.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://intermedia.litro.linewize.interlections.speeds.of.1902.2.dab.ca/</a>
+<hr class="link-divider">
+<a href="https://muffins.eilong.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://muffins.eilong.com/</a>
+
+<hr class="link-divider">
+<a href="https://muffin.learn.justinsteiger.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://muffin.learn.justinsteiger.com/</a>
+
+<hr class="link-divider">
+<a href="https://muffin.best.romppais.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://muffin.best.romppais.ca/</a>
+
+<hr class="link-divider">
+<a href="https://muffi.n.tire.is/" class="site-link" target="_blank" rel="noopener noreferrer">https://muffi.n.tire.is/</a>
+
+<hr class="link-divider">
+<a href="https://choc.muffin.greenbaynz.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://choc.muffin.greenbaynz.com/</a>
+
+<hr class="link-divider">
+<a href="https://firefighter.muffin.fire-change.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://firefighter.muffin.fire-change.com/</a>
+
+<hr class="link-divider">
+<a href="https://dentist.xylora.muffin.dentist4you.com.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://dentist.xylora.muffin.dentist4you.com.au/</a>
+
+<hr class="link-divider">
+<a href="https://travel.travelhits.co.uk/" class="site-link" target="_blank" rel="noopener noreferrer">https://travel.travelhits.co.uk/</a>
+
+<hr class="link-divider">
+<a href="https://yofu.c.ck.taii.toysland.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://yofu.c.ck.taii.toysland.hk/</a>
+
+<a href="https://xylora.rustyfoundation.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.rustyfoundation.com/</a>
+<hr class="link-divider">
+
+<a href="https://buyingmo.buymojatom.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://buyingmo.buymojatom.com/</a>
+<hr class="link-divider">
+
+<a href="https://xylora.bostoncareercounselor.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.bostoncareercounselor.com/</a>
+<hr class="link-divider">
+
+<a href="https://xylora.rcdx93.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.rcdx93.net/</a>
+<hr class="link-divider">
+            
+<a href="https://xylora.huangqirui.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.huangqirui.xyz/</a>
+<hr class="link-divider">
+
+<a href="https://xylora.meow.srivaishnavam.org.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://xylora.meow.srivaishnavam.org.au/</a>
+<hr class="link-divider">
+
+<a href="https://muffin.love.grei-grei.lt/" class="site-link" target="_blank" rel="noopener noreferrer">https://muffin.love.grei-grei.lt/</a>
+<hr class="link-divider">
+            
+<a href="https://whatsupbro.gsxpress.com.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://whatsupbro.gsxpress.com.my/</a>
+<hr class="link-divider">
+
+<a href="https://hellobro.gsxpress.com.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://hellobro.gsxpress.com.my/</a>
+<hr class="link-divider">
+
+<a href="https://hellockusers.gsxpress.com.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://hellockusers.gsxpress.com.my/</a>
+<hr class="link-divider">
+
+<a href="https://hellousers.gsxpress.com.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://hellousers.gsxpress.com.my/</a>
+<hr class="link-divider">
+
+<a href="https://ck.gen1.srivaishnavam.org.au/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.gen1.srivaishnavam.org.au/</a>
+<hr class="link-divider">
+
+<a href="https://ck.gen2.art-motel.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.gen2.art-motel.com/</a>
+<hr class="link-divider">
+
+<a href="https://ck.gen3.parcomunica.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.gen3.parcomunica.com/</a>
+<hr class="link-divider">
+
+<a href="https://ck.contentkeeper1.ekocleaner.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.contentkeeper1.ekocleaner.ro/</a>
+<hr class="link-divider">
+
+<a href="https://ck.contentkeeper2.forever-20.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.contentkeeper2.forever-20.com/</a>
+<hr class="link-divider">
+
+<a href="https://ck.contentkeeper3.radioimpactfm.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://ck.contentkeeper3.radioimpactfm.ro/</a>
+<hr class="link-divider">
+
+<a href="https://content.keeper1.meridiano.com.br/" class="site-link" target="_blank" rel="noopener noreferrer">https://content.keeper1.meridiano.com.br/</a>
+<hr class="link-divider">
+
+<a href="https://content.keeper2.savenewport.com" class="site-link" target="_blank" rel="noopener noreferrer">https://content.keeper2.savenewport.com</a>
+<hr class="link-divider">
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-quasar" class="content-panel" role="tabpanel" aria-labelledby="tab-quasar" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Quasar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="quasar">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Quasar illustration"></div>
+        <p class="panel-description">Quasar is a sci-fi themed unblocked gaming portal with a focus on strategy, simulation, and space exploration games. Community ratings, weekly spotlights, and a well-organized library make finding great games easy.</p>
+        <div class="panel-tags"><span class="panel-tag">Strategy</span><span class="panel-tag">Sci-Fi</span><span class="panel-tag">Simulation</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">310</span></div><div class="meta-item"><span class="meta-label">Reviews</span><span class="meta-value">22K</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">9K</span></div></div>
+        <div class="links-section">
+          <p>No links :[</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-infamous" class="content-panel" role="tabpanel" aria-labelledby="tab-infamous" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Infamous</h2><button class="open-sites-btn" aria-label="View all sites" data-site="infamous">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Infamous illustration"></div>
+        <p class="panel-description">Infamous is one of the most well-known unblocked game sites around. Home to the classics — Run 3, Slope, 1v1.LOL, and hundreds more fan favorites. If it got you through a boring class, it's probably here.</p>
+        <div class="panel-tags"><span class="panel-tag">Classics</span><span class="panel-tag">Popular</span><span class="panel-tag">All-Time Faves</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">700+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">50K</span></div><div class="meta-item"><span class="meta-label">Legends</span><span class="meta-value">30</span></div></div>
+        <div class="links-section">
+          <a href="https://clever.com.lifthillsandthrills.co.uk/" class="site-link" target="_blank" rel="noopener noreferrer">https://clever.com.lifthillsandthrills.co.uk/</a>
+          <hr class="link-divider">
+          <a href="https://clever.com.darkroom-lang.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://clever.com.darkroom-lang.org/</a>
+          <hr class="link-divider">
+          <a href="https://canvas.com.reconectar.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://canvas.com.reconectar.cl/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-truffled" class="content-panel" role="tabpanel" aria-labelledby="tab-truffled" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Truffled</h2><button class="open-sites-btn" aria-label="View all sites" data-site="truffled">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Truffled illustration"></div>
+        <p class="panel-description">Truffled is a hidden-gem unblocked games site known for surfacing obscure and indie browser titles you won't find anywhere else. Small catalog, high quality — every game here was hand-picked to be worth your time.</p>
+        <div class="panel-tags"><span class="panel-tag">Indie</span><span class="panel-tag">Hidden Gems</span><span class="panel-tag">Curated</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">120</span></div><div class="meta-item"><span class="meta-label">Hidden Gems</span><span class="meta-value">45</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">3K</span></div></div>
+        <div class="links-section">
+          <a href="https://health.wvpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://health.wvpreschool.org/</a>
+          <hr class="link-divider">
+          <a href="https://reading.astrodestin.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://reading.astrodestin.ro/</a>
+          <hr class="link-divider">
+          <a href="https://script.google.com/a/macros/ecasd.us/s/AKfycbxb16odTSaO0fmEEu5Mclb5VAIsdlPWyTsqWFHjPcxcIAoObll0E1uXaUi5AvDe1aSZJg/exec" class="site-link" target="_blank" rel="noopener noreferrer">https://script.google.com/a/macros/ecasd.us/s/AKfycbxb16odTSaO0fmEEu5Mclb5VAIsdlPWyTsqWFHjPcxcIAoObll0E1uXaUi5AvDe1aSZJg/exec</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-uniub" class="content-panel" role="tabpanel" aria-labelledby="tab-uniub" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>UniUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="uniub">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="UniUB illustration"></div>
+        <p class="panel-description">UniUB is the go-to unblocked games site for university and high school students. Clean interface, wide genre coverage, and a library that reliably punches through campus network filters without needing any extensions.</p>
+        <div class="panel-tags"><span class="panel-tag">School-Friendly</span><span class="panel-tag">Campus</span><span class="panel-tag">Students</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">480</span></div><div class="meta-item"><span class="meta-label">Schools</span><span class="meta-value">200+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">22K</span></div></div>
+        <div class="links-section">
+          <a href="https://learnaboutbillclinton.lotossutra.at/" class="site-link" target="_blank" rel="noopener noreferrer">https://learnaboutbillclinton.lotossutra.at/</a>
+          <hr class="link-divider">
+          <a href="https://wildcard.capemaycityschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://wildcard.capemaycityschool.org/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-dogeub" class="content-panel" role="tabpanel" aria-labelledby="tab-dogeub" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>DogeUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="dogeub">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="DogeUB illustration"></div>
+        <p class="panel-description">DogeUB is a meme-fueled unblocked games platform with a fun, chaotic community vibe. Features doge-themed games, viral browser hits, and all the classics — wrapped in an interface that doesn't take itself seriously.</p>
+        <div class="panel-tags"><span class="panel-tag">Memes</span><span class="panel-tag">Community</span><span class="panel-tag">Fun</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">250</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">18K</span></div><div class="meta-item"><span class="meta-label">Memes</span><span class="meta-value">&#8734;</span></div></div>
+        <div class="links-section">
+          <div class="link-row">
+            <a href="https://storage.googleapis.com/educationate/index.html" class="site-link" target="_blank" rel="noopener noreferrer">https://storage.googleapis.com/educationate/index.html</a>
+            <span class="link-badge">forever unblocked</span>
+          </div>
+          <hr class="link-divider">
+          <a href="https://api.nolathedogtherapist.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://api.nolathedogtherapist.com/</a>
+          <hr class="link-divider">
+          <a href="https://apply.nolathedogtherapist.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://apply.nolathedogtherapist.com/</a>
+          <hr class="link-divider">
+          <a href="https://codeprojects.org/projects/weblab/795f4164-f323-4e2c-bce9-84ead985126f/" class="site-link" target="_blank" rel="noopener noreferrer">https://codeprojects.org/projects/weblab/795f4164-f323-4e2c-bce9-84ead985126f/</a>
+          <hr class="link-divider">
+          <a href="https://mircosoft-windows.firebaseapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://mircosoft-windows.firebaseapp.com/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-lunar" class="content-panel" role="tabpanel" aria-labelledby="tab-lunar" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Lunar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="lunar">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Lunar illustration"></div>
+        <p class="panel-description">Lunar is a sleek, moon-themed unblocked games site particularly popular for late-night gaming sessions. Dark mode is built in by default, the library is deep, and the site stays up when others go down.</p>
+        <div class="panel-tags"><span class="panel-tag">Dark Mode</span><span class="panel-tag">Night Gaming</span><span class="panel-tag">Always Online</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">330</span></div><div class="meta-item"><span class="meta-label">Night Players</span><span class="meta-value">11K</span></div><div class="meta-item"><span class="meta-label">Themes</span><span class="meta-value">5</span></div></div>
+        <div class="links-section">
+          <a href="https://jobsearch.banglaraloprotidin.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://jobsearch.banglaraloprotidin.com/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-frogies-arcade" class="content-panel" role="tabpanel" aria-labelledby="tab-frogies-arcade" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Frogies arcade</h2><button class="open-sites-btn" aria-label="View all sites" data-site="frogies-arcade">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Frogies arcade illustration"></div>
+        <p class="panel-description">Frogies Arcade is a retro unblocked games site stocked with classic arcade titles, pixel-art games, and old-school browser hits. Global leaderboards for every game, chiptune soundtrack optional, good vibes mandatory.</p>
+        <div class="panel-tags"><span class="panel-tag">Retro</span><span class="panel-tag">Arcade</span><span class="panel-tag">Pixel Art</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">840</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">45K</span></div><div class="meta-item"><span class="meta-label">High Scores</span><span class="meta-value">320K</span></div></div>
+        <div class="links-section">
+          <div class="link-credentials">
+            <span class="cred-item"><span class="cred-key">username</span><span class="cred-value">user_27e4cb</span></span>
+            <span class="cred-item"><span class="cred-key">password</span><span class="cred-value">1d8dbf40</span></span>
+          </div>
+          <hr class="link-divider">
+          <a href="https://gh8woqn3.mttaborpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://gh8woqn3.mttaborpreschool.org/</a>
+          <hr class="link-divider">
+          <a href="https://msq400nf.lakehillpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://msq400nf.lakehillpreschool.org/</a>
+          <hr class="link-divider">
+          <a href="https://cdksk4og.mttaborpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://cdksk4og.mttaborpreschool.org/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-interstellar" class="content-panel" role="tabpanel" aria-labelledby="tab-interstellar" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Interstellar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="interstellar">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Interstellar illustration"></div>
+        <p class="panel-description">Interstellar is a premium unblocked games site known for hosting the largest collection of multiplayer browser games around. Space-travel aesthetic, real-time player counts, and a library that spans every genre.</p>
+        <div class="panel-tags"><span class="panel-tag">Multiplayer</span><span class="panel-tag">Premium</span><span class="panel-tag">All Genres</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">450</span></div><div class="meta-item"><span class="meta-label">Multiplayer</span><span class="meta-value">80</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">30K</span></div></div>
+        <div class="links-section">
+          <a href="https://madebygrandemass.imgmetal.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://madebygrandemass.imgmetal.cl/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-shadow" class="content-panel" role="tabpanel" aria-labelledby="tab-shadow" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Shadow</h2><button class="open-sites-btn" aria-label="View all sites" data-site="shadow">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Shadow illustration"></div>
+        <p class="panel-description">Shadow is a dark-themed unblocked games site known for horror, stealth, and thriller browser games. It also hides a handful of secret bonus games unlocked only by solving riddles scattered across the site.</p>
+        <div class="panel-tags"><span class="panel-tag">Horror</span><span class="panel-tag">Stealth</span><span class="panel-tag">Secret Games</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">190</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">8K</span></div><div class="meta-item"><span class="meta-label">Secrets</span><span class="meta-value">12</span></div></div>
+        <div class="links-section">
+          <a href="https://neatreading.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://neatreading.babypos.hk/</a>
+          <hr class="link-divider">
+          <a href="https://solidcoding.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://solidcoding.babypos.hk/</a>
+          <hr class="link-divider">
+          <a href="https://coolscience.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://coolscience.babypos.hk/</a>
+          <hr class="link-divider">
+          <a href="https://neatgeo.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://neatgeo.babypos.hk/</a>
+          <hr class="link-divider">
+          <a href="https://hypergrammar.babypos.hk/" class="site-link" target="_blank" rel="noopener noreferrer">https://hypergrammar.babypos.hk/</a>
+          <hr class="link-divider">
+          <a href="https://corealgebra.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://corealgebra.bdyoutube.com/</a>
+          <hr class="link-divider">
+          <a href="https://freshgrammar.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://freshgrammar.bdyoutube.com/</a>
+          <hr class="link-divider">
+          <a href="https://prowriting.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://prowriting.bdyoutube.com/</a>
+          <hr class="link-divider">
+          <a href="https://coolcoding.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://coolcoding.bdyoutube.com/</a>
+          <hr class="link-divider">
+          <a href="https://modernpoems.bdyoutube.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://modernpoems.bdyoutube.com/</a>
+          <hr class="link-divider">
+          <a href="https://hyperhistory.pjfox.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://hyperhistory.pjfox.xyz/</a>
+          <hr class="link-divider">
+          <a href="https://novaus.pjfox.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://novaus.pjfox.xyz/</a>
+          <hr class="link-divider">
+          <a href="https://modernalgebra.pjfox.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://modernalgebra.pjfox.xyz/</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-selenite" class="content-panel" role="tabpanel" aria-labelledby="tab-selenite" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Selenite</h2><button class="open-sites-btn" aria-label="View all sites" data-site="selenite">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Selenite illustration"></div>
+        <p class="panel-description">Selenite is a low-key unblocked games hub focused on relaxing, meditative, and low-stress browser games. Perfect for winding down between classes — think clicker games, peaceful sims, and chill puzzle titles.</p>
+        <div class="panel-tags"><span class="panel-tag">Relaxing</span><span class="panel-tag">Clicker Games</span><span class="panel-tag">Low Stress</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">160</span></div><div class="meta-item"><span class="meta-label">Chill Games</span><span class="meta-value">90</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">5K</span></div></div>
+        <div class="links-section">
+            <a href="https://slnt.frenchchurch.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://slnt.frenchchurch.org/</a>
+            <hr class="link-divider">
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-duckmath" class="content-panel" role="tabpanel" aria-labelledby="tab-duckmath" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Duckmath</h2><button class="open-sites-btn" aria-label="View all sites" data-site="duckmath">View All Sites</button></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Duckmath illustration"></div>
+        <p class="panel-description">DuckMath is an educational unblocked games site that sneaks real learning into genuinely fun math and logic games. School-approved, surprisingly addictive, and a lifesaver when you need to look productive.</p>
+        <div class="panel-tags"><span class="panel-tag">Educational</span><span class="panel-tag">Math Games</span><span class="panel-tag">School-Safe</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">240</span></div><div class="meta-item"><span class="meta-label">Students</span><span class="meta-value">110K</span></div><div class="meta-item"><span class="meta-label">Quacks</span><span class="meta-value">999+</span></div></div>
+        <div class="links-section">
+          <a href="https://duck.studymenes.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://duck.studymenes.com/</a>
+          <hr class="link-divider">
+          <a href="https://unpkg.com/classroomduck@1.0.0/index.html" class="site-link" target="_blank" rel="noopener noreferrer">https://unpkg.com/classroomduck@1.0.0/index.html</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <aside id="side-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="All sites" aria-hidden="true">
+    <div class="side-panel-header">
+      <h3>All Sites</h3>
+      <button id="close-side-panel" class="close-side-panel" aria-label="Close sites panel" tabindex="-1">&#10005;</button>
     </div>
-  </section>
+    <ul id="sites-list" class="sites-list" role="list"></ul>
+  </aside>
+
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
 
   <script src="script.js"></script>
 </body>
