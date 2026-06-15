@@ -106,17 +106,18 @@
     ],
 
     'arcade': [
-      { label: 'Buckshot Roulette',    url: 'https://html-classic.itch.zone/html/17574967/index.html?v=1779033998' },
-      { label: 'Slope',                url: 'https://html-classic.itch.zone/html/14788017/SlopePlus1.3.1Web/index.html' },
-      { label: 'Scritchy Scratchy',    url: 'https://html-classic.itch.zone/html/16388344-1536207/index.html' },
-      { label: 'Balatro',              url: 'https://html-classic.itch.zone/html/17618560/web-balatro-main/index.html?v=1779327186' },
-      { label: 'Bad Time Simulator',   url: 'https://html-classic.itch.zone/html/13788770/index.html' },
-      { label: 'Idle Gumball Machine', url: 'https://html-classic.itch.zone/html/15811950/index.html' },
-      { label: 'Cat Cove Inn',         url: 'https://html-classic.itch.zone/html/6577714/index.html' },
-      { label: 'Little Chef',          url: 'https://html-classic.itch.zone/html/15194587/index.html' },
-      { label: 'The MachinEGG',        url: 'https://html-classic.itch.zone/html/17095940/index.html' },
-      { label: 'Life _ Lemon',         url: 'https://html-classic.itch.zone/html/16093818/index.html' },
-      { label: 'Hooked',               url: 'https://html-classic.itch.zone/html/17338298/index.html?v=1777365531' }
+      { label: 'Buckshot Roulette',        url: 'https://html-classic.itch.zone/html/17574967/index.html?v=1779033998' },
+      { label: 'Slope',                    url: 'https://html-classic.itch.zone/html/14788017/SlopePlus1.3.1Web/index.html' },
+      { label: 'Scritchy Scratchy',        url: 'https://html-classic.itch.zone/html/16388344-1536207/index.html' },
+      { label: 'Drift Boss (With Cheats)', url: 'https://html-classic.itch.zone/html/17945501/drift-boss-main/index.html?v=1781550175' },
+      { label: 'Balatro',                  url: 'https://html-classic.itch.zone/html/17618560/web-balatro-main/index.html?v=1779327186' },
+      { label: 'Bad Time Simulator',       url: 'https://html-classic.itch.zone/html/13788770/index.html' },
+      { label: 'Idle Gumball Machine',     url: 'https://html-classic.itch.zone/html/15811950/index.html' },
+      { label: 'Cat Cove Inn',             url: 'https://html-classic.itch.zone/html/6577714/index.html' },
+      { label: 'Little Chef',              url: 'https://html-classic.itch.zone/html/15194587/index.html' },
+      { label: 'The MachinEGG',            url: 'https://html-classic.itch.zone/html/17095940/index.html' },
+      { label: 'Life _ Lemon',             url: 'https://html-classic.itch.zone/html/16093818/index.html' },
+      { label: 'Hooked',                   url: 'https://html-classic.itch.zone/html/17338298/index.html?v=1777365531' }
     ],
 
     'flash': [
