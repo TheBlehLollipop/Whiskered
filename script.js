@@ -5,13 +5,13 @@
   var SITES = [
     { id: 'cherri',          label: 'Cherri',          icon: '🍒', tagline: 'Creative community hub' },
     { id: 'gn-math',         label: 'GN‑Math',         icon: '🧮', tagline: 'Math at its finest' },
-    { id: 'nexora',          label: 'Nexora',          icon: '⚡',        tagline: 'Innovation platform' },
+    { id: 'nexora',          label: 'Nexora',          icon: '⚡',  tagline: 'Innovation platform' },
     { id: 'overcloaked',     label: 'Overcloaked',     icon: '🔒', tagline: 'Privacy first' },
-    { id: 'void-network',    label: 'Void Network',    icon: '◾', tagline: 'Decentralized signal' },
+    { id: 'void-network',    label: 'Void Network',    icon: '◾',  tagline: 'Decentralized signal' },
     { id: 'galaxy',          label: 'Galaxy',          icon: '🌌', tagline: 'Space exploration' },
     { id: 'fern',            label: 'Fern',            icon: '🌿', tagline: 'Nature & environment' },
-    { id: 'axis',            label: 'Axis',            icon: '⊕',        tagline: 'Developer tools' },
-    { id: 'xylora',          label: 'Xylora',          icon: '✦',        tagline: 'Creative arts' },
+    { id: 'axis',            label: 'Axis',            icon: '⊕',  tagline: 'Developer tools' },
+    { id: 'xylora',          label: 'Xylora',          icon: '✦',  tagline: 'Creative arts' },
     { id: 'quasar',          label: 'Quasar',          icon: '◉',  tagline: 'Science & research' },
     { id: 'infamous',        label: 'Infamous',        icon: '🎭', tagline: 'Underground culture' },
     { id: 'truffled',        label: 'Truffled',        icon: '🍄', tagline: 'Culinary discovery' },
@@ -20,7 +20,7 @@
     { id: 'lunar',           label: 'Lunar',           icon: '🌙', tagline: 'Moon & night sky' },
     { id: 'frogies-arcade',  label: 'Frogies arcade',  icon: '🐸', tagline: 'Retro gaming' },
     { id: 'interstellar',    label: 'Interstellar',    icon: '🚀', tagline: 'Space travel' },
-    { id: 'shadow',          label: 'Shadow',          icon: '◈',        tagline: 'Mystery & thriller' },
+    { id: 'shadow',          label: 'Shadow',          icon: '◈',  tagline: 'Mystery & thriller' },
     { id: 'selenite',        label: 'Selenite',        icon: '💎', tagline: 'Wellness & crystals' },
     { id: 'duckmath',        label: 'Duckmath',        icon: '🦆', tagline: 'Math education' },
   ];
@@ -97,7 +97,8 @@
     ],
 
     'puzzle': [
-      { label: 'Another Night At The Archive', url: 'https://html-classic.itch.zone/html/11493468/index.html' }
+      { label: 'Another Night At The Archive', url: 'https://html-classic.itch.zone/html/11493468/index.html' },
+      { label: 'Six Cats Under',               url: 'https://html-classic.itch.zone/html/2267583/index.html?v=1591301667' }
     ],
 
     'racing': [
