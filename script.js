@@ -58,13 +58,14 @@
     ],
 
     'horror': [
-      { label: 'A Bite at Freddy\'s', url: 'https://html-classic.itch.zone/html/17555938/index.html?v=1778890468' },
-      { label: 'Go to Sleep', url: 'https://html-classic.itch.zone/html/17866232/index.html?v=1781016689' },
-      { label: "Baldi's Basics Plus", url: "https://html-classic.itch.zone/html/17618752/index.html?v=1779328465" },
-      { label: 'Granny', url: 'https://html-classic.itch.zone/html/17861467/Granny-main/index.html?v=1780978127' },
-      { label: 'Slender', url: 'https://html-classic.itch.zone/html/17129783/index.html?v=1775929482' },
-      { label: 'Iron Lung', url: 'https://html-classic.itch.zone/html/17121628/iron-lung-main/index.html?v=1775858719' },
-      { label: 'The Deadseat (broken)', url: 'https://html-classic.itch.zone/html/17123849/index.html?v=1775877699' },
+      { label: 'A Bite at Freddy’s',       url: 'https://html-classic.itch.zone/html/17555938/index.html?v=1778890468' },
+      { label: 'Fish Face',                url: 'https://html-classic.itch.zone/html/14152976/FishFace/www/index.html' },
+      { label: 'Go to Sleep',              url: 'https://html-classic.itch.zone/html/17866232/index.html?v=1781016689' },
+      { label: "Baldi's Basics Plus",      url: "https://html-classic.itch.zone/html/17618752/index.html?v=1779328465" },
+      { label: 'Granny',                   url: 'https://html-classic.itch.zone/html/17861467/Granny-main/index.html?v=1780978127' },
+      { label: 'Slender',                  url: 'https://html-classic.itch.zone/html/17129783/index.html?v=1775929482' },
+      { label: 'Iron Lung',                url: 'https://html-classic.itch.zone/html/17121628/iron-lung-main/index.html?v=1775858719' },
+      { label: 'The Deadseat (broken)',    url: 'https://html-classic.itch.zone/html/17123849/index.html?v=1775877699' },
       { label: 'Five Nights at Epstein’s', url: 'https://html-classic.itch.zone/html/17122772/fnae-main/index.html?v=1775866888' }
     ],
 
@@ -74,9 +75,9 @@
     ],
 
     'survival': [
-      { label: 'Terraria', url: 'https://html-classic.itch.zone/html/17568965/index.html?v=1778991184' },
-      { label: 'Brotato',                 url: 'https://html-classic.itch.zone/html/17190505/index.html?v=1776374177' },
-      { label: 'Clover Pit',              url: 'https://html-classic.itch.zone/html/17203567/index.html?v=1776471501' }
+      { label: 'Terraria',     url: 'https://html-classic.itch.zone/html/17568965/index.html?v=1778991184' },
+      { label: 'Brotato',      url: 'https://html-classic.itch.zone/html/17190505/index.html?v=1776374177' },
+      { label: 'Clover Pit',   url: 'https://html-classic.itch.zone/html/17203567/index.html?v=1776471501' }
     ],
 
     'adventure': [
