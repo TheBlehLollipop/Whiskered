@@ -44,7 +44,7 @@
     'platformer': [
       { label: 'Geometry Dash Web', url: 'https://html-classic.itch.zone/html/17720116/web-dashers.github.io-main/index.html?v=1780000355' },
       { label: 'FISH Webport',      url: 'https://html-classic.itch.zone/html/17121759/fish-main/index.html?v=1775859823' },
-      { label: 'Celeste',           url: 'https://html-classic.itch.zone/html/17545259/index.html?v=1778813160' },
+      { label: 'Celeste',           url: 'https://html-classic.itch.zone/html/17545259/index.html?v=1783534234' },
       { label: 'A Difficult Game About Climbing', url: 'https://html-classic.itch.zone/html/17569102/index.html?v=1778992516' },
       { label: 'Pizza Tower',       url: 'https://html-classic.itch.zone/html/17123780/index.html?v=1775877118' }
     ],
@@ -107,16 +107,16 @@
     ],
 
     'arcade': [
-      { label: 'Buckshot Roulette',        url: 'https://html-classic.itch.zone/html/17574967/index.html?v=1779033998' },
+      { label: 'Buckshot Roulette',        url: 'https://html-classic.itch.zone/html/17574967/index.html?v=1783533883' },
       { label: 'Slope',                    url: 'https://html-classic.itch.zone/html/14788017/SlopePlus1.3.1Web/index.html' },
       { label: 'Scritchy Scratchy',        url: 'https://html-classic.itch.zone/html/16388344-1536207/index.html' },
-      { label: 'Drift Boss (With Cheats)', url: 'https://html-classic.itch.zone/html/17945501/drift-boss-main/index.html?v=1781550175' },
+      { label: 'Drift Boss (With Cheats)', url: 'https://html-classic.itch.zone/html/17945501/drift-boss-main/index.html?v=1783533981' },
       { label: 'Balatro',                  url: 'https://html-classic.itch.zone/html/17618560/web-balatro-main/index.html?v=1779327186' },
       { label: 'Bad Time Simulator',       url: 'https://html-classic.itch.zone/html/13788770/index.html' },
       { label: 'Idle Gumball Machine',     url: 'https://html-classic.itch.zone/html/15811950/index.html' },
       { label: 'Cat Cove Inn',             url: 'https://html-classic.itch.zone/html/6577714/index.html' },
       { label: 'Little Chef',              url: 'https://html-classic.itch.zone/html/15194587/index.html' },
-      { label: 'The MachinEGG',            url: 'https://html-classic.itch.zone/html/17095940/index.html' },
+      { label: 'The MachinEGG',            url: 'https://html-classic.itch.zone/html/17689705/index.html' },
       { label: 'Life _ Lemon',             url: 'https://html-classic.itch.zone/html/16093818/index.html' },
       { label: 'Hooked',                   url: 'https://html-classic.itch.zone/html/17338298/index.html?v=1777365531' }
     ],
