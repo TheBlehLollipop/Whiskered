@@ -58,6 +58,7 @@
 
     'fnf': [
       { label: "Friday Night Funkin'",    url: 'https://html-classic.itch.zone/html/16944508-1582492/index.html' },
+      { label: "Silly Billy: REMASTERED", url: 'https://html-classic.itch.zone/html/18667914/SILLY%20BILLY%20REMASTERED/index.html?v=1785824313' },
       { label: 'FNF Indie Cross',         url: 'https://html-classic.itch.zone/html/17168896/indie-cross-fnf-main/index.html?v=1785811653' },
       { label: 'ONE HIT SINGLE', url: 'https://html-classic.itch.zone/html/18666548/silly-billy-fnf-main/index.html?v=1785810819' }
     ],
