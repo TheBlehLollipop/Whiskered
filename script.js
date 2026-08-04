@@ -53,12 +53,12 @@
     'rhythm': [
       { label: 'Just Shapes and Beats', url: 'https://html-classic.itch.zone/html/17555895/index.html?v=1778890141' },
       { label: 'BeatBlock', url: 'https://html-classic.itch.zone/html/17569074/index.html?v=1778992254' },
-      { label: "Friday Night Funkin'",    url: 'https://html-classic.itch.zone/html/16944508-1582492/index.html' },
-      { label: 'FNF Indie Cross',         url: 'https://html-classic.itch.zone/html/17168896/indie-cross-fnf-main/index.html?v=1776208991' },
       { label: 'A Dance of Fire And Ice', url: 'https://html-classic.itch.zone/html/1175401/index.html' }
     ],
 
     'fnf': [
+      { label: "Friday Night Funkin'",    url: 'https://html-classic.itch.zone/html/16944508-1582492/index.html' },
+      { label: 'FNF Indie Cross',         url: 'https://html-classic.itch.zone/html/17168896/indie-cross-fnf-main/index.html?v=1776208991' },
       { label: 'ONE HIT SINGLE', url: 'https://html-classic.itch.zone/html/18666548/silly-billy-fnf-main/index.html?v=1785810819' }
     ],
 
