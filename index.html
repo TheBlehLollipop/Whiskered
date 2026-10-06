@@ -4,257 +4,924 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Whiskered</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='3'%20y='3'%20width='58'%20height='58'%20rx='16'%20fill='%23FF9F45'%20stroke='%2324160D'%20stroke-width='4'/%3E%3Cg%20transform='translate(11%2011)%20scale(1.05)'%20fill='none'%20stroke='%2324160D'%20stroke-width='2.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M7%2017%206%205l8%205.5a14%2014%200%200%201%2012%200L34%205l-1%2012c1.4%202%202%204%202%206.5C35%2031%2028%2035%2020%2035S5%2031%205%2023.5C5%2021%205.6%2019%207%2017Z'/%3E%3Ccircle%20cx='14'%20cy='22'%20r='1.6'%20fill='%2324160D'%20stroke='none'/%3E%3Ccircle%20cx='26'%20cy='22'%20r='1.6'%20fill='%2324160D'%20stroke='none'/%3E%3Cpath%20d='M18.5%2026.5h3L20%2028.5ZM20%2028.5v1.5M20%2030c-1.2%201.4-3%201.4-4%20.4M20%2030c1.2%201.4%203%201.4%204%20.4'/%3E%3Cpath%20d='M2%2025l7%201M2%2029l7-1.5M38%2025l-7%201M38%2029l-7-1.5'%20stroke-width='1.8'/%3E%3C/g%3E%3C/svg%3E">
   <meta name="description" content="Whiskered – a curated directory of creative platforms and communities">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+/* ============================================================
+   Whiskered v3 – bold "sticker" design, sidebar layout
+   Theme tokens are set on :root by script (applyPrefs); the
+   values below are the dark / lime defaults.
+   ============================================================ */
+:root {
+  --bg: #16110D;
+  --surface: #211A14;
+  --surface-2: #2D241B;
+  --text: #FAF0E2;
+  --muted: #BBA994;
+  --line: #44372B;
+  --ink: #44372B;
+  --hard: #0A0705;
+  --accent: #FF9F45;
+  --accent-strong: #E07A1F;
+  --accent-text: #FF9F45;
+  --on-accent: #24160D;
+  --soft: rgba(255, 159, 69, 0.14);
+
+  --side-w: 248px;
+  --bar-h: 60px;
+  --pad: 28px;
+  --gap: 18px;
+  --r: 18px;
+  --r-sm: 10px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --font: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'Space Mono', ui-monospace, Menlo, monospace;
+}
+:root[data-theme="light"] {
+  --bg: #FCF1DE; --surface: #FFFAF1; --surface-2: #F4E4C6;
+  --text: #24160D; --muted: #6B5440; --line: #24160D; --ink: #24160D; --hard: #24160D;
+  --soft: rgba(36, 22, 13, 0.07);
+}
+body.compact { --pad: 18px; --gap: 12px; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+body[data-motion="reduced"] * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+body.hide-welcome-guidance .how-to-use { display: none; }
+
+.skip-link {
+  position: absolute; top: -100px; left: 16px; z-index: 9999;
+  background: var(--accent); color: var(--on-accent);
+  padding: 8px 16px; border-radius: var(--r-sm); font-weight: 700; text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+/* focus */
+:where(button, a, input):focus-visible { outline: 3px solid var(--accent-text); outline-offset: 3px; }
+
+/* ---- Sidebar ---------------------------------------------- */
+.topbar {
+  position: fixed; z-index: 200; top: 0; bottom: 0; left: 0; width: var(--side-w);
+  display: flex; flex-direction: column; gap: 28px;
+  padding: 28px 20px 22px;
+  background: var(--surface);
+  border-right: 2px solid var(--ink);
+}
+.topbar-brand {
+  display: flex; align-items: center; gap: 12px; text-decoration: none;
+  font-size: 24px; font-weight: 800; letter-spacing: -0.04em;
+}
+.topbar-mark {
+  width: 40px; height: 40px; display: grid; place-items: center; flex-shrink: 0;
+  background: var(--accent); color: var(--on-accent);
+  border: 2px solid var(--ink); border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--hard);
+  font-weight: 800; font-size: 21px; transform: rotate(-6deg);
+  transition: transform .25s var(--pop);
+}
+.topbar-brand:hover .topbar-mark { transform: rotate(6deg) scale(1.06); }
+.topbar-nav { display: flex; flex-direction: column; gap: 6px; counter-reset: nav; }
+.topbar-link {
+  counter-increment: nav;
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 12px 14px; border: 2px solid transparent; border-radius: 14px;
+  background: transparent; color: var(--muted);
+  font-size: 17px; font-weight: 700; letter-spacing: -0.01em; text-align: left; cursor: pointer;
+  transition: background .15s, color .15s, transform .2s var(--pop);
+}
+.topbar-link::before {
+  content: "0" counter(nav);
+  font: 400 11px var(--mono); opacity: .7;
+}
+.topbar-link:hover { color: var(--text); background: var(--soft); transform: translateX(4px); }
+.topbar-link.active {
+  color: var(--on-accent); background: var(--accent);
+  border-color: var(--ink); box-shadow: 3px 3px 0 var(--hard);
+}
+.customize-pill {
+  margin-top: auto;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 14px; border: 2px dashed var(--ink); border-radius: 14px;
+  background: transparent; color: var(--text);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: background .15s, transform .2s var(--pop), border-style .15s;
+}
+.customize-pill:hover { background: var(--soft); border-style: solid; transform: translateY(-2px); }
+
+/* ---- Shell ------------------------------------------------ */
+.content-area { margin-left: var(--side-w); min-height: 100vh; padding: 56px var(--pad) 96px; position: relative; }
+.welcome-screen, .itchio-view, .itchio-genre-view, .websites-view {
+  width: 100%; max-width: 1040px; margin: 0 auto;
+}
+.itchio-view, .websites-view { flex-direction: column; }
+.itchio-genre-view { flex-direction: column; }
+
+/* ---- Home ------------------------------------------------- */
+.bento { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
+.bento > * { min-width: 0; }
+
+.welcome-hero { grid-column: 1 / -1; padding: 8px 0 20px; position: relative; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--surface); font: 700 11px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+.hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--ink); animation: pulse 1.8s infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 2px var(--ink), 0 0 0 7px transparent; } }
+.site-title {
+  margin: 18px 0 0;
+  font-size: clamp(58px, 12vw, 148px); font-weight: 800; line-height: .86; letter-spacing: -.05em;
+}
+.site-title em {
+  display: inline-block; margin: 18px 0 0 4px;
+  padding: 6px 16px 8px; border: 2px solid var(--ink); border-radius: 12px;
+  background: var(--accent); color: var(--on-accent); box-shadow: 4px 4px 0 var(--hard);
+  font-size: clamp(18px, 2.4vw, 28px); font-style: normal; font-weight: 700; letter-spacing: -.02em;
+  transform: rotate(-2deg);
+}
+.site-subtitle { margin-top: 26px; max-width: 46ch; font-size: 19px; color: var(--muted); }
+
+.home-mode-buttons { display: contents; }
+.home-mode-btn {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 4px;
+  min-height: 240px; padding: 26px; text-align: left; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 24px; box-shadow: 6px 6px 0 var(--hard);
+  transition: transform .2s var(--pop), box-shadow .2s var(--ease);
+}
+#btn-itchio { background: var(--accent); color: var(--on-accent); }
+.home-mode-btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--hard); }
+.home-mode-btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--hard); }
+.mode-icon { position: absolute; top: 20px; left: 24px; font-size: 44px; line-height: 1; transition: transform .3s var(--pop); }
+.home-mode-btn:hover .mode-icon { transform: rotate(-12deg) scale(1.15); }
+.mode-title { font-size: clamp(34px, 4.6vw, 54px); font-weight: 800; letter-spacing: -.045em; line-height: 1; }
+.mode-desc { font-size: 15px; opacity: .8; }
+.mode-count {
+  position: absolute; top: 22px; right: 22px;
+  padding: 4px 10px; border: 2px solid currentColor; border-radius: 999px;
+  font: 700 11px var(--mono); letter-spacing: .06em; text-transform: uppercase;
+}
+.mode-count:empty { display: none; }
+
+.side-widget {
+  padding: 22px; background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r);
+}
+.widget-title { font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+.widget-sub { margin: 2px 0 14px; font: 400 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.widget-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.widget-item {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--surface-2);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: transform .2s var(--pop), background .15s;
+}
+.widget-item:hover { background: var(--accent); color: var(--on-accent); transform: translateY(-2px) rotate(-1.5deg); }
+.widget-item-icon {
+  width: 26px; height: 26px; display: grid; place-items: center; flex-shrink: 0;
+  border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 12px; font-weight: 800;
+}
+.widget-item:hover .widget-item-icon { background: var(--surface); color: var(--text); }
+.widget-news p { font-size: 15px; line-height: 1.45; margin: 8px 0 12px; }
+.widget-link {
+  border: 0; background: none; padding: 0; cursor: pointer;
+  font-weight: 700; font-size: 14px; color: var(--accent-text); text-decoration: underline; text-underline-offset: 4px;
+}
+.link-badge {
+  display: inline-block; padding: 2px 10px; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--accent); color: var(--on-accent); font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .05em;
+}
+
+.how-to-use {
+  grid-column: 1 / -1; padding: 34px; background: var(--surface-2); border: 2px solid var(--ink); border-radius: 24px;
+}
+.htu-kicker { font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); }
+.how-to-use h2 { margin: 4px 0 12px; font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05; }
+.how-to-use > p { max-width: 62ch; color: var(--muted); }
+.htu-steps { list-style: none; margin: 24px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.htu-step {
+  display: flex; flex-direction: column; gap: 6px; padding: 18px;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r);
+  color: var(--muted); font-size: 14px;
+}
+.htu-step strong:first-of-type { color: var(--text); font-size: 20px; letter-spacing: -.02em; }
+.htu-step strong { color: var(--text); }
+.htu-num {
+  width: 34px; height: 34px; display: grid; place-items: center; margin-bottom: 6px;
+  border: 2px solid var(--ink); border-radius: 50%; background: var(--accent); color: var(--on-accent);
+  font: 700 14px var(--mono);
+}
+.htu-tips-title { margin-top: 8px; font: 700 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.htu-tips { list-style: none; margin-top: 10px; display: grid; gap: 8px; }
+.htu-tips li { display: flex; gap: 10px; font-size: 14px; color: var(--muted); }
+.htu-tips strong { color: var(--text); }
+.htu-tip-icon { flex-shrink: 0; }
+
+/* ---- Directory pages -------------------------------------- */
+.itchio-header, .itchio-genre-head { margin-bottom: 28px; }
+.itchio-heading, .itchio-genre-title {
+  font-size: clamp(48px, 9vw, 104px); font-weight: 800; letter-spacing: -.06em; line-height: .9;
+}
+.itchio-subheading { margin-top: 12px; font: 400 13px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.itchio-back-btn, .back-home-btn {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 8px 14px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--surface);
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: transform .2s var(--pop), background .15s;
+}
+.itchio-back-btn:hover, .back-home-btn:hover { background: var(--accent); color: var(--on-accent); transform: translateX(-4px); }
+
+/* genre tiles + site rows share .sites-card */
+.sites-card {
+  display: flex; text-align: left; cursor: pointer;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r);
+  box-shadow: 4px 4px 0 var(--hard);
+  transition: transform .2s var(--pop), box-shadow .2s var(--ease), background .15s;
+}
+.sites-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--hard); background: var(--surface-2); }
+.sites-card:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--hard); }
+.sites-card-icon {
+  width: 48px; height: 48px; flex-shrink: 0; display: grid; place-items: center;
+  border: 2px solid var(--ink); border-radius: 14px; background: var(--accent); color: var(--on-accent);
+  font-size: 20px; font-weight: 800; transition: transform .25s var(--pop);
+}
+.sites-card:hover .sites-card-icon { transform: rotate(-8deg) scale(1.08); }
+.sites-card-icon-img { width: 28px; height: 28px; object-fit: contain; }
+.sites-card-icon-img-blend { mix-blend-mode: multiply; }
+.sites-card-name { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+.sites-card-tagline { font-size: 14px; color: var(--muted); }
+
+.itchio-genre-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.itchio-genre-grid .sites-card { flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 28px; padding: 18px; min-height: 160px; }
+.itchio-genre-grid .sites-card-name { font-size: 20px; }
+.itchio-genre-grid .sites-card-icon { width: 80px; height: 80px; padding: 4px; border-radius: 20px; }
+.itchio-genre-grid .sites-card-icon-img { width: 100%; height: 100%; object-fit: contain; }
+.itchio-genre-grid .sites-card { min-height: 190px; }
+
+.websites-grid { display: flex; flex-direction: column; counter-reset: site; border: 2px solid var(--ink); border-radius: 24px; overflow: hidden; background: var(--surface); }
+.websites-grid .sites-card {
+  counter-increment: site; flex-direction: row; align-items: center; gap: 18px; width: 100%;
+  padding: 16px 22px; border: 0; border-bottom: 2px solid var(--ink); border-radius: 0; box-shadow: none; background: transparent;
+  position: relative;
+}
+.websites-grid .sites-card:last-child { border-bottom: 0; }
+.websites-grid .sites-card::before { content: counter(site, decimal-leading-zero); font: 400 12px var(--mono); color: var(--muted); width: 22px; }
+.websites-grid .sites-card:hover { transform: none; box-shadow: none; background: var(--accent); color: var(--on-accent); }
+.websites-grid .sites-card:hover .sites-card-tagline,
+.websites-grid .sites-card:hover::before { color: var(--on-accent); }
+.websites-grid .sites-card-icon { width: 42px; height: 42px; font-size: 18px; }
+.websites-grid .sites-card:hover .sites-card-icon { background: var(--surface); color: var(--text); }
+.websites-grid .sites-card > span:nth-child(2) { flex: 0 0 auto; min-width: 150px; }
+.websites-grid .sites-card::after { content: "→"; margin-left: auto; font-size: 22px; font-weight: 800; opacity: 0; transform: translateX(-8px); transition: .2s var(--ease); }
+.websites-grid .sites-card:hover::after { opacity: 1; transform: none; }
+
+.game-search {
+  width: 100%; max-width: 440px; margin-bottom: 22px; padding: 13px 18px;
+  background: var(--surface); color: var(--text); border: 2px solid var(--ink); border-radius: 999px; font: inherit; font-size: 16px;
+}
+.game-search:focus { outline: none; box-shadow: 4px 4px 0 var(--accent-text); }
+.game-search::placeholder { color: var(--muted); }
+.itchio-placeholder-buttons { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+.itchio-empty { grid-column: 1 / -1; color: var(--muted); }
+.itchio-placeholder-btn {
+  display: flex; flex-direction: column; text-decoration: none; overflow: hidden;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r); box-shadow: 4px 4px 0 var(--hard);
+  animation: rise .45s var(--ease) both;
+  transition: transform .2s var(--pop), box-shadow .2s var(--ease);
+}
+.itchio-placeholder-btn:hover { transform: translate(-2px, -2px) rotate(-.6deg); box-shadow: 7px 7px 0 var(--hard); }
+.game-cover { display: block; aspect-ratio: 4 / 5; overflow: hidden; border-bottom: 2px solid var(--ink); background: var(--surface-2); }
+.game-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s var(--ease); }
+.itchio-placeholder-btn:hover .game-cover img { transform: scale(1.06); }
+.game-cover-letter { width: 100%; height: 100%; display: grid; place-items: center; background: var(--accent); color: var(--on-accent); font-size: 48px; font-weight: 800; }
+.game-name { padding: 12px 14px 14px; font-weight: 800; font-size: 16px; letter-spacing: -.02em; line-height: 1.2; }
+
+/* ---- Site panels ------------------------------------------ */
+.content-panel {
+  position: fixed; inset: 0 0 0 var(--side-w); z-index: 50; overflow-y: auto;
+  background: var(--bg); opacity: 0; transform: translateY(14px); pointer-events: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+.content-panel.active { opacity: 1; transform: none; pointer-events: auto; }
+.content-panel.exiting { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+.content-panel:focus { outline: none; }
+.panel-inner {
+  max-width: 1040px; margin: 0 auto; padding: 56px var(--pad) 96px;
+  display: grid; gap: 22px 40px; align-items: start; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+}
+.panel-inner > .back-home-btn { grid-column: 1 / -1; justify-self: start; margin: 0; }
+/* banner */
+.panel-header {
+  grid-column: 1 / -1; position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 28px;
+  padding: 36px 40px; margin: 0;
+  background: var(--accent); color: var(--on-accent);
+  border: 2px solid var(--ink); border-radius: 32px; box-shadow: 8px 8px 0 var(--hard);
+}
+.panel-header::before, .panel-header::after {
+  content: ""; position: absolute; z-index: -1; border-radius: 50%; background: rgba(255, 255, 255, .22);
+}
+.panel-header::before { width: 340px; height: 340px; right: -90px; top: -150px; }
+.panel-header::after { width: 220px; height: 220px; right: 200px; bottom: -150px; background: rgba(0, 0, 0, .1); }
+.ph-icon {
+  width: 104px; height: 104px; display: grid; place-items: center; flex-shrink: 0;
+  background: var(--surface); color: var(--text); border: 2px solid var(--ink); border-radius: 28px; box-shadow: 5px 5px 0 var(--hard);
+  font-size: 56px; font-weight: 800; letter-spacing: -.04em; transform: rotate(-5deg);
+}
+.ph-text { min-width: 0; }
+.ph-kicker { font: 700 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
+.panel-header h2 {
+  margin: 6px 0 0; font-size: clamp(44px, 8vw, 96px); font-weight: 800; letter-spacing: -.055em; line-height: .92;
+  overflow-wrap: anywhere;
+}
+.ph-tagline { margin-top: 12px; font-size: 20px; font-weight: 600; letter-spacing: -.01em; }
+.ph-open {
+  padding: 14px 22px; border: 2px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--bg);
+  font-size: 16px; font-weight: 800; white-space: nowrap; cursor: pointer; box-shadow: 4px 4px 0 rgba(0, 0, 0, .35);
+  transition: transform .2s var(--pop), box-shadow .2s;
+}
+.ph-open:hover { transform: translate(-2px, -2px) rotate(-1deg); box-shadow: 6px 6px 0 rgba(0, 0, 0, .35); }
+:root[data-theme="light"] .ph-open { background: #24160D; color: #fff; }
+:root:not([data-theme="light"]) .ph-open { background: #24160D; color: var(--accent); border-color: #24160D; }
+
+/* about card + pager */
+.about-card {
+  grid-column: 1; display: grid; gap: 14px; padding: 26px;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 24px; box-shadow: 5px 5px 0 var(--hard);
+}
+.about-card h3 { font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); }
+.about-card .panel-description { font-size: 17px; line-height: 1.6; color: var(--text); }
+.about-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding-top: 14px; border-top: 2px dashed var(--line); }
+.about-fact { display: flex; flex-direction: column; gap: 2px; }
+.about-fact span { font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.about-fact strong { font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pager-btn {
+  display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; text-align: left; cursor: pointer;
+  background: var(--surface-2); border: 2px solid var(--ink); border-radius: 18px;
+  transition: transform .2s var(--pop), background .15s, color .15s;
+}
+.pager-btn span { font: 400 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+.pager-btn strong { font-size: 16px; font-weight: 800; letter-spacing: -.02em; overflow-wrap: break-word; }
+.pager-btn.next { text-align: right; }
+.pager-btn:hover { background: var(--accent); color: var(--on-accent); transform: translateY(-3px); }
+.pager-btn:disabled { visibility: hidden; }
+.panel-tags, .panel-meta { display: none; }
+.links-section { grid-column: 2; grid-row: 3 / span 6; min-width: 0; }
+.links-section > p {
+  padding: 40px 24px; text-align: center; color: var(--muted);
+  border: 2px dashed var(--ink); border-radius: 24px; font: 400 14px var(--mono); text-transform: uppercase; letter-spacing: .06em;
+}
+
+.links-bar {
+  position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 0 0 16px; padding: 12px; background: var(--surface); border: 2px solid var(--ink); border-radius: 18px;
+  box-shadow: 4px 4px 0 var(--hard);
+}
+.links-count { padding: 0 8px; font: 700 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.links-count b { display: inline-grid; place-items: center; min-width: 30px; height: 30px; margin-right: 6px; padding: 0 8px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 14px; }
+.links-filter {
+  flex: 1; min-width: 140px; padding: 9px 16px; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--bg); color: var(--text); font: inherit; font-size: 15px;
+}
+.links-filter:focus { outline: none; box-shadow: 3px 3px 0 var(--accent-text); }
+.links-filter::placeholder { color: var(--muted); }
+.links-copyall {
+  margin-left: auto; padding: 9px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--accent); color: var(--on-accent);
+  font-size: 14px; font-weight: 800; cursor: pointer; transition: transform .2s var(--pop), box-shadow .2s;
+}
+.links-copyall:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--hard); }
+
+.link-list { list-style: none; display: grid; gap: 12px; counter-reset: none; }
+.link-card {
+  position: relative; display: flex; align-items: stretch; min-width: 0;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 18px; box-shadow: 4px 4px 0 var(--hard);
+  transition: transform .2s var(--pop), box-shadow .2s var(--ease);
+  animation: rise .4s var(--ease) both;
+}
+.link-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--accent-text); }
+.link-card[hidden] { display: none; }
+.site-link {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 16px; padding: 16px 8px 16px 18px;
+  border-radius: 16px 0 0 16px; text-decoration: none; color: var(--text);
+}
+.site-link:hover { padding-left: 18px; color: var(--text); }
+.site-link::before { content: none; }
+.lc-num { flex-shrink: 0; width: 28px; font: 400 12px var(--mono); color: var(--muted); }
+.lc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.lc-host { font-size: 18px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; overflow-wrap: anywhere; }
+.lc-path { font: 400 12px var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.lc-path:empty { display: none; }
+.lc-go {
+  flex-shrink: 0; width: 38px; height: 38px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%;
+  font-size: 18px; font-weight: 800; transition: transform .25s var(--pop), background .15s;
+}
+.link-card:hover .lc-go { background: var(--accent); color: var(--on-accent); transform: rotate(45deg) scale(1.1); }
+.link-card .link-badge { align-self: flex-start; margin-top: 4px; }
+.lc-copy {
+  flex-shrink: 0; width: 76px; border: 0; border-left: 2px solid var(--ink); border-radius: 0 16px 16px 0;
+  background: transparent; font: 700 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.lc-copy:hover { background: var(--accent); color: var(--on-accent); }
+.lc-copy.done { background: var(--accent); color: var(--on-accent); }
+.link-nomatch { padding: 28px; text-align: center; color: var(--muted); border: 2px dashed var(--ink); border-radius: 18px; }
+
+.link-credentials {
+  display: grid; gap: 8px; margin: 0 0 16px; padding: 16px; background: var(--surface-2);
+  border: 2px dashed var(--ink); border-radius: 18px;
+}
+.link-credentials::before { content: "Login required"; font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent-text); }
+.cred-item { display: flex; align-items: center; gap: 12px; font: 400 14px var(--mono); }
+.cred-key { width: 90px; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: .06em; }
+.cred-value { flex: 1; min-width: 0; padding: 6px 10px; background: var(--bg); border: 2px solid var(--ink); border-radius: 8px; word-break: break-all; }
+.cred-copy { padding: 6px 10px; border: 2px solid var(--ink); border-radius: 8px; background: transparent; font: 700 11px var(--mono); text-transform: uppercase; cursor: pointer; }
+.cred-copy:hover, .cred-copy.done { background: var(--accent); color: var(--on-accent); }
+.link-status { font: 700 11px var(--mono); text-transform: uppercase; }
+.link-status.online { color: var(--accent-text); }
+.link-status.offline { color: #ff6b6b; }
+
+/* left column info on site pages */
+
+/* ---- Customize panel -------------------------------------- */
+.customize-overlay {
+  position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; transition: opacity .2s var(--ease);
+}
+.customize-overlay.open { opacity: 1; pointer-events: auto; }
+.customize-panel {
+  width: min(94vw, 460px); max-height: 88vh; overflow: auto; padding: 24px;
+  background: var(--surface); color: var(--text); border: 2px solid var(--ink); border-radius: 24px; box-shadow: 8px 8px 0 var(--accent);
+  transform: translateY(16px) rotate(-1deg); transition: transform .3s var(--pop);
+}
+.customize-overlay.open .customize-panel { transform: none; }
+.customize-header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.customize-kicker { font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-text); }
+.customize-header h2 { font-size: 28px; font-weight: 800; letter-spacing: -.04em; line-height: 1.05; }
+.customize-sub { font-size: 14px; color: var(--muted); }
+.customize-close, .changelog-close {
+  flex-shrink: 0; width: 36px; height: 36px; border: 2px solid var(--ink); border-radius: 50%;
+  background: var(--surface-2); cursor: pointer; font-size: 18px; line-height: 1; transition: transform .2s var(--pop), background .15s;
+}
+.customize-close:hover, .changelog-close:hover { background: var(--accent); color: var(--on-accent); transform: rotate(90deg); }
+.customize-section { padding: 14px 0; border-top: 2px dashed var(--line); }
+.customize-label { display: block; margin-bottom: 10px; font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.option-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.option-row.segmented .choice-chip { flex: 1; }
+.choice-chip {
+  padding: 10px 14px; border: 2px solid var(--ink); border-radius: 12px; background: var(--surface-2);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: transform .15s var(--pop), background .15s;
+}
+.choice-chip:hover { transform: translateY(-2px); }
+.choice-chip.active { background: var(--accent); color: var(--on-accent); box-shadow: 3px 3px 0 var(--hard); }
+.color-swatch { width: 38px; height: 38px; border: 2px solid var(--ink); border-radius: 50%; cursor: pointer; transition: transform .2s var(--pop); }
+.color-swatch:hover { transform: scale(1.12); }
+.color-swatch.active { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--text); }
+.color-swatch[data-accent-choice="lime"] { background: #D7FF3F; }
+.color-swatch[data-accent-choice="orange"] { background: #FF9F45; }
+.color-swatch[data-accent-choice="blue"] { background: #3B82F6; }
+.color-swatch[data-accent-choice="purple"] { background: #8B5CF6; }
+.color-swatch[data-accent-choice="green"] { background: #16A34A; }
+.color-swatch[data-accent-choice="pink"] { background: #FF6EC7; }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.switch-text { display: flex; flex-direction: column; }
+.switch-label { font-weight: 700; }
+.switch-desc { font-size: 13px; color: var(--muted); }
+.switch {
+  position: relative; flex-shrink: 0; width: 54px; height: 30px; border: 2px solid var(--ink); border-radius: 999px;
+  background: var(--surface-2); cursor: pointer; transition: background .2s;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--text); transition: transform .25s var(--pop);
+}
+.switch.active { background: var(--accent); }
+.switch.active::after { transform: translateX(24px); background: var(--on-accent); }
+.customize-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 2px dashed var(--line); }
+.customize-note { font: 400 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.reset-btn { padding: 8px 14px; border: 2px solid var(--ink); border-radius: 999px; background: transparent; font-weight: 700; font-size: 13px; cursor: pointer; }
+.reset-btn:hover { background: var(--accent); color: var(--on-accent); }
+
+/* ---- Changelog -------------------------------------------- */
+.changelog-modal {
+  position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; animation: fadeUp .35s var(--ease) forwards;
+}
+.changelog-box {
+  width: min(92%, 500px); max-height: 82vh; overflow-y: auto; padding: 26px;
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 24px; box-shadow: 8px 8px 0 var(--accent);
+}
+.changelog-header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px dashed var(--line); }
+.changelog-header h2 { font-size: 30px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.changelog-sub { margin-top: 4px; font-size: 14px; color: var(--muted); }
+.changelog-list { list-style: none; display: grid; gap: 12px; }
+.changelog-entry { padding: 14px 16px; border: 2px solid var(--ink); border-radius: var(--r-sm); background: var(--surface-2); }
+.changelog-entry p { margin-top: 8px; line-height: 1.45; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+/* ---- Page transitions ------------------------------------- */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes pageExit { to { opacity: 0; transform: translateY(-10px); } }
+.page-entering { animation: rise .4s var(--ease) both; }
+.page-exiting { animation: pageExit .18s var(--ease) forwards; pointer-events: none; }
+.welcome-hero > * { animation: rise .6s var(--ease) both; }
+.welcome-hero > :nth-child(2) { animation-delay: .06s; }
+.welcome-hero > :nth-child(3) { animation-delay: .14s; }
+
+/* ---- Responsive ------------------------------------------- */
+@media (max-width: 900px) {
+  .topbar {
+    inset: 0 0 auto 0; width: auto; height: var(--bar-h); flex-direction: row; align-items: center; gap: 10px;
+    padding: 0 14px; border-right: 0; border-bottom: 2px solid var(--ink);
+  }
+  .topbar-brand { font-size: 0; gap: 0; }
+  .topbar-mark { width: 34px; height: 34px; font-size: 18px; }
+  .topbar-nav { flex-direction: row; margin-left: auto; gap: 2px; }
+  .topbar-link { width: auto; padding: 8px 12px; font-size: 14px; }
+  .topbar-link::before { display: none; }
+  .topbar-link:hover { transform: none; }
+  .customize-pill { margin: 0; width: 38px; height: 38px; padding: 0; font-size: 16px; justify-content: center; }
+  .pill-label { display: none; }
+  .content-area { margin-left: 0; padding: calc(var(--bar-h) + 28px) 16px 72px; }
+  .content-panel { inset: var(--bar-h) 0 0 0; }
+  .panel-inner { grid-template-columns: 1fr; padding: 28px 16px 72px; }
+  .about-card, .links-section { grid-column: 1; grid-row: auto; position: static; }
+  .panel-header { grid-template-columns: auto minmax(0, 1fr); padding: 28px 24px; }
+  .ph-actions { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .ph-icon { width: 68px; height: 68px; font-size: 36px; border-radius: 20px; }
+  .panel-header { gap: 16px; border-radius: 24px; }
+  .ph-tagline { font-size: 17px; }
+  .lc-copy { width: 58px; }
+  .site-link { gap: 10px; padding-left: 14px; }
+  .lc-num { display: none; }
+  .lc-host { font-size: 16px; }
+  .cred-item { flex-wrap: wrap; }
+  .bento { grid-template-columns: 1fr; }
+  .home-mode-btn { min-height: 190px; }
+  .htu-steps { grid-template-columns: 1fr; }
+  .how-to-use { padding: 24px 20px; }
+  .itchio-genre-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .itchio-placeholder-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .websites-grid .sites-card { padding: 14px 16px; gap: 12px; }
+  .websites-grid .sites-card::before, .websites-grid .sites-card::after { display: none; }
+  .websites-grid .sites-card > span:nth-child(2) { min-width: 0; }
+  .sites-card-tagline { font-size: 12px; }
+}
+
+/* ============================================================
+   CAT THEME
+   ============================================================ */
+::selection { background: var(--accent); color: var(--on-accent); }
+
+/* paw-print wallpaper */
+.content-area::before {
+  content: ""; position: fixed; inset: 0 0 0 var(--side-w); z-index: 0; pointer-events: none;
+  background: var(--text); opacity: .045;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg transform='translate(20 24) rotate(-18 32 32) scale(.7)'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/g%3E%3Cg transform='translate(135 120) rotate(16 32 32) scale(.7)'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/g%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg transform='translate(20 24) rotate(-18 32 32) scale(.7)'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/g%3E%3Cg transform='translate(135 120) rotate(16 32 32) scale(.7)'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/g%3E%3C/svg%3E"); -webkit-mask-size: 220px; mask-size: 220px;
+}
+.content-area > * { position: relative; z-index: 1; }
+.content-panel { z-index: 50; }
+
+/* logo = cat face */
+.topbar-mark { transform: rotate(-4deg); }
+.topbar-mark svg { display: block; }
+.topbar-brand:hover .topbar-mark { transform: rotate(4deg) scale(1.08); }
+
+/* napping cat in the sidebar */
+.side-cat { margin-top: auto; padding: 0 6px; color: var(--ink); text-align: center; }
+:root[data-theme="light"] .side-cat { color: var(--ink); }
+.side-cat svg { display: block; overflow: visible; }
+.side-cat .zzz { color: var(--accent-text); stroke: var(--accent-text); animation: zzz 2.4s ease-in-out infinite; transform-box: fill-box; }
+@keyframes zzz { 0%, 100% { opacity: .25; transform: translateY(3px); } 50% { opacity: 1; transform: translateY(-3px); } }
+.side-cat-note { display: block; margin-top: 6px; font: 400 10.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.customize-pill { margin-top: 14px; }
+
+/* ears on the big cards and the site tile */
+.home-mode-btn::before, .home-mode-btn::after,
+.ph-icon::before, .ph-icon::after {
+  content: ""; position: absolute; width: 54px; height: 30px; background: var(--ink);
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+.home-mode-btn::before { left: 40px; top: -28px; transform: rotate(-8deg); transform-origin: bottom center; }
+.home-mode-btn::after { right: 40px; top: -28px; transform: rotate(8deg); transform-origin: bottom center; }
+#btn-itchio::before, #btn-itchio::after { background: var(--ink); }
+.ph-icon { position: relative; }
+.ph-icon::before { left: 8px; top: -24px; width: 34px; height: 22px; }
+.ph-icon::after { right: 8px; top: -24px; width: 34px; height: 22px; }
+.bento { row-gap: 34px; }
+.mode-icon { filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, .25)); }
+
+/* back buttons stay pill-sized inside flex views */
+.itchio-back-btn { align-self: flex-start; }
+
+/* paw sticker on home hero */
+.welcome-hero::after {
+  content: ""; position: absolute; top: 34px; right: 10px; width: 118px; height: 118px; background: var(--accent);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='43' rx='15' ry='12'/%3E%3Cellipse cx='12' cy='29' rx='6' ry='8' transform='rotate(-22 12 29)'/%3E%3Cellipse cx='25' cy='14' rx='6' ry='9' transform='rotate(-8 25 14)'/%3E%3Cellipse cx='39' cy='14' rx='6' ry='9' transform='rotate(8 39 14)'/%3E%3Cellipse cx='52' cy='29' rx='6' ry='8' transform='rotate(22 52 29)'/%3E%3C/svg%3E"); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  transform: rotate(16deg); animation: none; opacity: .95;
+}
+.hero-badge { transform: rotate(-2deg); }
+.hero-badge::after { content: "=^..^="; margin-left: 4px; letter-spacing: 0; font-weight: 700; color: var(--accent-text); }
+
+/* paw bullets */
+.topbar-link::before { content: "\1F43E"; font: 12px/1 sans-serif; opacity: .8; filter: grayscale(1) contrast(1.1); }
+.topbar-link.active::before { filter: none; opacity: 1; }
+.widget-item:hover { transform: translateY(-2px) rotate(-1.5deg); }
+.lc-go { font-size: 0; }
+.lc-go::before { content: "\1F43E"; font-size: 17px; filter: grayscale(1) brightness(1.4); }
+.link-card:hover .lc-go::before { filter: none; }
+.link-card:hover .lc-go { transform: rotate(-15deg) scale(1.12); }
+.itchio-heading::after, .itchio-genre-title::after { content: none; }
+.itchio-heading::after { content: none; }
+
+@media (max-width: 900px) {
+  .side-cat { display: none; }
+  .content-area::before { inset: var(--bar-h) 0 0 0; }
+  .welcome-hero::after { width: 76px; height: 76px; top: 4px; right: 0; }
+  .customize-pill { margin-top: 0; }
+  .topbar-link::before { display: none; }
+  .home-mode-btn::before, .home-mode-btn::after { width: 38px; height: 20px; top: -22px; }
+}
+
+/* ============================================================
+   SIDEBAR EXTRAS
+   ============================================================ */
+.topbar { gap: 20px; background:
+  radial-gradient(circle at 100% 0, var(--soft), transparent 55%), var(--surface); overflow-y: auto; scrollbar-width: none; }
+.topbar::-webkit-scrollbar { display: none; }
+.topbar-name { display: flex; flex-direction: column; line-height: 1; }
+.topbar-name small { margin-top: 5px; font: 400 9.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.side-group { display: grid; gap: 8px; }
+.side-label { padding: 0 14px; font: 700 10.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.side-label::after { content: ""; display: inline-block; vertical-align: middle; margin-left: 10px; width: 36px; border-top: 2px dashed var(--line); }
+.topbar-text { flex: 1; }
+.topbar-count {
+  min-width: 26px; padding: 2px 8px; border: 2px solid currentColor; border-radius: 999px; text-align: center;
+  font: 700 11px var(--mono); opacity: .75;
+}
+.topbar-count:empty { display: none; }
+.topbar-link.active .topbar-count { opacity: 1; }
+
+.side-lucky {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; text-align: left; cursor: pointer;
+  background: var(--soft); border: 2px dashed var(--ink); border-radius: 18px;
+  transition: transform .2s var(--pop), background .15s, border-style .15s, box-shadow .2s;
+}
+.side-lucky:hover { background: var(--accent); color: var(--on-accent); border-style: solid; box-shadow: 4px 4px 0 var(--hard); transform: translate(-2px, -2px) rotate(-1deg); }
+.lucky-icon { font-size: 28px; line-height: 1; transition: transform .5s var(--pop); }
+.side-lucky:hover .lucky-icon { transform: rotate(360deg) scale(1.1); }
+.lucky-text { display: flex; flex-direction: column; line-height: 1.2; }
+.lucky-text strong { font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
+.lucky-text small { font-size: 12px; opacity: .75; }
+
+.side-cat { cursor: pointer; margin-top: auto; }
+.side-cat svg { transition: transform .3s var(--pop); transform-origin: 50% 100%; }
+.side-cat:hover svg { transform: scale(1.05) rotate(-1.5deg); }
+.side-cat:hover .zzz { animation: none; opacity: 0; }
+.note-awake { display: none; color: var(--accent-text); }
+.side-cat:hover .note-idle { display: none; }
+.side-cat:hover .note-awake { display: inline; }
+
+.side-cat.purr svg { animation: purr .6s ease-in-out; }
+@keyframes purr { 20%, 60% { transform: scale(1.06, .96) rotate(-1deg); } 40%, 80% { transform: scale(.98, 1.04) rotate(1deg); } }
+.side-tools { display: flex; gap: 8px; margin-top: 4px; }
+.side-tool {
+  display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; padding: 10px 12px; cursor: pointer;
+  background: var(--surface-2); border: 2px solid var(--ink); border-radius: 14px; font-size: 13px; font-weight: 700;
+  transition: transform .2s var(--pop), background .15s, color .15s;
+}
+.side-tool:hover { background: var(--accent); color: var(--on-accent); transform: translateY(-2px); }
+.side-tool-icon { flex: 0 0 46px; padding: 10px 0; font-size: 17px; }
+.theme-glyph::before { content: "\263E"; }
+:root[data-theme="light"] .theme-glyph::before { content: "\2600"; }
+.customize-pill { margin-top: 0; }
+
+@media (max-height: 780px) { .side-cat { display: none; } .side-lucky { margin-top: auto; } }
+@media (max-width: 900px) {
+  .topbar-name, .side-label, .topbar-count, .side-lucky, .side-tools { display: none; }
+  .side-group { display: contents; }
+}
+</style>
+
 </head>
 <body class="no-js">
   <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="topbar">
+    <a class="topbar-brand" href="#" data-nav="home" aria-label="Whiskered home"><span class="topbar-mark" aria-hidden="true"><svg viewBox="0 0 40 40" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 6 5l8 5.5a14 14 0 0 1 12 0L34 5l-1 12c1.4 2 2 4 2 6.5C35 31 28 35 20 35S5 31 5 23.5C5 21 5.6 19 7 17Z"/><circle cx="14" cy="22" r="1.6" fill="currentColor" stroke="none"/><circle cx="26" cy="22" r="1.6" fill="currentColor" stroke="none"/><path d="M18.5 26.5h3L20 28.5ZM20 28.5v1.5M20 30c-1.2 1.4-3 1.4-4 .4M20 30c1.2 1.4 3 1.4 4 .4"/><path d="M2 25l7 1M2 29l7-1.5M38 25l-7 1M38 29l-7-1.5" stroke-width="1.8"/></svg></span><span class="topbar-name">Whiskered<small>cat-curated directory</small></span></a>
+    <div class="side-group">
+      <p class="side-label">Browse</p>
+      <nav class="topbar-nav" aria-label="Primary">
+        <button type="button" class="topbar-link" data-nav="home"><span class="topbar-text">Home</span></button>
+        <button type="button" class="topbar-link" data-nav="itchio"><span class="topbar-text">Games</span><span class="topbar-count" id="nav-count-games"></span></button>
+        <button type="button" class="topbar-link" data-nav="websites"><span class="topbar-text">Websites</span><span class="topbar-count" id="nav-count-sites"></span></button>
+      </nav>
+    </div>
+    <button type="button" id="lucky-btn" class="side-lucky">
+      <span class="lucky-icon" aria-hidden="true">&#127922;</span>
+      <span class="lucky-text"><strong>Feeling lucky?</strong><small>Pounce on a random site</small></span>
+    </button>
+<div class="side-cat" aria-hidden="true">
+      <svg viewBox="0 0 200 110" width="100%" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 96h160" opacity=".35"/>
+        <path d="M34 96c-8-34 14-58 56-58 40 0 70 18 70 46 0 6-1 9-3 12" fill="var(--surface-2)"/>
+        <path d="M160 96c14 0 24-6 22-16-2-9-12-9-12-2" />
+        <path d="M44 62 36 40l22 8" fill="var(--surface-2)"/><path d="M82 46l10-22 12 22" fill="var(--surface-2)" transform="translate(-20 6)"/>
+        <path d="M52 66q6 5 12 0M72 66q6 5 12 0" stroke-width="3"/>
+        <path d="M63 76l3 3 3-3z" fill="currentColor"/>
+        <path d="M126 36h8l-8 9h8M142 20h6l-6 7h6" stroke-width="2.5" class="zzz"/>
+      </svg>
+      <span class="side-cat-note"><span class="note-idle">shh, the cat is napping</span><span class="note-awake">purrrrrr&hellip;</span></span>
+    </div>
+    <div class="side-tools">
+      <button type="button" id="side-theme" class="side-tool side-tool-icon" aria-label="Switch between light and dark theme" title="Light / dark"><span aria-hidden="true" class="theme-glyph"></span></button>
+      <button type="button" id="side-changelog" class="side-tool"><span aria-hidden="true">&#128220;</span> Changelog</button>
+    </div>
+    <button id="open-customize" class="customize-pill" type="button" aria-haspopup="dialog" aria-controls="customize-overlay" aria-label="Customize"><span aria-hidden="true">⚙</span><span class="pill-label">Customize</span></button>
+  </header>
+
+  <div id="customize-overlay" class="customize-overlay" aria-hidden="true">
+    <div class="customize-panel" role="dialog" aria-modal="true" aria-labelledby="customize-title">
+      <div class="customize-header">
+        <div>
+          <p class="customize-kicker">Personalize</p>
+          <h2 id="customize-title">Customize Whiskered</h2>
+          <p class="customize-sub">Changes save automatically.</p>
+        </div>
+        <button id="close-customize" class="customize-close" type="button" aria-label="Close customization panel">✕</button>
+      </div>
+
+      <div class="customize-section">
+        <label class="customize-label">Theme</label>
+        <div class="option-row segmented">
+          <button class="choice-chip" type="button" data-theme-choice="light">&#9728; Light</button>
+          <button class="choice-chip" type="button" data-theme-choice="dark">&#9790; Dark</button>
+        </div>
+      </div>
+
+      <div class="customize-section">
+        <label class="customize-label">Accent</label>
+        <div class="option-row">
+          <button class="color-swatch" type="button" data-accent-choice="lime" aria-label="Catnip accent" title="Catnip"></button>
+          <button class="color-swatch" type="button" data-accent-choice="orange" aria-label="Ginger accent" title="Ginger"></button>
+          <button class="color-swatch" type="button" data-accent-choice="blue" aria-label="Russian blue accent" title="Russian blue"></button>
+          <button class="color-swatch" type="button" data-accent-choice="purple" aria-label="Lilac point accent" title="Lilac point"></button>
+          <button class="color-swatch" type="button" data-accent-choice="green" aria-label="Emerald eyes accent" title="Emerald eyes"></button>
+          <button class="color-swatch" type="button" data-accent-choice="pink" aria-label="Toe beans accent" title="Toe beans"></button>
+        </div>
+      </div>
+
+      <div class="customize-section">
+        <label class="customize-label">Layout</label>
+        <div class="option-row segmented">
+          <button class="choice-chip" type="button" data-density-choice="comfortable">Comfortable</button>
+          <button class="choice-chip" type="button" data-density-choice="compact">Compact</button>
+        </div>
+      </div>
+
+      <div class="customize-section switch-row">
+        <span class="switch-text"><span class="switch-label">Show welcome guidance</span><span class="switch-desc">The "What is Whiskered?" card on the home screen</span></span>
+        <button class="switch" type="button" data-toggle="welcome" aria-label="Toggle welcome guidance" aria-pressed="true"></button>
+      </div>
+
+      <div class="customize-section switch-row">
+        <span class="switch-text"><span class="switch-label">Reduce motion</span><span class="switch-desc">Turn off animations and transitions</span></span>
+        <button class="switch" type="button" data-toggle="motion" aria-label="Toggle reduced motion" aria-pressed="false"></button>
+      </div>
+
+      <div class="customize-footer">
+        <span class="customize-note">Stored in this browser</span>
+        <button class="reset-btn" type="button" data-reset="all">Reset to defaults</button>
+      </div>
+
+    </div>
+  </div>
 
   <main id="main" class="content-area">
 
     <div id="itchio-view" class="itchio-view" style="display:none">
       <button id="itchio-back-btn" class="itchio-back-btn">&#8592; Back to home</button>
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Games</h2>
+        <p class="itchio-subheading">Pick a genre to hunt for games</p>
+      </header>
       <div id="itchio-genre-grid" class="itchio-genre-grid"></div>
-      <div class="websites-footer">
-        <button id="itchio-home-btn" class="websites-home-btn">&#8962; Go home</button>
-      </div>
     </div>
 
     <div id="itchio-genre-view" class="itchio-genre-view" style="display:none">
       <button id="itchio-genre-back-btn" class="itchio-back-btn">&#8592; Back</button>
-      <h2 id="itchio-genre-title" class="itchio-genre-title"></h2>
+      <div class="itchio-genre-head">
+        <h2 id="itchio-genre-title" class="itchio-genre-title"></h2>
+        <p id="itchio-genre-count" class="itchio-subheading"></p>
+      </div>
+      <input id="game-search" class="game-search" type="search" placeholder="Search games..." aria-label="Search games" autocomplete="off" hidden>
       <div class="itchio-placeholder-buttons"></div>
     </div>
 
     <div id="websites-view" class="websites-view" style="display:none">
+      <button id="websites-back-btn" class="itchio-back-btn">&#8592; Back to home</button>
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Websites</h2>
+        <p class="itchio-subheading">Pick a site to sniff out its links</p>
+      </header>
       <div id="websites-grid" class="websites-grid"></div>
-      <div class="websites-footer">
-        <button id="websites-home-btn" class="websites-home-btn">&#8962; Go home</button>
-      </div>
     </div>
 
     <div id="welcome-screen" class="welcome-screen">
-      <div class="welcome-hero">
-        <h1 class="site-title">Whiskered</h1>
-        <p class="site-subtitle">A curated directory of creative platforms and communities</p>
+      <div class="bento">
+        <div class="welcome-hero">
+          <span class="hero-badge"><span class="hero-badge-dot" aria-hidden="true"></span>Free to browse &mdash; no sign-up, no collar</span>
+          <h1 class="site-title">Whiskered<em>Purr-fectly curated.</em></h1>
+          <p class="site-subtitle">A cat-curated directory of creative platforms and communities</p>
+        </div>
+        <div class="home-mode-buttons">
+          <button id="btn-itchio" class="home-mode-btn">
+            <span class="mode-icon" aria-hidden="true">&#128049;</span>
+            <span class="mode-title">Games</span>
+            <span class="mode-desc">Chase browser games by genre</span>
+            <span id="count-games" class="mode-count"></span>
+          </button>
+          <button id="btn-websites" class="home-mode-btn">
+            <span class="mode-icon" aria-hidden="true">&#129526;</span>
+            <span class="mode-title">Websites</span>
+            <span class="mode-desc">Unravel curated platforms &amp; link lists</span>
+            <span id="count-sites" class="mode-count"></span>
+          </button>
+        </div>
+        <aside class="side-widget side-widget-left" aria-labelledby="quick-jump-title">
+          <h3 id="quick-jump-title" class="widget-title">Pounce on one</h3>
+          <p class="widget-sub">A few sites to sniff</p>
+          <ul id="quick-jump-list" class="widget-list"></ul>
+        </aside>
+        <aside class="side-widget side-widget-right" aria-labelledby="whats-new-title">
+          <h3 id="whats-new-title" class="widget-title">Fresh catch</h3>
+          <p class="widget-sub">Latest update</p>
+          <div id="whats-new-body" class="widget-news"></div>
+          <button id="open-changelog" class="widget-link" type="button">Full changelog &rarr;</button>
+        </aside>
+        <section class="how-to-use" aria-labelledby="htu-heading">
+          <p class="htu-kicker">How it works</p>
+          <h2 id="htu-heading">What is Whiskered?</h2>
+          <p>Whiskered is a curated directory of creative platforms, gaming hubs, and community resources. It helps users discover accessible browser games, unblocked sites, and themed web collections in one polished interface.</p>
+          <ol class="htu-steps">
+            <li class="htu-step"><span class="htu-num">1</span><strong>Choose</strong><span>Pick <strong>Games</strong> or <strong>Websites</strong> from the home screen.</span></li>
+            <li class="htu-step"><span class="htu-num">2</span><strong>Prowl</strong><span>Browse curated categories and individual platform panels.</span></li>
+            <li class="htu-step"><span class="htu-num">3</span><strong>Pounce</strong><span>Every entry has a name, icon, tagline, and direct links.</span></li>
+          </ol>
+          <h3 class="htu-tips-title">Good to know</h3>
+          <ul class="htu-tips">
+            <li><span class="htu-tip-icon" aria-hidden="true">&#128062;</span><span>Change the theme and accent colour with <strong>Customize</strong> in the top right.</span></li>
+            <li><span class="htu-tip-icon" aria-hidden="true">&#128269;</span><span>Big genres have a <strong>search box</strong> to find a game fast.</span></li>
+            <li><span class="htu-tip-icon" aria-hidden="true">&#8677;</span><span>Press <strong>Esc</strong> to close any pop-up.</span></li>
+          </ul>
+        </section>
       </div>
-      <div class="home-mode-buttons">
-        <button id="btn-itchio" class="home-mode-btn">Games</button>
-        <button id="btn-websites" class="home-mode-btn">Websites</button>
-      </div>
-      <section class="how-to-use" aria-labelledby="htu-heading">
-        <h2 id="htu-heading">How to Use &amp; Deploy</h2>
-        <h3>Deploying on Google Apps Script</h3>
-        <ol>
-          <li>Open <strong>script.google.com</strong> and create a new project.</li>
-          <li>Go to <em>File &rarr; New &rarr; HTML file</em> and create three files: <code>index</code>, <code>styles</code>, and <code>script</code>.</li>
-          <li>Paste the contents of <code>index.html</code> into <code>index.html</code>. For <code>styles.html</code>, wrap the CSS in <code>&lt;style&gt;&hellip;&lt;/style&gt;</code>. For <code>script.html</code>, wrap the JS in <code>&lt;script&gt;&hellip;&lt;/script&gt;</code>.</li>
-          <li>In <code>index.html</code>, replace the <code>&lt;link&gt;</code> tag with <code>&lt;?!= include('styles') ?&gt;</code> and the <code>&lt;script src="script.js"&gt;</code> tag with <code>&lt;?!= include('script') ?&gt;</code>.</li>
-          <li>In <code>Code.gs</code>, add a <code>doGet</code> function:<br>
-            <code>function doGet() { return HtmlService.createTemplateFromFile('index').evaluate().setTitle('Whiskered').setSandboxMode(HtmlService.SandboxMode.IFRAME); }</code>
-          </li>
-          <li>Add a helper: <code>function include(f) { return HtmlService.createHtmlOutputFromFile(f).getContent(); }</code></li>
-          <li>Go to <em>Deploy &rarr; New deployment</em>, choose <em>Web App</em>, configure access, then click <em>Deploy</em>.</li>
-        </ol>
-        <h3>Customizing Tab Order</h3>
-        <p>In <code>script.js</code>, find the <code>SITES</code> array near the top. Each entry has an <code>id</code>, <code>label</code>, <code>icon</code>, and <code>tagline</code>. Reorder or rename entries freely — the HTML tab list, panels, and side panel all stay in sync automatically.</p>
-        <h3>Customizing Colors</h3>
-        <p>In <code>styles.css</code>, the <code>:root</code> block at the top contains <code>--clr-light-orange</code> and <code>--clr-orange</code>. Changing these two values recolors the entire theme. Fine-tune <code>--clr-orange-dark</code>, <code>--clr-orange-mid</code>, and <code>--clr-orange-pale</code> for more control.</p>
-        <h3>Customizing Animations</h3>
-        <p>The <code>:root</code> block also exposes <code>--dur-fast</code> (180ms), <code>--dur-med</code> (280ms), and <code>--dur-slow</code> (350ms) for transition durations, plus <code>--ease-out</code> and <code>--ease-spring</code> for easing curves. Increase values for slower, more deliberate motion; decrease for snappier feedback.</p>
-      </section>
     </div>
 
 </main>
-<div id="changelog-modal" class="changelog-modal">
+<div id="changelog-modal" class="changelog-modal" role="dialog" aria-modal="true" aria-labelledby="changelog-title">
   <div class="changelog-box">
 
-    <button id="close-changelog" class="links-btn">Close</button>
-
-    <h2 class="changelog-box">Summer Changelog</h2>
-    <p class="panel-description">Welcome back to school :(.</p>
-        <hr class="link-divider">
-
-        <div class="link-row">
-          <span class="link-badge">New games</span>
-          <span class="site-link">Added Granny, Silly Billy: REMASTERED, ONE HIT SINGLE, Go to Sleep, Slope, Fish Face, Drift Boss (With Cheats), LETHAL SHIT (Lethal Company Demake) and Six Cats Under!</span>
-        </div>
-        <hr class="link-divider">
-
-     <div class="link-row">
-          <span class="link-badge">New catagory</span>
-          <span class="site-link">Added the FNF catagory!</span>
-        </div>
-        <hr class="link-divider">
-    
-     <div class="link-row">
-          <span class="link-badge">New links</span>
-          <span class="site-link">Added a TON of xylora links along with a few overcloaked!</span>
-        </div>
-        <hr class="link-divider">
-
+    <div class="changelog-header">
+      <div>
+        <h2 id="changelog-title">Changelog</h2>
+        <p class="changelog-sub">What's new in Whiskered</p>
       </div>
-
+      <button id="close-changelog" class="changelog-close" aria-label="Close changelog">&times;</button>
     </div>
 
+    <ul id="changelog-list" class="changelog-list"></ul>
+
   </div>
+</div>
 
-    <section id="panel-cherri" class="content-panel" role="tabpanel" aria-labelledby="tab-cherri" tabindex="-1" hidden>
-      <div class="panel-inner">
-        <div class="panel-header"><h2>Cherri</h2><button class="open-sites-btn" aria-label="View all sites" data-site="cherri">View All Sites</button></div>
-        <div class="panel-image-placeholder" role="img" aria-label="Cherri illustration"></div>
-        <p class="panel-description">Cherri V2 is a customizable, feature-rich platform designed for entertainment, browsing, and social interaction, wrapped in a clean pink-themed interface. It offers access to a large library of over 3,500 games, along with cloud save support so users can sync progress across devices.</p>
-        <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Browser Games</span><span class="panel-tag">Free</span></div>
-        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">450+</span></div><div class="meta-item"><span class="meta-label">Daily Players</span><span class="meta-value">12K</span></div><div class="meta-item"><span class="meta-label">Genres</span><span class="meta-value">25</span></div></div>
-        <div class="links-section">
-          <a href="https://dog.pupface.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://dog.pupface.com/</a>
-          <hr class="link-divider">
-          <a href="https://larp.zinets.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://larp.zinets.ca/</a>
-          <hr class="link-divider">
-          <a href="http://technology.teacher.chemistry.drama.algebra.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.teacher.chemistry.drama.algebra.astroarquetipica.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://homework.grammar.teacher.writing.lecture.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.grammar.teacher.writing.lecture.arcloud.pl/</a>
-          <hr class="link-divider">
-          <a href="http://library.computer.music.vocabulary.student.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.computer.music.vocabulary.student.zinga77.net/</a>
-          <hr class="link-divider">
-          <a href="http://classroom.geometry.campus.assignment.learning.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.geometry.campus.assignment.learning.leonbenasayag.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://literature.campus.classroom.english.seminar.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.campus.classroom.english.seminar.astroarquetipica.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://homework.math.music.classroom.history.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.math.music.classroom.history.arcloud.pl/</a>
-          <hr class="link-divider">
-          <a href="http://technology.art.history.computer.seminar.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.art.history.computer.seminar.zinga77.net/</a>
-          <hr class="link-divider">
-          <a href="http://literature.science.geography.music.project.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://literature.science.geography.music.project.leonbenasayag.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://science.chemistry.engineering.biology.student.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://science.chemistry.engineering.biology.student.astroarquetipica.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://engineering.classroom.seminar.chemistry.campus.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://engineering.classroom.seminar.chemistry.campus.arcloud.pl/</a>
-          <hr class="link-divider">
-          <a href="http://assignment.engineering.calculus.music.english.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://assignment.engineering.calculus.music.english.zinga77.net/</a>
-          <hr class="link-divider">
-          <a href="http://homework.engineering.library.project.math.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.engineering.library.project.math.leonbenasayag.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://calculus.writing.geography.studying.geometry.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.geography.studying.geometry.arcloud.pl/</a>
-          <hr class="link-divider">
-          <a href="http://programming.drama.campus.history.teacher.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.campus.history.teacher.astroarquetipica.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://lecture.engineering.english.seminar.calculus.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://lecture.engineering.english.seminar.calculus.zinga77.net/</a>
-          <hr class="link-divider">
-          <a href="http://programming.computer.learning.physics.campus.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.computer.learning.physics.campus.leonbenasayag.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://geography.reading.computer.student.grammar.arcloud.pl/" class="site-link" target="_blank" rel="noopener noreferrer">http://geography.reading.computer.student.grammar.arcloud.pl/</a>
-          <hr class="link-divider">
-          <a href="http://computer.calculus.lecture.assignment.history.astroarquetipica.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.calculus.lecture.assignment.history.astroarquetipica.com.ar/</a>
-          <hr class="link-divider">
-          <a href="http://library.programming.classroom.science.literature.zinga77.net/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.programming.classroom.science.literature.zinga77.net/</a>
-          <hr class="link-divider">
-          <a href="http://technology.campus.calculus.programming.english.leonbenasayag.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.campus.calculus.programming.english.leonbenasayag.com.ar/</a>
-          <hr class="link-divider">
-<a href="http://project.art.drama.vocabulary.reading.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://project.art.drama.vocabulary.reading.resursecs2.ro</a>
-
-<hr class="link-divider">
-<a href="http://student.history.studying.music.english.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://student.history.studying.music.english.domn.net</a>
-
-<hr class="link-divider">
-<a href="http://calculus.writing.technology.engineering.biology.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.writing.technology.engineering.biology.sicadimoveis.com.br</a>
-
-<hr class="link-divider">
-<a href="http://science.physics.teacher.classroom.english.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://science.physics.teacher.classroom.english.ericlebaron.com</a>
-
-<hr class="link-divider">
-<a href="http://physics.reading.algebra.project.seminar.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.algebra.project.seminar.robertbagany.com</a>
-
-<hr class="link-divider">
-<a href="http://vocabulary.library.engineering.programming.chemistry.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.library.engineering.programming.chemistry.hollowed.io</a>
-
-<hr class="link-divider">
-<a href="http://campus.computer.lecture.grammar.calculus.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://campus.computer.lecture.grammar.calculus.resursecs2.ro</a>
-
-<hr class="link-divider">
-<a href="http://chemistry.calculus.geometry.studying.vocabulary.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://chemistry.calculus.geometry.studying.vocabulary.domn.net</a>
-
-<hr class="link-divider">
-<a href="http://calculus.project.technology.student.music.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.project.technology.student.music.sicadimoveis.com.br</a>
-
-<hr class="link-divider">
-<a href="http://teacher.campus.calculus.classroom.computer.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.campus.calculus.classroom.computer.ericlebaron.com</a>
-
-<hr class="link-divider">
-<a href="http://teacher.chemistry.library.literature.geography.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.chemistry.library.literature.geography.resursecs2.ro</a>
-
-<hr class="link-divider">
-<a href="http://classroom.english.math.music.geometry.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.english.math.music.geometry.domn.net</a>
-
-<hr class="link-divider">
-<a href="http://drama.art.seminar.reading.assignment.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.art.seminar.reading.assignment.robertbagany.com</a>
-
-<hr class="link-divider">
-<a href="http://physics.reading.calculus.programming.learning.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.reading.calculus.programming.learning.hollowed.io</a>
-
-<hr class="link-divider">
-<a href="http://programming.drama.classroom.seminar.algebra.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://programming.drama.classroom.seminar.algebra.sicadimoveis.com.br</a>
-
-<hr class="link-divider">
-<a href="http://english.teacher.reading.technology.engineering.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://english.teacher.reading.technology.engineering.ericlebaron.com</a>
-
-<hr class="link-divider">
-<a href="http://algebra.project.science.literature.reading.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://algebra.project.science.literature.reading.domn.net</a>
-
-<hr class="link-divider">
-<a href="http://computer.writing.library.engineering.music.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.writing.library.engineering.music.resursecs2.ro</a>
-
-<hr class="link-divider">
-<a href="http://calculus.grammar.teacher.chemistry.art.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.grammar.teacher.chemistry.art.robertbagany.com</a>
-
-<hr class="link-divider">
-<a href="http://calculus.reading.drama.grammar.vocabulary.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.reading.drama.grammar.vocabulary.hollowed.io</a>
-
-<hr class="link-divider">
-<a href="http://chemistry.grammar.campus.biology.homework.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://chemistry.grammar.campus.biology.homework.ericlebaron.com</a>
-
-<hr class="link-divider">
-<a href="http://reading.math.history.learning.science.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://reading.math.history.learning.science.sicadimoveis.com.br</a>
-
-<hr class="link-divider">
-<a href="http://physics.math.grammar.studying.lecture.resursecs2.ro" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.math.grammar.studying.lecture.resursecs2.ro</a>
-
-<hr class="link-divider">
-<a href="http://calculus.math.project.technology.computer.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://calculus.math.project.technology.computer.hollowed.io</a>
-
-<hr class="link-divider">
-<a href="http://music.writing.technology.teacher.biology.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://music.writing.technology.teacher.biology.robertbagany.com</a>
-
-<hr class="link-divider">
-<a href="http://reading.computer.homework.assignment.seminar.ericlebaron.com" class="site-link" target="_blank" rel="noopener noreferrer">http://reading.computer.homework.assignment.seminar.ericlebaron.com</a>
-
-<hr class="link-divider">
-<a href="http://biology.student.teacher.programming.literature.sicadimoveis.com.br" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.student.teacher.programming.literature.sicadimoveis.com.br</a>
-
-<hr class="link-divider">
-<a href="http://science.classroom.algebra.technology.drama.domn.net" class="site-link" target="_blank" rel="noopener noreferrer">http://science.classroom.algebra.technology.drama.domn.net</a>
-
-<hr class="link-divider">
-<a href="http://vocabulary.seminar.student.calculus.learning.hollowed.io" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.seminar.student.calculus.learning.hollowed.io</a>
-
-<hr class="link-divider">
-<a href="http://biology.literature.studying.lecture.science.robertbagany.com" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.literature.studying.lecture.science.robertbagany.com</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-gn-math" class="content-panel" role="tabpanel" aria-labelledby="tab-gn-math" tabindex="-1" hidden>
+<section id="panel-gn-math" class="content-panel" role="tabpanel" aria-labelledby="tab-gn-math" tabindex="-1" hidden>
   <div class="panel-inner">
 
     <div class="panel-header">
       <h2>GN‑Math</h2>
-      <button class="open-sites-btn" aria-label="View all sites" data-site="gn-math">View All Sites</button>
     </div>
 
     <div class="panel-image-placeholder" role="img" aria-label="GN‑Math illustration"></div>
 
     <p class="panel-description">
-      uhhh theres no proxy tho cuz breadbb is kinda homeless xD
+      uhhh theres no proxy cuz breadbb is kinda homeless xD
     </p>
 
     <div class="panel-tags">
@@ -278,8 +945,7 @@
     </div>
 
     <div class="links-section">
-      <a href="https://a2174-99533489.cluster40.canvas-user-content.com/users/2174~344930/files/2174~99533489/my%20files/gnmath.html?download=1&inline=1&sf_verifier=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoiMjE3NDAwMDAwMDAzNDQ5MzAiLCJhdHRhY2htZW50X2lkIjoiMjE3NDAwMDAwOTk1MzM0ODkiLCJwZXJtaXNzaW9uIjpbInJlYWQiLCJkb3dubG9hZCJdLCJyb290X2FjY291bnRfaWQiOiIyMTc0MDAwMDAwMDAwMDAwMSIsIm9hdXRoX2hvc3QiOiJrYXR5aXNkLmluc3RydWN0dXJlLmNvbSIsInJldHVybl91cmwiOm51bGwsImZhbGxiYWNrX3VybCI6Imh0dHBzOi8va2F0eWlzZC5pbnN0cnVjdHVyZS5jb20vZmlsZXMvOTk1MzM0ODkvZG93bmxvYWQ_dmVyaWZpZXI9OTE4ZU5iaVdzR2dmMnN6c05KV2hLWTJRQ1RDTk4wZExJNkhiVDJZM1x1MDAyNmZhbGxiYWNrX3RzPTE3ODAxMTE3MzkiLCJqdGkiOiI3YThhYTJlZC0xMTc3LTQ3NWMtOTJiYS1hM2QzZDA0YmEzOTAiLCJleHAiOjE3ODAxMTIwMzl9.ctQD2ZCAPjhFE_i2GRc8dUkSDbHZesVgkLQko3R_0FQoalLYWu9BNwIWyBG_6gaR5VLjsswqieSxtWJoNfrv-Q&verifier=918eNbiWsGgf2szsNJWhKY2QCTCNN0dLI6HbT2Y3/" class="site-link" target="_blank" rel="noopener noreferrer">God Link (will not get blocked)</a>
-      <hr class="link-divider">
+      <p>No links :[</p>
     </div>
 
   </div>
@@ -287,7 +953,7 @@
 
     <section id="panel-nexora" class="content-panel" role="tabpanel" aria-labelledby="tab-nexora" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Nexora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="nexora">View All Sites</button></div>
+        <div class="panel-header"><h2>Nexora</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Nexora illustration"></div>
         <p class="panel-description">Nexora is a sleek, modern unblocked gaming hub known for its carefully curated library of high-quality browser games. Fast loads, zero downloads, and always accessible — even on restricted school or work networks.</p>
         <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Curated</span><span class="panel-tag">No Download</span></div>
@@ -310,141 +976,72 @@
 
     <section id="panel-overcloaked" class="content-panel" role="tabpanel" aria-labelledby="tab-overcloaked" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Overcloaked</h2><button class="open-sites-btn" aria-label="View all sites" data-site="overcloaked">View All Sites</button></div>
+        <div class="panel-header"><h2>Overcloaked</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Overcloaked illustration"></div>
         <p class="panel-description">OverCloaked is a lightweight access hub designed to provide instant entry to unblocked websites and a wide selection of online entertainment. It features a large collection of games, giving users hundreds of options to play directly in the browser.</p>
         <div class="panel-tags"><span class="panel-tag">Proxy</span><span class="panel-tag">Bypass Filters</span><span class="panel-tag">Always Up</span></div>
         <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">500+</span></div><div class="meta-item"><span class="meta-label">Uptime</span><span class="meta-value">99.7%</span></div><div class="meta-item"><span class="meta-label">Mirrors</span><span class="meta-value">6</span></div></div>
         <div class="links-section">
-          <a href="https://digitallearninghelp.onlidigital.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://digitallearninghelp.onlidigital.com/</a>
+          <a href="https://edu.zort.cl/" class="site-link" target="_blank" rel="noopener noreferrer">https://edu.zort.cl/</a>
           <hr class="link-divider">
           <a href="https://rykstests.1.ryk.infinityfreeapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://rykstests.1.ryk.infinityfreeapp.com/</a>
           <hr class="link-divider">
-          <a href="https://s3.amazonaws.com/sadddwasffwaaaasf/https://overyourmom.turbo-education.com/overyourmom.turbo-education.com/index.html" class="site-link" target="_blank" rel="noopener noreferrer">https://s3.amazonaws.com/sadddwasffwaaaasf/https://overyourmom.turbo-education.com/overyourmom.turbo-education.com/index.html</a>
+          <a href="https://s3.amazonaws.com/sadddwasffwaaaasf/" class="site-link" target="_blank" rel="noopener noreferrer">https://s3.amazonaws.com/sadddwasffwaaaasf/</a>
           <hr class="link-divider">
-          <a href="https://paukenschlag-blog.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://paukenschlag-blog.org/</a>
-          <hr class="link-divider">
-          <a href="http://technology.art.english.student.homework.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://technology.art.english.student.homework.tokeslaszlo.eu/</a>
-          <hr class="link-divider">
-          <a href="http://grammar.reading.lecture.engineering.drama.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://grammar.reading.lecture.engineering.drama.tokeslaszlo.eu/</a>
-          <hr class="link-divider">
-          <a href="http://library.homework.reading.student.computer.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://library.homework.reading.student.computer.tokeslaszlo.eu/</a>
-          <hr class="link-divider">
-          <a href="http://classroom.technology.writing.engineering.programming.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://classroom.technology.writing.engineering.programming.tokeslaszlo.eu/</a>
-          <hr class="link-divider">
-          <a href="http://science.library.calculus.algebra.english.tokeslaszlo.eu/" class="site-link" target="_blank" rel="noopener noreferrer">http://science.library.calculus.algebra.english.tokeslaszlo.eu/</a>
           <a href="http://vocabulary.chemistry.physics.music.homework.saltbush.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://vocabulary.chemistry.physics.music.homework.saltbush.com/</a>
           <hr class="link-divider">
           <a href="http://homework.geography.grammar.studying.project.jetzt-reichts.ch/" class="site-link" target="_blank" rel="noopener noreferrer">http://homework.geography.grammar.studying.project.jetzt-reichts.ch/</a>
           <hr class="link-divider">
-          <a href="http://physics.music.engineering.grammar.geometry.litescripts.com/" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.music.engineering.grammar.geometry.litescripts.com/</a>
+          <a href="https://over.volticsolar.co.za/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.volticsolar.co.za/</a>
           <hr class="link-divider">
-<a href="http://teacher.biology.student.lecture.campus.yfsgt.com" class="site-link" target="_blank" rel="noopener noreferrer">http://teacher.biology.student.lecture.campus.yfsgt.com</a>
-<hr class="link-divider">
-<a href="http://geography.engineering.programming.biology.computer.yfsgt.com" class="site-link" target="_blank" rel="noopener noreferrer">http://geography.engineering.programming.biology.computer.yfsgt.com</a>
-<hr class="link-divider">
-<a href="http://grammar.teacher.literature.lecture.physics.yfsgt.com" class="site-link" target="_blank" rel="noopener noreferrer">http://grammar.teacher.literature.lecture.physics.yfsgt.com</a>
-<hr class="link-divider">
-<a href="http://drama.math.studying.music.teacher.thegleasons.com" class="site-link" target="_blank" rel="noopener noreferrer">http://drama.math.studying.music.teacher.thegleasons.com</a>
-<hr class="link-divider">
-<a href="http://biology.project.grammar.chemistry.classroom.yfsgt.com" class="site-link" target="_blank" rel="noopener noreferrer">http://biology.project.grammar.chemistry.classroom.yfsgt.com</a>
-<hr class="link-divider">
-<a href="http://physics.library.seminar.computer.project.thegleasons.com" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.library.seminar.computer.project.thegleasons.com</a>
-<hr class="link-divider">
-<a href="http://grammar.english.seminar.classroom.library.yfsgt.com" class="site-link" target="_blank" rel="noopener noreferrer">http://grammar.english.seminar.classroom.library.yfsgt.com</a>
-<hr class="link-divider">
-<a href="http://geography.homework.classroom.physics.vocabulary.thegleasons.com" class="site-link" target="_blank" rel="noopener noreferrer">http://geography.homework.classroom.physics.vocabulary.thegleasons.com</a>
-<hr class="link-divider">
-<a href="http://computer.calculus.engineering.student.science.thegleasons.com" class="site-link" target="_blank" rel="noopener noreferrer">http://computer.calculus.engineering.student.science.thegleasons.com</a>
-<hr class="link-divider">
-<a href="http://physics.history.engineering.lecture.literature.thegleasons.com" class="site-link" target="_blank" rel="noopener noreferrer">http://physics.history.engineering.lecture.literature.thegleasons.com</a>
-
-        </div>
-      </div>
-    </section>
-
-    <section id="panel-void-network" class="content-panel" role="tabpanel" aria-labelledby="tab-void-network" tabindex="-1" hidden>
-      <div class="panel-inner">
-        <div class="panel-header"><h2>Void Network</h2><button class="open-sites-btn" aria-label="View all sites" data-site="void-network">View All Sites</button></div>
-        <div class="panel-image-placeholder" role="img" aria-label="Void Network illustration"></div>
-        <p class="panel-description">Void Network is a dark-themed unblocked gaming network running across multiple mirrors for maximum availability. Known for hosting rare and obscure browser titles you won't find elsewhere. But the downside of using Void Network is that it has SO many advertisments.</p>
-        <div class="panel-tags"><span class="panel-tag">Multi-Mirror</span><span class="panel-tag">Ad-Free</span><span class="panel-tag">Underground</span></div>
-        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">280</span></div><div class="meta-item"><span class="meta-label">Mirrors</span><span class="meta-value">12</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">5K</span></div></div>
-        <div class="links-section">
-          <a href="https://voidnrtowkr93urridudi.geetabasyal.com.np/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnrtowkr93urridudi.geetabasyal.com.np/</a>
+          <a href="https://over.worldmicroscope.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.worldmicroscope.com/</a>
           <hr class="link-divider">
-          <a href="https://callmathsmallpls.4.riesgocrediticio.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://callmathsmallpls.4.riesgocrediticio.com/</a>
+          <a href="https://over.nicodim-conta.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.nicodim-conta.ro/</a>
           <hr class="link-divider">
-          <a href="https://i.eat.refrigerator.obiteljski-dom-pticek.hr/" class="site-link" target="_blank" rel="noopener noreferrer">https://i.eat.refrigerator.obiteljski-dom-pticek.hr/</a>
+          <a href="https://over.taminache.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.taminache.ru/</a>
           <hr class="link-divider">
-          <a href="https://alanthegoatmakeslinks.unicoridor.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://alanthegoatmakeslinks.unicoridor.ru/</a>
+          <a href="https://over.datafluvialtech.ch/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.datafluvialtech.ch/</a>
           <hr class="link-divider">
-          <a href="https://africa.is.decent.obiteljski-dom-pticek.hr/" class="site-link" target="_blank" rel="noopener noreferrer">https://africa.is.decent.obiteljski-dom-pticek.hr/</a>
+          <a href="https://over.prima-bel-canto.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.prima-bel-canto.com/</a>
           <hr class="link-divider">
-          <a href="https://voidnetwork2.railway.web.id/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnetwork2.railway.web.id/</a>
+          <a href="https://over.rako-bptechsolutions.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://over.rako-bptechsolutions.ca/</a>
           <hr class="link-divider">
-          <a href="https://learning.kthru12.bsmart-solutions.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://learning.kthru12.bsmart-solutions.com/</a>
+          <a href="https://67.feste-ip.net/" class="site-link" target="_blank" rel="noopener noreferrer">https://67.feste-ip.net/</a>
           <hr class="link-divider">
-          <a href="https://history-is-fun.for-everyone.bazaarhalloffame.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://history-is-fun.for-everyone.bazaarhalloffame.com/</a>
-          <hr class="link-divider">
-          <a href="https://wearealllostnowweregone.thejeremybecker.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://wearealllostnowweregone.thejeremybecker.com/</a>
-          <hr class="link-divider">
-          <a href="https://voidnetwork5.railway.web.id/" class="site-link" target="_blank" rel="noopener noreferrer">https://voidnetwork5.railway.web.id/</a>
-          <hr class="link-divider">
-          <a href="https://mathcodingames.30.riesgocrediticio.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://mathcodingames.30.riesgocrediticio.com/</a>
-          <hr class="link-divider">
-          <a href="https://mythostesting.meteotodi.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://mythostesting.meteotodi.com/</a>
-          <hr class="link-divider">
-          <a href="https://edu.ucecom-craiova.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://edu.ucecom-craiova.ro/</a>
-          <hr class="link-divider">
-          <a href="https://friedchicken.pjfox.xyz/" class="site-link" target="_blank" rel="noopener noreferrer">https://friedchicken.pjfox.xyz/</a>
+          <a href="https://school.dynamisches-dns.de/" class="site-link" target="_blank" rel="noopener noreferrer">https://school.dynamisches-dns.de/</a>
         </div>
       </div>
     </section>
 
     <section id="panel-galaxy" class="content-panel" role="tabpanel" aria-labelledby="tab-galaxy" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Galaxy</h2><button class="open-sites-btn" aria-label="View all sites" data-site="galaxy">View All Sites</button></div>
+        <div class="panel-header"><h2>Galaxy</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Galaxy illustration"></div>
         <p class="panel-description">Galaxy is a space-themed unblocked games portal with a stunning UI and a massive catalog of browser games. Features community leaderboards, weekly game spotlights, and a huge selection of io and action titles.</p>
         <div class="panel-tags"><span class="panel-tag">Space Theme</span><span class="panel-tag">Leaderboards</span><span class="panel-tag">Community</span></div>
         <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">600+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">20K</span></div><div class="meta-item"><span class="meta-label">Top Score</span><span class="meta-value">&#8734;</span></div></div>
         <div class="links-section">
-          <a href="https://bubbles.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://bubbles.redbubbles.org.my/</a>
-          <hr class="link-divider">
-          <a href="https://salonn.suzannesorganicssalon.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://salonn.suzannesorganicssalon.com/</a>
-          <hr class="link-divider">
-          <a href="https://save-whales.alexkrav.se/" class="site-link" target="_blank" rel="noopener noreferrer">https://save-whales.alexkrav.se/</a>
-          <hr class="link-divider">
-          <a href="https://hubert.hubretro.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://hubert.hubretro.com/</a>
-          <hr class="link-divider">
-          <a href="http://save-whales.alexkrav.se/" class="site-link" target="_blank" rel="noopener noreferrer">http://save-whales.alexkrav.se/</a>
-          <hr class="link-divider">
-          <a href="https://geography.indormost.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://geography.indormost.ru/</a>
-          <hr class="link-divider">
-          <a href="https://red.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://red.redbubbles.org.my/</a>
-          <hr class="link-divider">
-          <a href="https://bubbles-red.redbubbles.org.my/" class="site-link" target="_blank" rel="noopener noreferrer">https://bubbles-red.redbubbles.org.my/</a>
+          <p>No links :[</p>
         </div>
       </div>
     </section>
 
     <section id="panel-fern" class="content-panel" role="tabpanel" aria-labelledby="tab-fern" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Fern</h2><button class="open-sites-btn" aria-label="View all sites" data-site="fern">View All Sites</button></div>
+        <div class="panel-header"><h2>Fern</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Fern illustration"></div>
         <p class="panel-description">Fern is a calm, nature-aesthetic unblocked games site favored for its relaxing selection of puzzle and idle games, but with plenty of fast-paced action titles too. Clean layout, no pop-ups, no nonsense.</p>
         <div class="panel-tags"><span class="panel-tag">Puzzle</span><span class="panel-tag">Idle Games</span><span class="panel-tag">Chill</span></div>
         <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">200</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">4K</span></div><div class="meta-item"><span class="meta-label">Puzzle Games</span><span class="meta-value">80</span></div></div>
         <div class="links-section">
-          <a href="https://talesfiction.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://talesfiction.com/</a>
+          <p>No links :[</p>
         </div>
       </div>
     </section>
 
     <section id="panel-axis" class="content-panel" role="tabpanel" aria-labelledby="tab-axis" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Axis</h2><button class="open-sites-btn" aria-label="View all sites" data-site="axis">View All Sites</button></div>
+        <div class="panel-header"><h2>Axis</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Axis illustration"></div>
         <p class="panel-description">Axis is a lightweight, fast-access hub designed to provide regularly updated unblocked links in a clean and simple interface. The platform focuses on ease of use and quick navigation, offering a large and growing library of games along with additional media content.</p>
         <div class="panel-tags"><span class="panel-tag">Fast</span><span class="panel-tag">Minimal</span><span class="panel-tag">School-Safe</span></div>
@@ -544,7 +1141,7 @@
 
     <section id="panel-xylora" class="content-panel" role="tabpanel" aria-labelledby="tab-xylora" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Xylora</h2><button class="open-sites-btn" aria-label="View all sites" data-site="xylora">View All Sites</button></div>
+        <div class="panel-header"><h2>Xylora</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Xylora illustration"></div>
         <p class="panel-description">Xylora is a creative-focused unblocked games site featuring drawing games, sandbox experiences, and artistic browser titles. Built for players who want to make something, not just play something.</p>
         <div class="panel-tags"><span class="panel-tag">Creative</span><span class="panel-tag">Sandbox</span><span class="panel-tag">Drawing Games</span></div>
@@ -879,14 +1476,33 @@
 
 <hr class="link-divider">
 <a href="https://watch.lavachamber.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://watch.lavachamber.com/</a>
-          
+<hr class="link-divider">
+<a href="https://gecko.geckobungalow.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://gecko.geckobungalow.com/</a>
+<hr class="link-divider">
+<a href="https://orchid.orchid-idea.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://orchid.orchid-idea.com/</a>
+<hr class="link-divider">
+<a href="https://gecko.lauriemillotte.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://gecko.lauriemillotte.com/</a>
+<hr class="link-divider">
+<a href="https://vitrual-ideas.tippyturtle.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://vitrual-ideas.tippyturtle.com/</a>
+<hr class="link-divider">
+<a href="https://leach.contraprivatizacao.com.br/" class="site-link" target="_blank" rel="noopener noreferrer">https://leach.contraprivatizacao.com.br/</a>
+<hr class="link-divider">
+<a href="https://junior.7dejunio.com.ar/" class="site-link" target="_blank" rel="noopener noreferrer">https://junior.7dejunio.com.ar/</a>
+<hr class="link-divider">
+<a href="https://bible.biblosconsulting.ru/" class="site-link" target="_blank" rel="noopener noreferrer">https://bible.biblosconsulting.ru/</a>
+<hr class="link-divider">
+<a href="https://believe.bijayakilla.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://believe.bijayakilla.com/</a>
+<hr class="link-divider">
+<a href="https://hand-working.handfolding.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://hand-working.handfolding.com/</a>
+<hr class="link-divider">
+<a href="https://watch.lavachamber.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://watch.lavachamber.com/</a>
         </div>
       </div>
     </section>
 
     <section id="panel-quasar" class="content-panel" role="tabpanel" aria-labelledby="tab-quasar" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Quasar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="quasar">View All Sites</button></div>
+        <div class="panel-header"><h2>Quasar</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Quasar illustration"></div>
         <p class="panel-description">Quasar is a sci-fi themed unblocked gaming portal with a focus on strategy, simulation, and space exploration games. Community ratings, weekly spotlights, and a well-organized library make finding great games easy.</p>
         <div class="panel-tags"><span class="panel-tag">Strategy</span><span class="panel-tag">Sci-Fi</span><span class="panel-tag">Simulation</span></div>
@@ -899,7 +1515,7 @@
 
     <section id="panel-infamous" class="content-panel" role="tabpanel" aria-labelledby="tab-infamous" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Infamous</h2><button class="open-sites-btn" aria-label="View all sites" data-site="infamous">View All Sites</button></div>
+        <div class="panel-header"><h2>Infamous</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Infamous illustration"></div>
         <p class="panel-description">Infamous is one of the most well-known unblocked game sites around. Home to the classics — Run 3, Slope, 1v1.LOL, and hundreds more fan favorites. If it got you through a boring class, it's probably here.</p>
         <div class="panel-tags"><span class="panel-tag">Classics</span><span class="panel-tag">Popular</span><span class="panel-tag">All-Time Faves</span></div>
@@ -916,46 +1532,49 @@
 
     <section id="panel-truffled" class="content-panel" role="tabpanel" aria-labelledby="tab-truffled" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Truffled</h2><button class="open-sites-btn" aria-label="View all sites" data-site="truffled">View All Sites</button></div>
+        <div class="panel-header"><h2>Truffled</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Truffled illustration"></div>
         <p class="panel-description">Truffled is a hidden-gem unblocked games site known for surfacing obscure and indie browser titles you won't find anywhere else. Small catalog, high quality — every game here was hand-picked to be worth your time.</p>
         <div class="panel-tags"><span class="panel-tag">Indie</span><span class="panel-tag">Hidden Gems</span><span class="panel-tag">Curated</span></div>
         <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">120</span></div><div class="meta-item"><span class="meta-label">Hidden Gems</span><span class="meta-value">45</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">3K</span></div></div>
         <div class="links-section">
-          <a href="https://health.wvpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://health.wvpreschool.org/</a>
-          <hr class="link-divider">
-          <a href="https://reading.astrodestin.ro/" class="site-link" target="_blank" rel="noopener noreferrer">https://reading.astrodestin.ro/</a>
-          <hr class="link-divider">
-<a href="https://bogiscool.kodkert.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://bogiscool.kodkert.com/</a>
+<a href="https://health.wvpreschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://health.wvpreschool.org/</a>
 <hr class="link-divider">
 <a href="https://tungtung.suliaotongwang.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://tungtung.suliaotongwang.com/</a>
 <hr class="link-divider">
 <a href="https://chemistry.metallicstream.info/" class="site-link" target="_blank" rel="noopener noreferrer">https://chemistry.metallicstream.info/</a>
-
-          <hr class="link-divider">
-          <a href="https://script.google.com/a/macros/ecasd.us/s/AKfycbxb16odTSaO0fmEEu5Mclb5VAIsdlPWyTsqWFHjPcxcIAoObll0E1uXaUi5AvDe1aSZJg/exec" class="site-link" target="_blank" rel="noopener noreferrer">https://script.google.com/a/macros/ecasd.us/s/AKfycbxb16odTSaO0fmEEu5Mclb5VAIsdlPWyTsqWFHjPcxcIAoObll0E1uXaUi5AvDe1aSZJg/exec</a>
+<hr class="link-divider">
+<a href="https://therapy.wellnessconnectsales.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://therapy.wellnessconnectsales.com/</a>
+<hr class="link-divider">
+          <a href="https://wandlyninns.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://wandlyninns.com/</a>
+<hr class="link-divider">
+          <a href="https://stalbansepiscopal.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://stalbansepiscopal.com/</a>
+<hr class="link-divider">
+          <a href="https://best95trend.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://best95trend.com/</a>
+<hr class="link-divider">
+          <a href="https://september.pound4poundmma.ca/" class="site-link" target="_blank" rel="noopener noreferrer">https://september.pound4poundmma.ca/</a>
+<hr class="link-divider">
+          <a href="https://spanish-class.scottbaptist.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://spanish-class.scottbaptist.com/</a>
         </div>
       </div>
     </section>
 
     <section id="panel-uniub" class="content-panel" role="tabpanel" aria-labelledby="tab-uniub" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>UniUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="uniub">View All Sites</button></div>
+        <div class="panel-header"><h2>UniUB</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="UniUB illustration"></div>
         <p class="panel-description">UniUB is the go-to unblocked games site for university and high school students. Clean interface, wide genre coverage, and a library that reliably punches through campus network filters without needing any extensions.</p>
         <div class="panel-tags"><span class="panel-tag">School-Friendly</span><span class="panel-tag">Campus</span><span class="panel-tag">Students</span></div>
         <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">480</span></div><div class="meta-item"><span class="meta-label">Schools</span><span class="meta-value">200+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">22K</span></div></div>
         <div class="links-section">
-          <a href="https://learnaboutbillclinton.lotossutra.at/" class="site-link" target="_blank" rel="noopener noreferrer">https://learnaboutbillclinton.lotossutra.at/</a>
-          <hr class="link-divider">
-          <a href="https://wildcard.capemaycityschool.org/" class="site-link" target="_blank" rel="noopener noreferrer">https://wildcard.capemaycityschool.org/</a>
+           <p>No links :[</p>
         </div>
       </div>
     </section>
 
     <section id="panel-dogeub" class="content-panel" role="tabpanel" aria-labelledby="tab-dogeub" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>DogeUB</h2><button class="open-sites-btn" aria-label="View all sites" data-site="dogeub">View All Sites</button></div>
+        <div class="panel-header"><h2>DogeUB</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="DogeUB illustration"></div>
         <p class="panel-description">DogeUB is a meme-fueled unblocked games platform with a fun, chaotic community vibe. Features doge-themed games, viral browser hits, and all the classics — wrapped in an interface that doesn't take itself seriously.</p>
         <div class="panel-tags"><span class="panel-tag">Memes</span><span class="panel-tag">Community</span><span class="panel-tag">Fun</span></div>
@@ -979,7 +1598,7 @@
 
     <section id="panel-lunar" class="content-panel" role="tabpanel" aria-labelledby="tab-lunar" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Lunar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="lunar">View All Sites</button></div>
+        <div class="panel-header"><h2>Lunar</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Lunar illustration"></div>
         <p class="panel-description">Lunar is a sleek, moon-themed unblocked games site particularly popular for late-night gaming sessions. Dark mode is built in by default, the library is deep, and the site stays up when others go down.</p>
         <div class="panel-tags"><span class="panel-tag">Dark Mode</span><span class="panel-tag">Night Gaming</span><span class="panel-tag">Always Online</span></div>
@@ -992,7 +1611,7 @@
 
     <section id="panel-frogies-arcade" class="content-panel" role="tabpanel" aria-labelledby="tab-frogies-arcade" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Frogies arcade</h2><button class="open-sites-btn" aria-label="View all sites" data-site="frogies-arcade">View All Sites</button></div>
+        <div class="panel-header"><h2>Frogies arcade</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Frogies arcade illustration"></div>
         <p class="panel-description">Frogies Arcade is a retro unblocked games site stocked with classic arcade titles, pixel-art games, and old-school browser hits. Global leaderboards for every game, chiptune soundtrack optional, good vibes mandatory.</p>
         <div class="panel-tags"><span class="panel-tag">Retro</span><span class="panel-tag">Arcade</span><span class="panel-tag">Pixel Art</span></div>
@@ -1014,7 +1633,7 @@
 
     <section id="panel-interstellar" class="content-panel" role="tabpanel" aria-labelledby="tab-interstellar" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Interstellar</h2><button class="open-sites-btn" aria-label="View all sites" data-site="interstellar">View All Sites</button></div>
+        <div class="panel-header"><h2>Interstellar</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Interstellar illustration"></div>
         <p class="panel-description">Interstellar is a premium unblocked games site known for hosting the largest collection of multiplayer browser games around. Space-travel aesthetic, real-time player counts, and a library that spans every genre.</p>
         <div class="panel-tags"><span class="panel-tag">Multiplayer</span><span class="panel-tag">Premium</span><span class="panel-tag">All Genres</span></div>
@@ -1027,7 +1646,7 @@
 
     <section id="panel-shadow" class="content-panel" role="tabpanel" aria-labelledby="tab-shadow" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Shadow</h2><button class="open-sites-btn" aria-label="View all sites" data-site="shadow">View All Sites</button></div>
+        <div class="panel-header"><h2>Shadow</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Shadow illustration"></div>
         <p class="panel-description">Shadow is a dark-themed unblocked games site known for horror, stealth, and thriller browser games. It also hides a handful of secret bonus games unlocked only by solving riddles scattered across the site.</p>
         <div class="panel-tags"><span class="panel-tag">Horror</span><span class="panel-tag">Stealth</span><span class="panel-tag">Secret Games</span></div>
@@ -1064,7 +1683,7 @@
 
     <section id="panel-selenite" class="content-panel" role="tabpanel" aria-labelledby="tab-selenite" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Selenite</h2><button class="open-sites-btn" aria-label="View all sites" data-site="selenite">View All Sites</button></div>
+        <div class="panel-header"><h2>Selenite</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Selenite illustration"></div>
         <p class="panel-description">Selenite is a low-key unblocked games hub focused on relaxing, meditative, and low-stress browser games. Perfect for winding down between classes — think clicker games, peaceful sims, and chill puzzle titles.</p>
         <div class="panel-tags"><span class="panel-tag">Relaxing</span><span class="panel-tag">Clicker Games</span><span class="panel-tag">Low Stress</span></div>
@@ -1078,7 +1697,7 @@
 
     <section id="panel-duckmath" class="content-panel" role="tabpanel" aria-labelledby="tab-duckmath" tabindex="-1" hidden>
       <div class="panel-inner">
-        <div class="panel-header"><h2>Duckmath</h2><button class="open-sites-btn" aria-label="View all sites" data-site="duckmath">View All Sites</button></div>
+        <div class="panel-header"><h2>Duckmath</h2></div>
         <div class="panel-image-placeholder" role="img" aria-label="Duckmath illustration"></div>
         <p class="panel-description">DuckMath is an educational unblocked games site that sneaks real learning into genuinely fun math and logic games. School-approved, surprisingly addictive, and a lifesaver when you need to look productive.</p>
         <div class="panel-tags"><span class="panel-tag">Educational</span><span class="panel-tag">Math Games</span><span class="panel-tag">School-Safe</span></div>
@@ -1091,18 +1710,1092 @@
       </div>
     </section>
 
+    <section id="panel-interdimensional-games" class="content-panel" role="tabpanel" aria-labelledby="tab-interdimensional-games" tabindex="-1" hidden>
+      <div class="panel-inner">
+        <div class="panel-header"><h2>Interdimensional Games</h2></div>
+        <div class="panel-image-placeholder" role="img" aria-label="Interdimensional Games illustration"></div>
+        <p class="panel-description">Interdimensional Games is an unblocked gaming hub with a clean, customizable interface. Built-in personalization tools let you tweak the look and feel while you browse the game library.</p>
+        <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Customizable</span><span class="panel-tag">Free</span></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">100+</span></div><div class="meta-item"><span class="meta-label">Players</span><span class="meta-value">5K</span></div><div class="meta-item"><span class="meta-label">Genres</span><span class="meta-value">10</span></div></div>
+        <div class="links-section">
+          <a href="https://new-upd.d13qic2f6zga3.amplifyapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://new-upd.d13qic2f6zga3.amplifyapp.com/</a>
+          <hr class="link-divider">
+          <a href="https://pinkdev.d13qic2f6zga3.amplifyapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://pinkdev.d13qic2f6zga3.amplifyapp.com/</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <aside id="side-panel" class="side-panel" role="dialog" aria-modal="true" aria-label="All sites" aria-hidden="true">
-    <div class="side-panel-header">
-      <h3>All Sites</h3>
-      <button id="close-side-panel" class="close-side-panel" aria-label="Close sites panel" tabindex="-1">&#10005;</button>
-    </div>
-    <ul id="sites-list" class="sites-list" role="list"></ul>
-  </aside>
+  <script>
+/* Whiskered – script.js */
+(function () {
+  'use strict';
 
-  <div id="overlay" class="overlay" aria-hidden="true"></div>
+  var SITES = [
+    { id: 'gn-math',                label: 'GN‑Math',                icon: 'G', tagline: 'Just games' },
+    { id: 'nexora',                 label: 'Nexora',                 icon: 'N', tagline: 'Cherri but orange' },
+    { id: 'overcloaked',            label: 'Overcloaked',            icon: 'O', tagline: 'Corny but good' },
+    { id: 'galaxy',                 label: 'Galaxy',                 icon: 'G', tagline: 'They want to be an opeating system' },
+    { id: 'fern',                   label: 'Fern',                   icon: 'F', tagline: 'So many ads omg' },
+    { id: 'axis',                   label: 'Axis',                   icon: 'A', tagline: 'Nobody knows what this is' },
+    { id: 'xylora',                 label: 'Xylora',                 icon: 'X', tagline: 'Cozy' },
+    { id: 'quasar',                 label: 'Quasar',                 icon: 'Q', tagline: 'Just another proxy site' },
+    { id: 'infamous',               label: 'Infamous',               icon: 'I', tagline: 'Not infamous' },
+    { id: 'truffled',               label: 'Truffled',               icon: 'T', tagline: 'Only useful for its games, nothing else' },
+    { id: 'uniub',                  label: 'UniUB',                  icon: 'U', tagline: 'This used to be the best site' },
+    { id: 'dogeub',                 label: 'DogeUB',                 icon: 'D', tagline: 'Trying really hard to be better' },
+    { id: 'lunar',                  label: 'Lunar',                  icon: 'L', tagline: 'Actually good' },
+    { id: 'frogies-arcade',         label: 'Frogies arcade',         icon: 'F', tagline: 'Good proxy but bad games' },
+    { id: 'interstellar',           label: 'Interstellar',           icon: 'I', tagline: 'Who remembers ts' },
+    { id: 'shadow',                 label: 'Shadow',                 icon: 'S', tagline: 'Nobody uses this either' },
+    { id: 'selenite',               label: 'Selenite',               icon: 'S', tagline: 'This used to be the best ever. Its fallen off with ads' },
+    { id: 'duckmath',               label: 'Duckmath',               icon: 'D', tagline: 'ew discusting putrid get this out of here' },
+    { id: 'interdimensional-games', label: 'Interdimensional Games', icon: 'I', tagline: 'Pinkdev made this btw (the webdashers guy)' },
+  ];
 
-  <script src="script.js?v=5"></script>
+  var CHANGELOG = [
+    { badge: 'New games', text: 'Added Pianosaurus, The Hour Of Joy, and VEILHOLLOW to horror genre (WEBPORTS ALL BY ME :D)' }
+  ];
+
+  var GENRES = [
+    { id: 'platformer', label: 'Platformer', icon: 'P', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.iconfinder.com%2Fdata%2Ficons%2Fgame-development-14%2F32%2Fplatform_game_platformer_video_game_game_genres_game_development-1024.png&f=1&nofb=1&ipt=03c7f5f8025b243d84a8be5efe91f5b18e9c1a859bc8e258f61e2e47bb9f4caf' },
+    { id: 'rhythm',     label: 'Rhythm',     icon: 'R', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F025%2F848%2F321%2Foriginal%2Fline-icon-for-rhythm-vector.jpg&f=1&nofb=1&ipt=021b62c8ae23e73357e0453407c0914d2a78838a5f9ac4e728b54614271bf597', iconBlend: true },
+    { id: 'multiplayer',     label: 'Multiplayer',     icon: 'M', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.iconfinder.com%2Fdata%2Ficons%2Fgame-development-14%2F32%2Fmultiplayer_gaming_game_multiplayer_online_gaming_computer_game_video_game_gamers-512.png&f=1&nofb=1&ipt=b4b1e828274a25c405f5299c2ca06f1c078496cabd024279f2538576d179d25a', iconBlend: true },
+    { id: 'fnf',        label: 'FNF',        icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fios_filled%2F1200%2Ffriday-night-funkin.jpg&f=1&nofb=1&ipt=5f529e2206978bc21b3127c28009a8ae8cf7381428310fca6e54305d2590a3aa', iconBlend: true },
+    { id: 'horror',     label: 'Horror',     icon: 'H', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F028%2F148%2F686%2Flarge_2x%2Fghost-icon-isolated-on-white-background-ghost-icon-emotion-variation-simple-flat-style-design-element-scary-horror-pictures-vector.jpg&f=1&nofb=1&ipt=e9fbb2d87da02f54939669ab0eec7da02b546e3193d77175283fba558992119a', iconBlend: true },
+    { id: 'fps',        label: 'FPS',        icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fscope-icon-35.jpg&f=1&nofb=1&ipt=00c5da8fa64c8b32223bca8de0219d7ba295e52eccaaf38e5ad13d86c5f89129', iconBlend: true },
+    { id: 'arcade',     label: 'Arcade',     icon: 'A', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.clipartmax.com%2Fpng%2Fmiddle%2F189-1898756_arcade-icon-arcade-game.png&f=1&nofb=1&ipt=12c39031c4655e70bdce5f993bfd249eba034b6b456593622b31f20bbe2677d2', iconBlend: true },
+    { id: 'survival',   label: 'Survival',   icon: 'S', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftoppng.com%2Fuploads%2Fpreview%2Fmeat-icon-png-115529356657qvx2xpien.png&f=1&nofb=1&ipt=65c749358ba8ccbef38539a069585beceae81dd0f5e6dde1e4784512ec3dec04', iconBlend: true },
+    { id: 'adventure',  label: 'Adventure',  icon: 'A', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffreepngimg.com%2Fthumb%2Funited_states%2F76079-google-computer-icons-states-maps-united-location.png&f=1&nofb=1&ipt=14fd9590fc846c2898038560851da5d2dfc903b3436dbcae55e82a1a8460207e', iconBlend: true },
+    { id: 'chill',      label: 'Chill',      icon: 'C', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftoppng.com%2Fuploads%2Fpreview%2Fcoffee-svg-png-icon-free-download-coffee-icon-vector-115630823923jqzwmnp9y.png&f=1&nofb=1&ipt=95696eda7fd173d3c1a41b5c4489c97143231b8698db722473309ab8df71d184', iconBlend: true },
+    { id: 'puzzle',     label: 'Puzzle',     icon: 'P', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.-p0P3JauR98oBFi117qC7wHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=733e7198bfdda2d3e63edd7ad47ad81fbc904ff4767907daaf6190a1d823cd41', iconBlend: true },
+    { id: 'racing',     label: 'Racing',     icon: 'R', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fthumbnails%2F075%2F338%2F240%2Fsmall_2x%2Fsleek-black-and-white-illustration-of-a-modern-sports-car-design-vector.jpg&f=1&nofb=1&ipt=4d591b32f07a6410cf738ce0fa0429ca4b8c3de991ec1801bcb50a3a5a13c396', iconBlend: true },
+    { id: 'flash',      label: 'Flash',      icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F533%2F462%2Foriginal%2Flightning-bolt-icon-vector.jpg&f=1&nofb=1&ipt=b326a20c4688bf050133ff150518a6e681c104cb6be0c7302030da4a10235a98', iconBlend: true },
+  ];
+
+  /* To add a game: { label: 'Name', url: 'https://...', img: 'https://.../cover.png' }
+     `img` is optional (any image URL, or a local path like 'images/game.png').
+     Without it the card shows the game's first letter. */
+  var GENRE_GAMES = {
+    'platformer': [
+      { label: 'Geometry Dash WASM', url: 'https://html-classic.itch.zone/html/19417757/geometry-dash-webport-main/index.html?v=1790459708', img: 'https://quizizz.com/_media/uploadedFiles/b89c26ad-4a0c-4ef6-99fd-a404b14942bb-v2' },
+      { label: 'Web Dashers', url: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/8c916f9b-3103-4b75-8f41-b6870a84c484-v2', img: 'https://quizizz.com/_media/uploadedFiles/e2bafc34-0afd-48a1-827a-c9674b7fbc4e-v2' },
+      { label: 'FISH',      url: 'https://html-classic.itch.zone/html/17121759/fish-main/index.html?v=1775859823', img: 'https://quizizz.com/_media/uploadedFiles/ddc4d8c0-e5e4-411c-9453-a19825576fae-v2' },
+      { label: 'Celeste',           url: 'https://html-classic.itch.zone/html/17545259/index.html?v=1783534234', img: 'https://quizizz.com/_media/uploadedFiles/4cf5b8ce-122b-4c60-8391-4178ec04506e-v2' },
+      { label: 'A Difficult Game About Climbing', url: 'https://html-classic.itch.zone/html/17569102/index.html?v=1788493848', img: 'https://quizizz.com/_media/uploadedFiles/6e03dd16-67cc-4858-99c2-d8ee29f65001-v2' },
+      { label: 'Pizza Tower',       url: 'https://html-classic.itch.zone/html/17123780/index.html?v=1775877118', img: 'https://quizizz.com/_media/uploadedFiles/75da4359-a4bb-4e1c-a3ee-353e69e0c20b-v2' }
+    ],
+
+    'rhythm': [
+      { label: 'Just Shapes and Beats', url: 'https://html-classic.itch.zone/html/17555895/index.html?v=1788493990', img: 'https://quizizz.com/_media/uploadedFiles/61ab187d-8838-4a1f-88ad-1a7e6fa3b49f-v2' },
+      { label: 'BeatBlock', url: 'https://html-classic.itch.zone/html/17569074/index.html?v=1788494034', img: 'https://quizizz.com/_media/uploadedFiles/6c8a680b-0664-4a08-947f-e19a3d1f7dce-v2' },
+      { label: 'A Dance of Fire And Ice', url: 'https://html-classic.itch.zone/html/1175401/index.html', img: 'https://quizizz.com/_media/uploadedFiles/3e71168c-21a2-4001-96df-7b51c3ca85eb-v2' }
+    ],
+
+    'multiplayer': [
+      { label: 'Among Us', url: 'https://html-classic.itch.zone/html/19359677/index.html?v=1790122144', img: 'https://quizizz.com/_media/uploadedFiles/764ed233-3b48-4c15-970b-74100be36d26-v2' }
+    ],
+
+    'fnf': [
+      { label: "Friday Night Funkin'",    url: 'https://html-classic.itch.zone/html/16944508-1877713/index.html?v=1786550551', img: 'https://quizizz.com/_media/uploadedFiles/98d6b999-609a-4fea-b5ca-c0eca95ff78c-v2' },
+      { label: "Silly Billy: REMASTERED", url: 'https://html-classic.itch.zone/html/18667914/SILLY%20BILLY%20REMASTERED/index.html?v=1785824313', img: 'https://quizizz.com/_media/uploadedFiles/fac476f0-a43b-4e0f-844e-6a03292f9950-v2' },
+      { label: 'FNF Indie Cross',         url: 'https://html-classic.itch.zone/html/17168896/indie-cross-fnf-main/index.html?v=1785811653', img: 'https://quizizz.com/_media/uploadedFiles/dcfb03a3-080e-44f1-8b73-13f71f3820e8-v2' },
+      { label: 'ONE HIT SINGLE', url: 'https://html-classic.itch.zone/html/18666548/silly-billy-fnf-main/index.html?v=1785810819', img: 'https://quizizz.com/_media/uploadedFiles/9f167b82-68c8-4731-a189-cd52e2052c89-v2' }
+    ],
+
+    'horror': [
+      { label: 'The Hour Of Joy',                     url: 'https://html-classic.itch.zone/html/19565224/index.html?v=1791144775', img: 'https://quizizz.com/_media/uploadedFiles/8a6fc83a-5b4d-4270-8297-5193993cb9da-v2' },
+      { label: 'Pianosaurus',                         url: 'https://html-classic.itch.zone/html/19550584/index.html?v=1791088808', img: 'https://quizizz.com/_media/uploadedFiles/4f526e72-0e97-4442-8c39-3bbc46073d46-v2' },
+      { label: 'VEILHOLLOW',                          url: 'https://html-classic.itch.zone/html/19567962/index.html?v=1791153479', img: 'https://quizizz.com/_media/uploadedFiles/87a38f2e-bb1e-405b-9177-faf1d862955f-v2' },
+      { label: 'A Bite at Freddy’s',                  url: 'https://html-classic.itch.zone/html/17555938/index.html?v=1778890468', img: 'https://quizizz.com/_media/uploadedFiles/c1209eec-f449-4be0-aead-c033ce00ba72-v2' },
+      { label: 'Fish Face',                           url: 'https://html-classic.itch.zone/html/14152976/FishFace/www/index.html', img: 'https://quizizz.com/_media/uploadedFiles/2a2574da-e83f-4fdb-ace7-b848e8546567-v2' },
+      { label: 'Go To Bed',                           url: 'https://html-classic.itch.zone/html/17866232/index.html?v=1790462152', img: 'https://quizizz.com/_media/uploadedFiles/4bec3af6-0a27-4856-bcc7-0a305fbf9f9f-v2' },
+      { label: "Baldi's Basics Plus",                 url: "https://html-classic.itch.zone/html/17618752/index.html?v=1790462203", img: 'https://quizizz.com/_media/uploadedFiles/f821f38e-caff-4098-b8c2-602d5c61c416-v2' },
+      { label: 'Granny',                              url: 'https://html-classic.itch.zone/html/17861467/Granny-main/index.html?v=1790462263', img: 'https://quizizz.com/_media/uploadedFiles/9e8ef8c0-08a6-4e12-86f7-335c09787efc-v2' },
+      { label: 'Slender',                             url: 'https://html-classic.itch.zone/html/17129783/index.html?v=1775929482', img: 'https://quizizz.com/_media/uploadedFiles/5b06cd2c-a2d3-4032-b7d8-e2a650466de7-v2' },
+      { label: 'Iron Lung',                           url: 'https://html-classic.itch.zone/html/17121628/iron-lung-main/index.html?v=1775858719', img: 'https://quizizz.com/_media/uploadedFiles/5f29384e-d306-4548-a81c-78ab688efc7b-v2' },
+      { label: 'The Deadseat (broken)',               url: 'https://html-classic.itch.zone/html/17123849/index.html?v=1775877699', img: 'https://quizizz.com/_media/uploadedFiles/1b9feb50-0d61-4e13-80cf-d19e56f1a5c8-v2' },
+      { label: 'Five Nights at Epstein’s',            url: 'https://html-classic.itch.zone/html/17122772/fnae-main/index.html?v=1775866888', img: 'https://quizizz.com/_media/uploadedFiles/3bd37995-f786-481b-b79e-4e6c3e028a0a-v2' }
+    ],
+
+    'fps': [
+      { label: 'Half Life', url: 'https://html-classic.itch.zone/html/17555846/index.html?v=1790462327', img: 'https://quizizz.com/_media/uploadedFiles/7353e98c-ee09-4cd6-a36e-0231472b7c1e-v2' }
+    ],
+
+    'survival': [
+      { label: 'Terraria',     url: 'https://html-classic.itch.zone/html/17568965/index.html?v=1790462431', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/26725122-df5b-4ec5-9033-b653ab28ae52-v2' },
+      { label: 'Brotato',      url: 'https://html-classic.itch.zone/html/17190505/index.html?v=1790462489', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/77db2e86-5c96-4e13-abbc-1e0a5666e0af-v2' },
+      { label: 'Clover Pit',   url: 'https://html-classic.itch.zone/html/17203567/index.html?v=1790462591', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/a57639be-9a38-4b6c-9b06-7382aca110f1-v2' }
+    ],
+
+    'adventure': [
+      { label: 'Hollow Knight', url: 'https://html-classic.itch.zone/html/17203613/index.html?v=1790462649', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/3347a900-b861-44af-9253-b2fe7a796422-v2' },
+      { label: 'GTA: Vice City', url: 'https://html-classic.itch.zone/html/16068414/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/48c356d2-629d-4d38-a13a-2c6667058441-v2' },
+      { label: 'Omori', url: 'https://html-classic.itch.zone/html/17569024/index.html?v=1790462703', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/a9a907c0-946f-40a9-bd09-43d130d0c6b7-v2' }
+    ],
+
+    'chill': [
+      { label: 'An average day at the cat cafe', url: 'https://html-classic.itch.zone/html/6691622/WebGL/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/538ad862-5d31-46e5-aeb4-f9ba075ca94a-v2' },
+      { label: 'Animal Crossing', url: 'https://html-classic.itch.zone/html/17555943/index.html?v=1790461192', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/c5304bdf-3649-4071-9c14-a1c1515f5f1e-v2' },
+      { label: 'KittyToy',                       url: 'https://html-classic.itch.zone/html/10701493/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/cfcf9fda-5579-4953-b19e-c847412af963-v2' },
+      { label: 'Bake Care',                      url: 'https://html-classic.itch.zone/html/2638446/HTML/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/1f2cd3a7-9644-46b7-8a8a-de7a062b5bc5-v2' },
+      { label: 'b-e-e-t-l-e',                    url: 'https://html-classic.itch.zone/html/15021039/HTML/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/4da56917-3613-45dd-b40a-2880ae4ac0b2-v2' },
+      { label: 'Irori',                          url: 'https://html-classic.itch.zone/html/1848413/Web_v0.32/index.html', img: 'https://quizizz.com/_media/uploadedFiles/68c75dfc-a654-43b8-ab77-3140f674789a-v2' }
+    ],
+
+    'puzzle': [
+      { label: 'Another Night At The Archive', url: 'https://html-classic.itch.zone/html/11493468/index.html', img: 'https://quizizz.com/_media/uploadedFiles/d6608de6-dc8b-4e2c-a16d-bd68f63d4329-v2' },
+      { label: 'Six Cats Under',               url: 'https://html-classic.itch.zone/html/2267583/index.html?v=1591301667', img: 'https://quizizz.com/_media/uploadedFiles/4861c470-26d9-4c79-80f0-7b69c629b496-v2' }
+    ],
+
+    'racing': [
+      { label: 'PolyTrack', url: 'https://html-classic.itch.zone/html/19260993/index.html?v=1789545551', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/7723835a-0d38-47bc-a273-e5832b05c83e-v2' }
+    ],
+
+    'arcade': [
+      { label: 'Buckshot Roulette',        url: 'https://html-classic.itch.zone/html/17574967/index.html?v=1783533883', img: 'https://quizizz.com/_media/uploadedFiles/e80d528f-6241-42a3-9425-45c4b550bdfe-v2' },
+      { label: 'Slope',                    url: 'https://html-classic.itch.zone/html/14788017/SlopePlus1.3.1Web/index.html', img: 'https://quizizz.com/_media/uploadedFiles/165445d4-697a-4527-beb3-72725c5fb6d8-v2' },
+      { label: 'Purrgatory',                 url: 'https://html-classic.itch.zone/html/18001781/Purrgatory%20Web%201.4/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/66ed2f86-149c-4b56-973b-eb3dcfcc451d-v2' },
+      { label: 'Scritchy Scratchy',        url: 'https://html-classic.itch.zone/html/16388344-1536207/index.html', img: 'https://quizizz.com/_media/uploadedFiles/ca635142-dd7e-4cca-a2b6-b603e53bf050-v2' },
+      { label: 'Drift Boss (With Cheats)', url: 'https://html-classic.itch.zone/html/17945501/drift-boss-main/index.html?v=1783533981', img: 'https://quizizz.com/_media/uploadedFiles/d26af769-b9c4-4df0-b8d2-891c419e8b2c-v2' },
+      { label: 'Bad Time Simulator',       url: 'https://html-classic.itch.zone/html/13788770/index.html', img: 'https://quizizz.com/_media/uploadedFiles/3ca37124-fa2a-4027-bd25-03dc8073687c-v2' },
+      { label: 'Idle Gumball Machine',     url: 'https://html-classic.itch.zone/html/15811950/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/e2b86c32-6ca2-4270-a8eb-8bbe9a844a5d-v2' },
+      { label: 'Cat Cove Inn',             url: 'https://html-classic.itch.zone/html/6577714/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/81f8e6e9-509d-43e0-a839-1df58db6d4ae-v2' },
+      { label: 'Little Chef',              url: 'https://html-classic.itch.zone/html/15194587/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/a8636e76-f645-4e4d-8714-525f2194db0e-v2' },
+      { label: 'The MachinEGG',            url: 'https://html-classic.itch.zone/html/17689705/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/36b013c6-b827-4289-bf08-c7320d9c53fb-v2' },
+      { label: 'Life & Lemon', url: 'https://html-classic.itch.zone/html/18841454/Life%20&%20Lemon%20(WebGL)/index.html?v=1786958334', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/0ddb60f7-b389-4ed0-a962-447bde5f190f-v2' },
+      { label: 'Hooked',                   url: 'https://html-classic.itch.zone/html/17338298/index.html?v=1777365531', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/a808998d-39e8-4509-8939-83cc52692891-v2' }
+    ],
+
+    'flash': [
+      { label: 'Nip for Speed', url: 'https://html-classic.itch.zone/html/9641909/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/a601e8b2-6639-4a7d-ae70-9c285a0370cd-v2' },
+      { label: 'Deepest Sword', url: 'https://html-classic.itch.zone/html/4017918/index.html', img: 'https://media.quizizz.com/_mdserver/main/media/resource/gs/quizizz-media/uploadedFiles/3321ac29-195d-4655-8842-9f3c327ce834-v2' }
+    ]
+};
+
+
+
+  var CUSTOMIZE_STORAGE_KEY = 'whiskered-customize-cats';
+  var customizeOpen = false;
+  var activeTabId = null;
+  var prevPanel = null;
+  var prefs = {
+    theme: 'dark',
+    accent: 'orange',
+    density: 'comfortable',
+    welcome: true,
+    reducedMotion: false
+  };
+  var accentPalettes = {
+    lime:   { main: '#D7FF3F', strong: '#B9E62E', mid: '#C3E84A', pale: '#F2FFDD', light: '#E8FFA8' },
+    orange: { main: '#FF9F45', strong: '#E07A1F', mid: '#FFAA6B', pale: '#FFF6EE', light: '#FFE0C0' },
+    blue:   { main: '#3B82F6', strong: '#2563EB', mid: '#60A5FA', pale: '#EFF6FF', light: '#DBEAFE' },
+    purple: { main: '#8B5CF6', strong: '#7C3AED', mid: '#A78BFA', pale: '#F5F3FF', light: '#EDE9FE' },
+    green:  { main: '#16A34A', strong: '#15803D', mid: '#4ADE80', pale: '#F0FDF4', light: '#DCFCE7' },
+    pink:   { main: '#FF6EC7', strong: '#E0399C', mid: '#FF94D6', pale: '#FFF0FA', light: '#FFD6EE' }
+  };
+
+  function loadPrefs() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(CUSTOMIZE_STORAGE_KEY) || '{}');
+      Object.assign(prefs, saved);
+    } catch (e) {}
+    if (!prefs.theme) prefs.theme = 'dark';
+    if (!prefs.accent) prefs.accent = 'orange';
+    if (!prefs.density) prefs.density = 'comfortable';
+    if (typeof prefs.welcome !== 'boolean') prefs.welcome = true;
+    if (typeof prefs.reducedMotion !== 'boolean') prefs.reducedMotion = false;
+  }
+
+  function savePrefs() {
+    localStorage.setItem(CUSTOMIZE_STORAGE_KEY, JSON.stringify(prefs));
+  }
+
+  function hexToRgba(hex, alpha) {
+    var value = hex.replace('#', '');
+    if (value.length === 3) {
+      value = value.split('').map(function (ch) { return ch + ch; }).join('');
+    }
+    var intValue = parseInt(value, 16);
+    var r = (intValue >> 16) & 255;
+    var g = (intValue >> 8) & 255;
+    var b = intValue & 255;
+    return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
+  }
+
+  function relLum(hex) {
+    var v = parseInt(hex.slice(1), 16);
+    return [v >> 16, (v >> 8) & 255, v & 255].map(function (c) {
+      c /= 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }).reduce(function (sum, c, i) { return sum + c * [0.2126, 0.7152, 0.0722][i]; }, 0);
+  }
+
+  /* Darken a colour until it reaches at least 4.5:1 against the given background. */
+  function readableOn(hex, bgHex) {
+    var v = parseInt(hex.slice(1), 16);
+    var r = v >> 16, g = (v >> 8) & 255, b = v & 255;
+    var bgL = relLum(bgHex);
+    for (var i = 0; i < 40; i++) {
+      var cur = '#' + [r, g, b].map(function (c) { return ('0' + Math.round(c).toString(16)).slice(-2); }).join('');
+      var l = relLum(cur);
+      if ((bgL + 0.05) / (l + 0.05) >= 4.5) return cur;
+      r *= 0.94; g *= 0.94; b *= 0.94;
+    }
+    return '#2C1400';
+  }
+
+  function applyPrefs() {
+    var root = document.documentElement;
+    var isDark = prefs.theme !== 'light';
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.body.classList.toggle('compact', prefs.density === 'compact');
+    document.body.classList.toggle('hide-welcome-guidance', prefs.welcome === false);
+    document.body.setAttribute('data-density', prefs.density || 'comfortable');
+    document.body.setAttribute('data-motion', prefs.reducedMotion ? 'reduced' : 'normal');
+
+    var palette = accentPalettes[prefs.accent] || accentPalettes.orange;
+    var surface = isDark ? '#211A14' : '#FFFAF1';
+    var acc = parseInt(palette.main.slice(1), 16);
+    var lum = (0.299 * (acc >> 16) + 0.587 * ((acc >> 8) & 255) + 0.114 * (acc & 255)) / 255;
+
+    root.style.setProperty('--accent', palette.main);
+    root.style.setProperty('--accent-strong', palette.strong);
+    root.style.setProperty('--accent-text', isDark ? palette.main : readableOn(palette.main, surface));
+    root.style.setProperty('--on-accent', lum > 0.6 ? '#24160D' : '#FFFFFF');
+    if (!isDark) root.style.setProperty('--soft', 'rgba(36, 22, 13, 0.07)');
+    else root.style.setProperty('--soft', hexToRgba(palette.main, 0.14));
+
+    updateCustomizeUI();
+  }
+
+  function updateCustomizeUI() {
+    document.querySelectorAll('[data-theme-choice]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-theme-choice') === prefs.theme);
+    });
+    document.querySelectorAll('[data-accent-choice]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-accent-choice') === prefs.accent);
+    });
+    document.querySelectorAll('[data-density-choice]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-density-choice') === prefs.density);
+    });
+
+    var welcomeBtn = document.querySelector('[data-toggle="welcome"]');
+    if (welcomeBtn) {
+      welcomeBtn.classList.toggle('active', prefs.welcome);
+      welcomeBtn.setAttribute('aria-pressed', String(prefs.welcome));
+    }
+
+    var motionBtn = document.querySelector('[data-toggle="motion"]');
+    if (motionBtn) {
+      motionBtn.classList.toggle('active', prefs.reducedMotion);
+      motionBtn.setAttribute('aria-pressed', String(prefs.reducedMotion));
+    }
+
+  }
+
+  function openCustomizePanel() {
+    var overlay = document.getElementById('customize-overlay');
+    if (!overlay) return;
+    customizeOpen = true;
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    var closeBtn = document.getElementById('close-customize');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeCustomizePanel() {
+    var overlay = document.getElementById('customize-overlay');
+    if (!overlay) return;
+    customizeOpen = false;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+
+  /* ---- Transition helpers ---------------------------------- */
+  function getActiveView() {
+    var views = [
+      document.getElementById('welcome-screen'),
+      document.getElementById('itchio-view'),
+      document.getElementById('itchio-genre-view'),
+      document.getElementById('websites-view')
+    ];
+    for (var i = 0; i < views.length; i++) {
+      if (views[i] && views[i].style.display !== 'none') return views[i];
+    }
+    if (prevPanel && !prevPanel.hidden && prevPanel.classList.contains('active')) {
+      return prevPanel;
+    }
+    return null;
+  }
+
+  function animateOut(el, then) {
+    if (!el) { then(); return; }
+    el.classList.add('page-exiting');
+    setTimeout(function () {
+      el.classList.remove('page-exiting');
+      then();
+    }, 180);
+  }
+
+  function animateIn(el) {
+    if (!el) return;
+    el.classList.add('page-entering');
+    el.addEventListener('animationend', function handler() {
+      el.classList.remove('page-entering');
+      el.removeEventListener('animationend', handler);
+    });
+  }
+
+  /* ---- Mode switching -------------------------------------- */
+  function setNavActive(mode) {
+    document.querySelectorAll('.topbar-link').forEach(function (l) {
+      var on = l.getAttribute('data-nav') === mode;
+      l.classList.toggle('active', on);
+      if (on) l.setAttribute('aria-current', 'page'); else l.removeAttribute('aria-current');
+    });
+  }
+
+  function setMode(mode) {
+    document.querySelectorAll('.topbar-link').forEach(function (l) {
+      var n = l.getAttribute('data-nav');
+      var on = n === mode || (n === 'itchio' && mode === 'itchio-genre');
+      l.classList.toggle('active', on);
+      if (on) l.setAttribute('aria-current', 'page'); else l.removeAttribute('aria-current');
+    });
+    var itchioView = document.getElementById('itchio-view');
+    var welcomeScreen = document.getElementById('welcome-screen');
+    var websitesView = document.getElementById('websites-view');
+    var currentView = getActiveView();
+
+    animateOut(currentView, function () {
+      var itchioGenreView = document.getElementById('itchio-genre-view');
+      if (itchioView) itchioView.style.display = 'none';
+      if (itchioGenreView) itchioGenreView.style.display = 'none';
+      if (welcomeScreen) welcomeScreen.style.display = 'none';
+      if (websitesView) websitesView.style.display = 'none';
+      document.querySelectorAll('.content-panel').forEach(function (p) {
+        p.hidden = true;
+        p.classList.remove('active');
+      });
+      prevPanel = null;
+      activeTabId = null;
+
+      var target;
+      if (mode === 'itchio') {
+        if (itchioView) { itchioView.style.display = 'flex'; target = itchioView; }
+      } else if (mode === 'websites') {
+        if (websitesView) { websitesView.style.display = ''; target = websitesView; }
+      } else {
+        if (welcomeScreen) { welcomeScreen.style.display = ''; target = welcomeScreen; }
+      }
+      animateIn(target);
+    });
+  }
+
+  /* ---- Show a site panel (no tab elements needed) ---------- */
+  function showPanel(siteId) {
+    var panel = document.getElementById('panel-' + siteId);
+    if (!panel) return;
+    setNavActive('websites');
+    var currentView = getActiveView();
+
+    animateOut(currentView, function () {
+      var websitesView = document.getElementById('websites-view');
+      if (websitesView) websitesView.style.display = 'none';
+      var welcomeEl = document.getElementById('welcome-screen');
+      if (welcomeEl) welcomeEl.style.display = 'none';
+
+      if (prevPanel && prevPanel !== panel) {
+        prevPanel.classList.remove('active');
+        prevPanel.hidden = true;
+      }
+
+      activeTabId = siteId;
+      panel.hidden = false;
+      panel.scrollTop = 0;
+      panel.classList.remove('exiting');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          panel.classList.add('active');
+          animateIn(panel);
+          panel.focus({ preventScroll: true });
+        });
+      });
+      prevPanel = panel;
+      history.replaceState(null, '', '#panel-' + siteId);
+    });
+  }
+
+  /* ---- Build Itch.io genre grid ---------------------------- */
+  function buildItchioView() {
+    var grid = document.getElementById('itchio-genre-grid');
+    if (!grid) return;
+
+    GENRES.forEach(function (genre) {
+      var btn = document.createElement('button');
+      btn.className = 'sites-card';
+      var iconHtml = genre.iconImg
+        ? '<img class="sites-card-icon-img' + (genre.iconBlend ? ' sites-card-icon-img-blend' : '') + '" src="' + genre.iconImg + '" alt="" />'
+        : genre.icon;
+      btn.innerHTML =
+        '<span class="sites-card-icon" aria-hidden="true">' + iconHtml + '</span>' +
+        '<span class="sites-card-name">' + genre.label + '</span>';
+      btn.addEventListener('click', function () { showGenre(genre); });
+      grid.appendChild(btn);
+    });
+  }
+
+  /* ---- Show individual genre page -------------------------- */
+  function showGenre(genre) {
+    setNavActive('itchio');
+    var currentView = getActiveView();
+    var genreView = document.getElementById('itchio-genre-view');
+    var genreTitle = document.getElementById('itchio-genre-title');
+    var container = document.querySelector('.itchio-placeholder-buttons');
+
+    animateOut(currentView, function () {
+      var itchioView = document.getElementById('itchio-view');
+      if (itchioView) itchioView.style.display = 'none';
+
+      if (genreTitle) genreTitle.textContent = genre.label;
+      var genreCount = document.getElementById('itchio-genre-count');
+      var gameList = GENRE_GAMES[genre.id] || [];
+      if (genreCount) genreCount.textContent = gameList.length + (gameList.length === 1 ? ' game' : ' games');
+
+      if (container) {
+        container.innerHTML = '';
+        var games = GENRE_GAMES[genre.id] || [];
+        if (!games.length) {
+          var empty = document.createElement('p');
+          empty.className = 'itchio-empty';
+          empty.textContent = 'No games here yet. The cat knocked them off the shelf!';
+          container.appendChild(empty);
+        }
+        games.forEach(function (game, i) {
+          var a = document.createElement('a');
+          a.href = game.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'itchio-placeholder-btn';
+          a.style.animationDelay = Math.min(i * 30, 300) + 'ms';
+          a.dataset.name = game.label.toLowerCase();
+          var cover = document.createElement('span');
+          cover.className = 'game-cover';
+          if (game.img) {
+            var img = document.createElement('img');
+            img.src = game.img;
+            img.alt = '';
+            img.loading = 'lazy';
+            cover.appendChild(img);
+          } else {
+            var letter = document.createElement('span');
+            letter.className = 'game-cover-letter';
+            letter.setAttribute('aria-hidden', 'true');
+            letter.textContent = game.label.charAt(0).toUpperCase();
+            cover.appendChild(letter);
+          }
+          var name = document.createElement('span');
+          name.className = 'game-name';
+          name.textContent = game.label;
+          a.appendChild(cover);
+          a.appendChild(name);
+          container.appendChild(a);
+        });
+
+        var search = document.getElementById('game-search');
+        if (search) {
+          search.value = '';
+          search.hidden = games.length < 7;
+          search.oninput = function () {
+            var q = search.value.trim().toLowerCase();
+            var shown = 0;
+            container.querySelectorAll('.itchio-placeholder-btn').forEach(function (card) {
+              var match = !q || card.dataset.name.indexOf(q) !== -1;
+              card.style.display = match ? '' : 'none';
+              if (match) shown++;
+            });
+            var none = container.querySelector('.itchio-nomatch');
+            if (!shown && !none) {
+              none = document.createElement('p');
+              none.className = 'itchio-empty itchio-nomatch';
+              none.textContent = 'Nothing found. Try another sniff?';
+              container.appendChild(none);
+            } else if (shown && none) {
+              none.remove();
+            }
+          };
+        }
+      }
+
+      if (genreView) genreView.style.display = '';
+      animateIn(genreView);
+    });
+  }
+
+  /* ---- Build websites view --------------------------------- */
+  function buildWebsitesView() {
+    var grid = document.getElementById('websites-grid');
+    if (!grid) return;
+
+    SITES.forEach(function (site) {
+      var btn = document.createElement('button');
+      btn.className = 'sites-card';
+      btn.innerHTML =
+        '<span class="sites-card-icon" aria-hidden="true">' + site.icon + '</span>' +
+        '<span class="sites-card-name">' + site.label + '</span>' +
+        '<span class="sites-card-tagline">' + site.tagline + '</span>';
+      btn.addEventListener('click', function () { showPanel(site.id); });
+      grid.appendChild(btn);
+    });
+  }
+
+  /* ---- Boot ------------------------------------------------ */
+  function init() {
+    document.body.classList.remove('no-js');
+    var homeLink = document.querySelector('.topbar-link[data-nav="home"]');
+    if (homeLink) homeLink.classList.add('active');
+    loadPrefs();
+    applyPrefs();
+    enhancePanels();
+    buildItchioView();
+    var qj = document.getElementById('quick-jump-list');
+    if (qj) {
+      SITES.slice().sort(function () { return Math.random() - 0.5; }).slice(0, 5).forEach(function (site) {
+        var li = document.createElement('li');
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'widget-item';
+        b.innerHTML = '<span class="widget-item-icon" aria-hidden="true">' + site.icon + '</span><span>' + site.label + '</span>';
+        b.addEventListener('click', function () { showPanel(site.id); });
+        li.appendChild(b);
+        qj.appendChild(li);
+      });
+    }
+    var clList = document.getElementById('changelog-list');
+    if (clList) {
+      CHANGELOG.forEach(function (entry) {
+        var li = document.createElement('li');
+        li.className = 'changelog-entry';
+        var meta = document.createElement('div');
+        meta.className = 'changelog-meta';
+        var badge = document.createElement('span');
+        badge.className = 'link-badge';
+        badge.textContent = entry.badge;
+        meta.appendChild(badge);
+        var p = document.createElement('p');
+        p.textContent = entry.text;
+        li.appendChild(meta);
+        li.appendChild(p);
+        clList.appendChild(li);
+      });
+    }
+    var newsBody = document.getElementById('whats-new-body');
+    var latest = document.querySelector('#changelog-modal .changelog-entry');
+    if (newsBody) {
+      var badge = latest && latest.querySelector('.link-badge');
+      var text = latest && latest.querySelector('p');
+      if (badge && text) {
+        newsBody.innerHTML = '';
+        var b = document.createElement('span');
+        b.className = 'link-badge';
+        b.textContent = badge.textContent;
+        var p = document.createElement('p');
+        p.textContent = text.textContent;
+        newsBody.appendChild(b);
+        newsBody.appendChild(p);
+      } else {
+        newsBody.innerHTML = '<p>Nothing new yet.</p>';
+      }
+    }
+    var openCl = document.getElementById('open-changelog');
+    if (openCl) openCl.addEventListener('click', function () {
+      var m = document.getElementById('changelog-modal');
+      if (m) { m.style.display = 'flex'; m.style.opacity = '1'; m.style.pointerEvents = 'auto'; }
+    });
+    var cg = document.getElementById('count-games');
+    var cs = document.getElementById('count-sites');
+    if (cg) cg.textContent = GENRES.length + ' genres';
+    if (cs) cs.textContent = SITES.length + ' sites';
+    var ncg = document.getElementById('nav-count-games'), ncs = document.getElementById('nav-count-sites');
+    if (ncg) ncg.textContent = GENRES.length;
+    if (ncs) ncs.textContent = SITES.length;
+    var lucky = document.getElementById('lucky-btn');
+    if (lucky) lucky.addEventListener('click', function () {
+      var pick = SITES[Math.floor(Math.random() * SITES.length)];
+      if (activeTabId) {
+        var others = SITES.filter(function (x) { return x.id !== activeTabId; });
+        pick = others[Math.floor(Math.random() * others.length)];
+      }
+      showPanel(pick.id);
+    });
+    var sideTheme = document.getElementById('side-theme');
+    if (sideTheme) sideTheme.addEventListener('click', function () {
+      prefs.theme = prefs.theme === 'light' ? 'dark' : 'light';
+      applyPrefs(); savePrefs();
+    });
+    var sideCl = document.getElementById('side-changelog');
+    if (sideCl) sideCl.addEventListener('click', function () { if (openCl) openCl.click(); });
+    var sideCat = document.querySelector('.side-cat');
+    if (sideCat) sideCat.addEventListener('click', function () { sideCat.classList.remove('purr'); void sideCat.offsetWidth; sideCat.classList.add('purr'); });
+    buildWebsitesView();
+    bindEvents();
+  }
+
+  /* ---- Inject links button + back link into every panel ---- */
+  /* ---- Rebuild each panel's links as a link board ----------- */
+  function copyText(text, btn, label) {
+    var done = function () {
+      btn.classList.add('done');
+      btn.textContent = 'Copied';
+      setTimeout(function () { btn.classList.remove('done'); btn.textContent = label; }, 1300);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      ta.remove();
+    }
+  }
+
+  function buildLinksBoard(section) {
+    var anchors = Array.prototype.slice.call(section.querySelectorAll('a.site-link'));
+    var creds = section.querySelector('.link-credentials');
+    if (!anchors.length && !creds) return;
+    section.textContent = '';
+
+    if (creds) {
+      creds.querySelectorAll('.cred-item').forEach(function (item) {
+        var val = item.querySelector('.cred-value');
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'cred-copy'; b.textContent = 'Copy';
+        b.addEventListener('click', function () { copyText(val.textContent, b, 'Copy'); });
+        item.appendChild(b);
+      });
+      section.appendChild(creds);
+    }
+    if (!anchors.length) return;
+
+    var bar = document.createElement('div');
+    bar.className = 'links-bar';
+    var count = document.createElement('span');
+    count.className = 'links-count';
+    count.setAttribute('aria-live', 'polite');
+    bar.appendChild(count);
+    var filter = null;
+    if (anchors.length > 8) {
+      filter = document.createElement('input');
+      filter.type = 'search'; filter.className = 'links-filter';
+      filter.placeholder = 'Filter links...'; filter.setAttribute('aria-label', 'Filter links');
+      bar.appendChild(filter);
+    }
+    var copyAll = document.createElement('button');
+    copyAll.type = 'button'; copyAll.className = 'links-copyall'; copyAll.textContent = 'Copy all';
+    bar.appendChild(copyAll);
+    section.appendChild(bar);
+
+    var list = document.createElement('ol');
+    list.className = 'link-list';
+    var cards = [];
+    anchors.forEach(function (a, i) {
+      var href = a.href, host = href, rest = '';
+      try {
+        var u = new URL(href);
+        host = u.hostname.replace(/^www\./, '');
+        rest = (u.pathname === '/' ? '' : u.pathname) + u.search + u.hash;
+      } catch (e) {}
+      var row = a.closest('.link-row');
+      var badge = row && row.querySelector('.link-badge');
+
+      var li = document.createElement('li');
+      li.className = 'link-card';
+      li.style.animationDelay = Math.min(i * 25, 300) + 'ms';
+      li.dataset.url = href;
+
+      a.textContent = '';
+      a.title = href;
+      var num = document.createElement('span'); num.className = 'lc-num'; num.setAttribute('aria-hidden', 'true');
+      num.textContent = (i < 9 ? '0' : '') + (i + 1);
+      var main = document.createElement('span'); main.className = 'lc-main';
+      var h = document.createElement('span'); h.className = 'lc-host'; h.textContent = host;
+      var pth = document.createElement('span'); pth.className = 'lc-path'; pth.textContent = rest;
+      main.appendChild(h); main.appendChild(pth);
+      if (badge) main.appendChild(badge);
+      var go = document.createElement('span'); go.className = 'lc-go'; go.setAttribute('aria-hidden', 'true'); go.textContent = '\u2197';
+      a.appendChild(num); a.appendChild(main); a.appendChild(go);
+
+      var cp = document.createElement('button');
+      cp.type = 'button'; cp.className = 'lc-copy'; cp.textContent = 'Copy';
+      cp.setAttribute('aria-label', 'Copy link ' + (i + 1));
+      cp.addEventListener('click', function () { copyText(href, cp, 'Copy'); });
+
+      li.appendChild(a); li.appendChild(cp);
+      list.appendChild(li);
+      cards.push(li);
+    });
+    section.appendChild(list);
+
+    var nomatch = document.createElement('p');
+    nomatch.className = 'link-nomatch'; nomatch.textContent = 'No links match. Try another sniff?'; nomatch.hidden = true;
+    section.appendChild(nomatch);
+
+    function visibleCards() { return cards.filter(function (c) { return !c.hidden; }); }
+    function updateCount() {
+      var n = visibleCards().length;
+      count.innerHTML = '<b>' + (n === cards.length ? n : n + '/' + cards.length) + '</b>' + (cards.length === 1 ? 'link' : 'links');
+      nomatch.hidden = n !== 0;
+    }
+    if (filter) filter.addEventListener('input', function () {
+      var q = filter.value.trim().toLowerCase();
+      cards.forEach(function (c) { c.hidden = !!q && c.dataset.url.toLowerCase().indexOf(q) === -1; });
+      updateCount();
+    });
+    copyAll.addEventListener('click', function () {
+      copyText(visibleCards().map(function (c) { return c.dataset.url; }).join('\n'), copyAll, 'Copy all');
+    });
+    updateCount();
+  }
+
+  function enhancePanels() {
+    var panels = document.querySelectorAll('.content-panel');
+    panels.forEach(function (panel) {
+      var inner = panel.querySelector('.panel-inner');
+      var header = panel.querySelector('.panel-header');
+
+      /* Back button – inserted before the header */
+      if (inner && header) {
+        var back = document.createElement('button');
+        back.className = 'back-home-btn';
+        back.setAttribute('aria-label', 'Go back to home page');
+        back.innerHTML = '<span class="arrow" aria-hidden="true">&#8592;</span> Go back to home page';
+        back.addEventListener('click', function () { setMode('websites'); });
+        inner.insertBefore(back, header);
+      }
+      var linksSection = panel.querySelector('.links-section');
+      var siteId = panel.id.replace('panel-', '');
+      var siteIdx = SITES.findIndex(function (x) { return x.id === siteId; });
+      var site = SITES[siteIdx];
+      var linkCount = linksSection ? linksSection.querySelectorAll('a.site-link').length : 0;
+      var firstLink = linksSection && linksSection.querySelector('a.site-link');
+      var firstHref = firstLink ? firstLink.href : '';
+
+      /* Banner */
+      if (header && site) {
+        var name = header.querySelector('h2');
+        var icon = document.createElement('span');
+        icon.className = 'ph-icon'; icon.setAttribute('aria-hidden', 'true'); icon.textContent = site.icon;
+        var text = document.createElement('div');
+        text.className = 'ph-text';
+        var kicker = document.createElement('p');
+        kicker.className = 'ph-kicker';
+        kicker.textContent = 'Site ' + (siteIdx < 9 ? '0' : '') + (siteIdx + 1) + ' / ' + SITES.length + ' \u00b7 ' +
+          (linkCount ? linkCount + (linkCount === 1 ? ' link' : ' links') : 'No links yet');
+        var tag = document.createElement('p');
+        tag.className = 'ph-tagline'; tag.textContent = site.tagline;
+        text.appendChild(kicker); text.appendChild(name); text.appendChild(tag);
+        header.textContent = '';
+        header.appendChild(icon); header.appendChild(text);
+        if (firstHref) {
+          var actions = document.createElement('div');
+          actions.className = 'ph-actions';
+          var open = document.createElement('button');
+          open.type = 'button'; open.className = 'ph-open'; open.textContent = 'Open first link \u2197';
+          open.addEventListener('click', function () { window.open(firstHref, '_blank', 'noopener,noreferrer'); });
+          actions.appendChild(open); header.appendChild(actions);
+        }
+      }
+      var placeholder = panel.querySelector('.panel-image-placeholder');
+      if (placeholder) placeholder.remove();
+      if (back) back.innerHTML = '<span class="arrow" aria-hidden="true">&#8592;</span> All websites';
+      if (back) back.setAttribute('aria-label', 'Back to all websites');
+
+      /* About card with prev / next */
+      var desc = panel.querySelector('.panel-description');
+      if (inner && desc && site) {
+        var about = document.createElement('section');
+        about.className = 'about-card';
+        var h3 = document.createElement('h3'); h3.textContent = 'About';
+        desc.parentNode.insertBefore(about, desc);
+        about.appendChild(h3); about.appendChild(desc);
+
+        var facts = document.createElement('div');
+        facts.className = 'about-facts';
+        [['Links', linkCount || '\u2014'], ['Entry', (siteIdx + 1) + ' of ' + SITES.length]].forEach(function (f) {
+          var d = document.createElement('div'); d.className = 'about-fact';
+          d.innerHTML = '<span></span><strong></strong>';
+          d.firstChild.textContent = f[0]; d.lastChild.textContent = f[1];
+          facts.appendChild(d);
+        });
+        about.appendChild(facts);
+
+        var pager = document.createElement('div');
+        pager.className = 'pager';
+        [['prev', siteIdx - 1, 'Previous'], ['next', siteIdx + 1, 'Next']].forEach(function (cfg) {
+          var target = SITES[cfg[1]];
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'pager-btn ' + cfg[0];
+          b.innerHTML = '<span></span><strong></strong>';
+          b.firstChild.textContent = cfg[2];
+          if (target) {
+            b.lastChild.textContent = (cfg[0] === 'prev' ? '\u2190 ' : '') + target.label + (cfg[0] === 'next' ? ' \u2192' : '');
+            b.addEventListener('click', function () { showPanel(target.id); });
+          } else { b.disabled = true; b.lastChild.textContent = '-'; }
+          pager.appendChild(b);
+        });
+        about.appendChild(pager);
+      }
+
+      if (linksSection) buildLinksBoard(linksSection);
+    });
+  }
+
+  /* ---- Go back to welcome screen --------------------------- */
+  function goHome() {
+    var allTabs = document.querySelectorAll('.tab-item');
+    allTabs.forEach(function (t, i) {
+      t.setAttribute('aria-selected', 'false');
+      t.classList.remove('active');
+      t.setAttribute('tabindex', i === 0 ? '0' : '-1');
+    });
+
+    if (prevPanel) {
+      var leaving = prevPanel;
+      leaving.classList.remove('active');
+      leaving.classList.add('exiting');
+      setTimeout(function () {
+        leaving.classList.remove('exiting');
+        leaving.hidden = true;
+      }, 200);
+      prevPanel = null;
+    }
+
+    var welcome = document.getElementById('welcome-screen');
+    if (welcome) welcome.classList.remove('hidden');
+
+    activeTabId = null;
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    /* Return focus to first tab */
+    if (allTabs.length) allTabs[0].focus();
+  }
+
+  /* ---- Event wiring ---------------------------------------- */
+  function bindEvents() {
+    var btnItchio = document.getElementById('btn-itchio');
+    var btnWebsites = document.getElementById('btn-websites');
+    var itchioBack = document.getElementById('itchio-back-btn');
+    var openCustomizeBtn = document.getElementById('open-customize');
+    var closeCustomizeBtn = document.getElementById('close-customize');
+    var customizeOverlay = document.getElementById('customize-overlay');
+    document.querySelectorAll('[data-nav]').forEach(function (el) {
+      el.addEventListener('click', function (e) { e.preventDefault(); setMode(el.getAttribute('data-nav')); });
+    });
+    if (btnItchio) btnItchio.addEventListener('click', function () { setMode('itchio'); });
+    if (btnWebsites) btnWebsites.addEventListener('click', function () { setMode('websites'); });
+    if (itchioBack) itchioBack.addEventListener('click', function () { setMode('home'); });
+    if (openCustomizeBtn) openCustomizeBtn.addEventListener('click', openCustomizePanel);
+    if (closeCustomizeBtn) closeCustomizeBtn.addEventListener('click', closeCustomizePanel);
+    if (customizeOverlay) customizeOverlay.addEventListener('click', function (e) {
+      if (e.target === customizeOverlay) closeCustomizePanel();
+    });
+
+
+    var itchioGenreBack = document.getElementById('itchio-genre-back-btn');
+    if (itchioGenreBack) itchioGenreBack.addEventListener('click', function () { setMode('itchio'); });
+
+    var websitesHomeBtn = document.getElementById('websites-back-btn');
+    if (websitesHomeBtn) websitesHomeBtn.addEventListener('click', function () { setMode('home'); });
+
+    var tabList = document.getElementById('tab-list');
+    if (tabList) {
+      tabList.addEventListener('click', onTabClick);
+      tabList.addEventListener('keydown', onTabKeydown);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (customizeOpen) closeCustomizePanel();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest('[data-theme-choice], [data-accent-choice], [data-density-choice], [data-toggle], [data-reset]');
+      if (!chip) return;
+      if (chip.hasAttribute('data-reset')) {
+        prefs.theme = 'dark';
+        prefs.accent = 'orange';
+        prefs.density = 'comfortable';
+        prefs.welcome = true;
+        prefs.reducedMotion = false;
+      } else if (chip.getAttribute('data-theme-choice')) {
+        prefs.theme = chip.getAttribute('data-theme-choice');
+      } else if (chip.getAttribute('data-accent-choice')) {
+        prefs.accent = chip.getAttribute('data-accent-choice');
+      } else if (chip.getAttribute('data-density-choice')) {
+        prefs.density = chip.getAttribute('data-density-choice');
+      } else if (chip.getAttribute('data-toggle') === 'welcome') {
+        prefs.welcome = !prefs.welcome;
+      } else if (chip.getAttribute('data-toggle') === 'motion') {
+        prefs.reducedMotion = !prefs.reducedMotion;
+      }
+      savePrefs();
+      applyPrefs();
+    });
+
+    window.addEventListener('hashchange', onHashChange);
+  }
+
+  /* ---- Tab click ------------------------------------------- */
+  function onTabClick(e) {
+    var item = e.target.closest('.tab-item');
+    if (!item) return;
+    e.preventDefault();
+    activateTab(item.id.replace('tab-', ''));
+  }
+
+  /* ---- Tab keyboard ---------------------------------------- */
+  function onTabKeydown(e) {
+    var tabs = Array.from(document.querySelectorAll('.tab-item'));
+    var idx = tabs.indexOf(document.activeElement);
+    var next;
+
+    switch (e.key) {
+      case 'ArrowDown': case 'ArrowRight':
+        e.preventDefault();
+        next = (idx + 1) % tabs.length;
+        moveFocus(tabs, next);
+        break;
+      case 'ArrowUp': case 'ArrowLeft':
+        e.preventDefault();
+        next = (idx - 1 + tabs.length) % tabs.length;
+        moveFocus(tabs, next);
+        break;
+      case 'Home':
+        e.preventDefault();
+        moveFocus(tabs, 0);
+        break;
+      case 'End':
+        e.preventDefault();
+        moveFocus(tabs, tabs.length - 1);
+        break;
+      case 'Enter': case ' ':
+        e.preventDefault();
+        var focused = document.activeElement;
+        if (focused && focused.classList.contains('tab-item')) {
+          activateTab(focused.id.replace('tab-', ''));
+        }
+        break;
+    }
+  }
+
+  function moveFocus(tabs, idx) {
+    tabs.forEach(function (t, i) {
+      t.setAttribute('tabindex', i === idx ? '0' : '-1');
+    });
+    tabs[idx].focus();
+    tabs[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  /* ---- Activate tab ---------------------------------------- */
+  function activateTab(siteId) {
+    if (activeTabId === siteId) return;
+
+    var tab = document.getElementById('tab-' + siteId);
+    var panel = document.getElementById('panel-' + siteId);
+    if (!tab || !panel) return;
+
+    /* Deactivate previous tab */
+    var allTabs = document.querySelectorAll('.tab-item');
+    allTabs.forEach(function (t) {
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+      t.classList.remove('active');
+    });
+
+    /* Exit previous panel */
+    if (prevPanel && prevPanel !== panel) {
+      var leaving = prevPanel;
+      leaving.classList.remove('active');
+      leaving.classList.add('exiting');
+      var onEnd = function () {
+        leaving.classList.remove('exiting');
+        leaving.hidden = true;
+        leaving.removeEventListener('transitionend', onEnd);
+      };
+      leaving.addEventListener('transitionend', onEnd);
+    }
+
+    /* Activate new tab */
+    activeTabId = siteId;
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
+    tab.classList.add('active');
+    tab.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+    /* Show new panel */
+    panel.hidden = false;
+    panel.classList.remove('exiting');
+    /* Trigger paint before adding .active so transition fires */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        panel.classList.add('active');
+        panel.focus({ preventScroll: true });
+      });
+    });
+    prevPanel = panel;
+
+    /* Hide welcome screen */
+    var welcome = document.getElementById('welcome-screen');
+    if (welcome) welcome.classList.add('hidden');
+
+    /* Update URL hash silently */
+    history.replaceState(null, '', '#panel-' + siteId);
+  }
+
+  /* ---- Hash routing ---------------------------------------- */
+  function handleHashOnLoad() {
+    var hash = window.location.hash.replace('#panel-', '').replace('#', '');
+    if (!hash) return;
+    var match = SITES.find(function (s) { return s.id === hash; });
+    if (match) activateTab(match.id);
+  }
+
+  function onHashChange() {
+    var hash = window.location.hash.replace('#panel-', '').replace('#', '');
+    if (hash && hash !== activeTabId) {
+      var match = SITES.find(function (s) { return s.id === hash; });
+      if (match) activateTab(match.id);
+    }
+  }
+
+  /* ---- Start ----------------------------------------------- */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}());
+
+window.addEventListener("load", () => {
+  const modal = document.getElementById("changelog-modal");
+  modal.style.pointerEvents = "auto";
+  modal.style.opacity = "1";
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.getElementById("close-changelog");
+  const modal = document.getElementById("changelog-modal");
+
+  const close = () => { modal.style.display = "none"; };
+  closeBtn.addEventListener("click", close);
+  modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+});
+</script>
+
 </body>
 </html>
