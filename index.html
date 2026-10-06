@@ -270,6 +270,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .itchio-genre-grid .sites-card-name { font-size: 20px; }
 .itchio-genre-grid .sites-card-icon { width: 80px; height: 80px; padding: 4px; border-radius: 20px; }
 .itchio-genre-grid .sites-card-icon-img { width: 100%; height: 100%; object-fit: contain; }
+.sites-card-icon-svg { display: block; width: 100%; height: 100%; }
 .itchio-genre-grid .sites-card { min-height: 190px; }
 
 .websites-grid { display: flex; flex-direction: column; counter-reset: site; border: 2px solid var(--ink); border-radius: 24px; overflow: hidden; background: var(--surface); }
@@ -1749,19 +1750,19 @@ body.hide-welcome-guidance .how-to-use { display: none; }
   ];
 
   var GENRES = [
-    { id: 'platformer', label: 'Platformer', icon: 'P', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.iconfinder.com%2Fdata%2Ficons%2Fgame-development-14%2F32%2Fplatform_game_platformer_video_game_game_genres_game_development-1024.png&f=1&nofb=1&ipt=03c7f5f8025b243d84a8be5efe91f5b18e9c1a859bc8e258f61e2e47bb9f4caf' },
-    { id: 'rhythm',     label: 'Rhythm',     icon: 'R', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F025%2F848%2F321%2Foriginal%2Fline-icon-for-rhythm-vector.jpg&f=1&nofb=1&ipt=021b62c8ae23e73357e0453407c0914d2a78838a5f9ac4e728b54614271bf597', iconBlend: true },
-    { id: 'multiplayer',     label: 'Multiplayer',     icon: 'M', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn1.iconfinder.com%2Fdata%2Ficons%2Fgame-development-14%2F32%2Fmultiplayer_gaming_game_multiplayer_online_gaming_computer_game_video_game_gamers-512.png&f=1&nofb=1&ipt=b4b1e828274a25c405f5299c2ca06f1c078496cabd024279f2538576d179d25a', iconBlend: true },
+    { id: 'platformer', label: 'Platformer', icon: 'P', svg: '<path d="M5 41h10V31h10V21h10V11h8"/><circle cx="13" cy="21" r="4" fill="currentColor" stroke="none"/><path d="M18 15c3-5 8-6 12-3" stroke-dasharray="1 5"/>' },
+    { id: 'rhythm',     label: 'Rhythm',     icon: 'R', svg: '<path d="M18 35V12l20-5v23"/><circle cx="13" cy="35" r="5.5" fill="currentColor" stroke="none"/><circle cx="33" cy="30" r="5.5" fill="currentColor" stroke="none"/>' },
+    { id: 'multiplayer',     label: 'Multiplayer',     icon: 'M', svg: '<circle cx="17" cy="15" r="6.5"/><path d="M5 41c0-9 5-13 12-13s12 4 12 13z"/><circle cx="34" cy="18" r="5"/><path d="M33 29c7 0 11 4 11 12h-9"/>' },
     { id: 'fnf',        label: 'FNF',        icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.icons8.com%2Fios_filled%2F1200%2Ffriday-night-funkin.jpg&f=1&nofb=1&ipt=5f529e2206978bc21b3127c28009a8ae8cf7381428310fca6e54305d2590a3aa', iconBlend: true },
-    { id: 'horror',     label: 'Horror',     icon: 'H', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F028%2F148%2F686%2Flarge_2x%2Fghost-icon-isolated-on-white-background-ghost-icon-emotion-variation-simple-flat-style-design-element-scary-horror-pictures-vector.jpg&f=1&nofb=1&ipt=e9fbb2d87da02f54939669ab0eec7da02b546e3193d77175283fba558992119a', iconBlend: true },
-    { id: 'fps',        label: 'FPS',        icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Fscope-icon-35.jpg&f=1&nofb=1&ipt=00c5da8fa64c8b32223bca8de0219d7ba295e52eccaaf38e5ad13d86c5f89129', iconBlend: true },
-    { id: 'arcade',     label: 'Arcade',     icon: 'A', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.clipartmax.com%2Fpng%2Fmiddle%2F189-1898756_arcade-icon-arcade-game.png&f=1&nofb=1&ipt=12c39031c4655e70bdce5f993bfd249eba034b6b456593622b31f20bbe2677d2', iconBlend: true },
-    { id: 'survival',   label: 'Survival',   icon: 'S', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftoppng.com%2Fuploads%2Fpreview%2Fmeat-icon-png-115529356657qvx2xpien.png&f=1&nofb=1&ipt=65c749358ba8ccbef38539a069585beceae81dd0f5e6dde1e4784512ec3dec04', iconBlend: true },
-    { id: 'adventure',  label: 'Adventure',  icon: 'A', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffreepngimg.com%2Fthumb%2Funited_states%2F76079-google-computer-icons-states-maps-united-location.png&f=1&nofb=1&ipt=14fd9590fc846c2898038560851da5d2dfc903b3436dbcae55e82a1a8460207e', iconBlend: true },
-    { id: 'chill',      label: 'Chill',      icon: 'C', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftoppng.com%2Fuploads%2Fpreview%2Fcoffee-svg-png-icon-free-download-coffee-icon-vector-115630823923jqzwmnp9y.png&f=1&nofb=1&ipt=95696eda7fd173d3c1a41b5c4489c97143231b8698db722473309ab8df71d184', iconBlend: true },
-    { id: 'puzzle',     label: 'Puzzle',     icon: 'P', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.-p0P3JauR98oBFi117qC7wHaHa%3Fr%3D0%26pid%3DApi&f=1&ipt=733e7198bfdda2d3e63edd7ad47ad81fbc904ff4767907daaf6190a1d823cd41', iconBlend: true },
-    { id: 'racing',     label: 'Racing',     icon: 'R', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fthumbnails%2F075%2F338%2F240%2Fsmall_2x%2Fsleek-black-and-white-illustration-of-a-modern-sports-car-design-vector.jpg&f=1&nofb=1&ipt=4d591b32f07a6410cf738ce0fa0429ca4b8c3de991ec1801bcb50a3a5a13c396', iconBlend: true },
-    { id: 'flash',      label: 'Flash',      icon: 'F', iconImg: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F533%2F462%2Foriginal%2Flightning-bolt-icon-vector.jpg&f=1&nofb=1&ipt=b326a20c4688bf050133ff150518a6e681c104cb6be0c7302030da4a10235a98', iconBlend: true },
+    { id: 'horror',     label: 'Horror',     icon: 'H', svg: '<path d="M10 43V22a14 14 0 0 1 28 0v21l-4.7-4.5L28.7 43 24 38.5 19.3 43l-4.6-4.5z"/><circle cx="19" cy="22" r="2.8" fill="currentColor" stroke="none"/><circle cx="29" cy="22" r="2.8" fill="currentColor" stroke="none"/><path d="M20 30q4 3 8 0"/>' },
+    { id: 'fps',        label: 'FPS',        icon: 'F', svg: '<circle cx="24" cy="24" r="12"/><path d="M24 4v12M24 32v12M4 24h12M32 24h12"/><circle cx="24" cy="24" r="2" fill="currentColor" stroke="none"/>' },
+    { id: 'arcade',     label: 'Arcade',     icon: 'A', svg: '<path d="M11 44V9a4 4 0 0 1 4-4h18a4 4 0 0 1 4 4v35M7 44h34"/><rect x="16" y="10" width="16" height="12" rx="2"/><circle cx="18" cy="32" r="2.6" fill="currentColor" stroke="none"/><circle cx="26" cy="32" r="2.6" fill="currentColor" stroke="none"/><path d="M30 29v6"/>' },
+    { id: 'survival',   label: 'Survival',   icon: 'S', svg: '<path d="M24 4c1 8 11 11 11 23a11 11 0 0 1-22 0c0-6 3-9 6-12 0 4 2 6 4 6 1-6-1-10 1-17z"/><path d="M8 42l32-6M8 36l32 6"/>' },
+    { id: 'adventure',  label: 'Adventure',  icon: 'A', svg: '<path d="M3 41 17 17l8 12 6-8 14 20z"/><circle cx="37" cy="10" r="4.5"/><path d="M17 17l3 5"/>' },
+    { id: 'chill',      label: 'Chill',      icon: 'C', svg: '<path d="M8 20h26v12a9 9 0 0 1-9 9h-8a9 9 0 0 1-9-9z"/><path d="M34 24h3a4.5 4.5 0 0 1 0 9h-3"/><path d="M15 6c-3 4 3 5 0 10M23 6c-3 4 3 5 0 10M31 6c-3 4 3 5 0 10"/>' },
+    { id: 'puzzle',     label: 'Puzzle',     icon: 'P', svg: '<path d="M7 17h10a5 5 0 1 1 10 0h10v10a5 5 0 1 1 0 10v8H7z"/>' },
+    { id: 'racing',     label: 'Racing',     icon: 'R', svg: '<path d="M4 35v-7l7-9h19l8 9h6v7z"/><path d="M14 19l-3 9h27M24 19v9"/><circle cx="14" cy="36" r="5.5" fill="var(--accent)"/><circle cx="35" cy="36" r="5.5" fill="var(--accent)"/>' },
+    { id: 'flash',      label: 'Flash',      icon: 'F', svg: '<path d="M29 3 9 27h13l-3 18 20-26H26z" fill="currentColor" stroke="none"/>' },
   ];
 
   /* To add a game: { label: 'Name', url: 'https://...', img: 'https://.../cover.png' }
@@ -2126,9 +2127,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     GENRES.forEach(function (genre) {
       var btn = document.createElement('button');
       btn.className = 'sites-card';
-      var iconHtml = genre.iconImg
-        ? '<img class="sites-card-icon-img' + (genre.iconBlend ? ' sites-card-icon-img-blend' : '') + '" src="' + genre.iconImg + '" alt="" />'
-        : genre.icon;
+      var iconHtml = genre.svg
+        ? '<svg class="sites-card-icon-svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" focusable="false">' + genre.svg + '</svg>'
+        : genre.iconImg
+          ? '<img class="sites-card-icon-img' + (genre.iconBlend ? ' sites-card-icon-img-blend' : '') + '" src="' + genre.iconImg + '" alt="" />'
+          : genre.icon;
       btn.innerHTML =
         '<span class="sites-card-icon" aria-hidden="true">' + iconHtml + '</span>' +
         '<span class="sites-card-name">' + genre.label + '</span>';
