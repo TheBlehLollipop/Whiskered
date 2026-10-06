@@ -678,17 +678,6 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .topbar-count:empty { display: none; }
 .topbar-link.active .topbar-count { opacity: 1; }
 
-.side-lucky {
-  display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; text-align: left; cursor: pointer;
-  background: var(--soft); border: 2px dashed var(--ink); border-radius: 18px;
-  transition: transform .2s var(--pop), background .15s, border-style .15s, box-shadow .2s;
-}
-.side-lucky:hover { background: var(--accent); color: var(--on-accent); border-style: solid; box-shadow: 4px 4px 0 var(--hard); transform: translate(-2px, -2px) rotate(-1deg); }
-.lucky-icon { font-size: 28px; line-height: 1; transition: transform .5s var(--pop); }
-.side-lucky:hover .lucky-icon { transform: rotate(360deg) scale(1.1); }
-.lucky-text { display: flex; flex-direction: column; line-height: 1.2; }
-.lucky-text strong { font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
-.lucky-text small { font-size: 12px; opacity: .75; }
 
 .side-cat { cursor: pointer; margin-top: auto; }
 .side-cat svg { transition: transform .3s var(--pop); transform-origin: 50% 100%; }
@@ -712,9 +701,9 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 :root[data-theme="light"] .theme-glyph::before { content: "\2600"; }
 .customize-pill { margin-top: 0; }
 
-@media (max-height: 780px) { .side-cat { display: none; } .side-lucky { margin-top: auto; } }
+@media (max-height: 780px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
 @media (max-width: 900px) {
-  .topbar-name, .side-label, .topbar-count, .side-lucky, .side-tools { display: none; }
+  .topbar-name, .side-label, .topbar-count, .side-tools { display: none; }
   .side-group { display: contents; }
 }
 </style>
@@ -733,10 +722,6 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         <button type="button" class="topbar-link" data-nav="websites"><span class="topbar-text">Websites</span><span class="topbar-count" id="nav-count-sites"></span></button>
       </nav>
     </div>
-    <button type="button" id="lucky-btn" class="side-lucky">
-      <span class="lucky-icon" aria-hidden="true">&#127922;</span>
-      <span class="lucky-text"><strong>Feeling lucky?</strong><small>Pounce on a random site</small></span>
-    </button>
 <div class="side-cat" aria-hidden="true">
       <svg viewBox="0 0 200 110" width="100%" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 96h160" opacity=".35"/>
@@ -1755,7 +1740,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
   ];
 
   var CHANGELOG = [
-    { badge: 'New games', text: 'Added Pianosaurus, The Hour Of Joy, and VEILHOLLOW to horror genre (WEBPORTS ALL BY ME :D) TEST TEST TEST 3' }
+    { badge: 'New games', text: 'Added Pianosaurus, The Hour Of Joy, and VEILHOLLOW to horror genre (WEBPORTS ALL BY ME :D)' }
   ];
 
   var GENRES = [
@@ -2321,15 +2306,6 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     var ncg = document.getElementById('nav-count-games'), ncs = document.getElementById('nav-count-sites');
     if (ncg) ncg.textContent = GENRES.length;
     if (ncs) ncs.textContent = SITES.length;
-    var lucky = document.getElementById('lucky-btn');
-    if (lucky) lucky.addEventListener('click', function () {
-      var pick = SITES[Math.floor(Math.random() * SITES.length)];
-      if (activeTabId) {
-        var others = SITES.filter(function (x) { return x.id !== activeTabId; });
-        pick = others[Math.floor(Math.random() * others.length)];
-      }
-      showPanel(pick.id);
-    });
     var sideTheme = document.getElementById('side-theme');
     if (sideTheme) sideTheme.addEventListener('click', function () {
       prefs.theme = prefs.theme === 'light' ? 'dark' : 'light';
