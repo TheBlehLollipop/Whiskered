@@ -701,7 +701,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 :root[data-theme="light"] .theme-glyph::before { content: "\2600"; }
 .customize-pill { margin-top: 0; }
 
-@media (max-height: 780px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
+@media (max-height: 780px) {
+  .topbar { gap: 14px; padding-top: 20px; }
+  .side-cat svg { width: 62%; margin: 0 auto; }
+  .side-cat-note { display: none; }
+}
+@media (max-height: 520px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
 @media (max-width: 900px) {
   .topbar-name, .side-label, .topbar-count, .side-tools { display: none; }
   .side-group { display: contents; }
