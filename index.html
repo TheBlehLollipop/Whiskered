@@ -713,6 +713,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .customize-pill .ico { width: 1.1em; height: 1.1em; }
 .customize-pill { margin-top: 0; }
 .side-account-row .side-tool { width: 100%; }
+.acct-initial { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-accent); border: 2px solid var(--ink); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+.acct-initial[hidden] { display: none; }
+#side-account.logged-in .acct-ico { display: none; }
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 600; transform: translate(-50%, 20px); max-width: 90vw; padding: 10px 18px; background: var(--surface); color: var(--text); border: 2px solid var(--ink); border-radius: 999px; box-shadow: 4px 4px 0 var(--accent); font-weight: 800; opacity: 0; pointer-events: none; transition: opacity .2s, transform .25s var(--pop); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
 .side-account-row .side-tool > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .acct-form { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; }
 .acct-form .customize-label { margin: 8px 0 4px; }
@@ -821,7 +826,12 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
 @media (max-height: 420px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
 @media (max-width: 900px) {
   .topbar-name, .side-label, .topbar-count, .side-tools { display: none; }
-  .side-account-row { display: flex; margin-left: auto; margin-top: 0; }
+  .topbar { overflow-x: auto; scrollbar-width: none; }
+  .topbar::-webkit-scrollbar { display: none; }
+  .topbar > * { flex: none; }
+  .topbar-brand { order: -3; }
+  .side-account-row { display: flex; order: -2; margin-top: 0; }
+  .customize-pill { order: -1; }
   .side-account-row .side-tool { padding: 8px 10px; }
   .acct-label { display: none; }
   .side-group { display: contents; }
@@ -877,7 +887,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       <button type="button" id="side-changelog" class="side-tool"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9.5 12h6M9.5 16h6"/></svg></span> Changelog</button>
     </div>
     <div class="side-tools side-account-row">
-      <button type="button" id="side-account" class="side-tool" aria-haspopup="dialog" aria-controls="account-overlay"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.6-7 8-7s8 2.5 8 7"/></svg></span> <span class="acct-label" id="acct-label">Log in</span></button>
+      <button type="button" id="side-account" class="side-tool" aria-haspopup="dialog" aria-controls="account-overlay"><span aria-hidden="true" class="acct-ico"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.6-7 8-7s8 2.5 8 7"/></svg></span> <span class="acct-initial" id="acct-initial" aria-hidden="true" hidden></span><span class="acct-label" id="acct-label">Log in</span></button>
     </div>
     <button id="open-customize" class="customize-pill" type="button" aria-haspopup="dialog" aria-controls="customize-overlay" aria-label="Customize"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></span><span class="pill-label">Customize</span></button>
   </header>
@@ -2626,6 +2636,14 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
+    var announce = false, toastEl = null, toastTimer = null;
+    function toast(msg) {
+      if (!toastEl) { toastEl = document.createElement('div'); toastEl.className = 'toast'; toastEl.setAttribute('role', 'status'); document.body.appendChild(toastEl); }
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 3200);
+    }
     function notify() { listeners.forEach(function (f) { try { f(); } catch (e) {} }); }
 
     function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -2651,9 +2669,15 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     function sb(path, opts, token) {
       opts = opts || {};
       var headers = Object.assign({ apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json', Authorization: 'Bearer ' + (token || SUPABASE_ANON_KEY) }, opts.headers || {});
-      return fetch(BASE + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined })
-        .catch(function () { throw new Error('Could not reach the server. Check your connection.'); })
+      var ctl = window.AbortController ? new AbortController() : null, timedOut = false;
+      var timer = setTimeout(function () { timedOut = true; if (ctl) ctl.abort(); }, 15000);
+      return fetch(BASE + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctl ? ctl.signal : undefined })
+        .catch(function () {
+          clearTimeout(timer);
+          throw new Error(timedOut ? 'The server took too long to answer. Your network may be blocking Supabase.' : 'Could not reach the server. Check your connection.');
+        })
         .then(function (r) {
+          clearTimeout(timer);
           return r.text().then(function (t) {
             var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
             if (!r.ok) throw new Error((j && (j.msg || j.error_description || j.message)) || ('Request failed (' + r.status + ')'));
@@ -2700,6 +2724,10 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       var a = cur;
       el.guest.hidden = !!a; el.userView.hidden = !a;
       el.label.textContent = a ? a.display : 'Log in';
+      el.initial.textContent = a ? a.display.charAt(0) : '';
+      el.initial.hidden = !a;
+      var sideBtn = document.getElementById('side-account');
+      if (sideBtn) sideBtn.classList.toggle('logged-in', !!a);
       el.sub.textContent = a ? 'Signed in as @' + a.username + (role.owner ? ' \u00b7 owner' : role.admin ? ' \u00b7 admin' : '') : 'Log in or make an account';
       el.title.textContent = a ? 'Hi, ' + a.display + '!' : 'Account';
       if (a) {
@@ -2728,7 +2756,10 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       el.overlay.classList.remove('open'); el.overlay.setAttribute('aria-hidden', 'true');
       showError(''); el.pass.value = ''; el.pass2.value = ''; el.email.value = '';
     }
-    function done() { busy = false; el.submit.disabled = false; }
+    function done() {
+      busy = false; announce = false; el.submit.disabled = false;
+      el.submit.textContent = tab === 'signup' ? 'Create account' : 'Log in';
+    }
     function fail(e) { showError(e.message || 'Something went wrong.'); }
 
     function enter(profile, key) {
@@ -2736,6 +2767,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (REMOTE && (!cur.prefs || !Object.keys(cur.prefs).length)) { cur.prefs = clone(prefs); pushProfile({ prefs: cur.prefs }); }
       role = { admin: false, owner: false };
       applySaved(); paint(); notify();
+      if (announce) { announce = false; toast('Logged in as @' + cur.username); }
       loadRole();
     }
 
@@ -2765,7 +2797,8 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         if (pw.length < 6) return showError('Password must be at least 6 characters.');
         if (pw !== el.pass2.value) return showError('Passwords do not match.');
       } else if (!pw) return showError('Enter your password.');
-      busy = true; el.submit.disabled = true; showError('');
+      busy = true; announce = true; el.submit.disabled = true; showError('');
+      el.submit.textContent = tab === 'signup' ? 'Creating account...' : 'Logging in...';
       (REMOTE ? remoteSubmit(name, pw, email) : localSubmit(name, pw, email)).catch(fail).then(done);
     }
 
@@ -2815,7 +2848,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (REMOTE && sess) { var t = sess.access_token; sb('/auth/v1/logout', { method: 'POST' }, t).catch(function () {}); }
       cur = null; curKey = null; sess = null; drop(SESSION_KEY); drop(SB_KEY);
       role = { admin: false, owner: false };
-      paint(); close(); notify();
+      paint(); close(); notify(); toast('Logged out');
     }
 
     function saveName() {
@@ -2859,7 +2892,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         var $ = function (i) { return document.getElementById(i); };
         el = { overlay: $('account-overlay'), guest: $('acct-guest'), userView: $('acct-user-view'), form: $('acct-form'), user: $('acct-user'),
           pass: $('acct-pass'), pass2: $('acct-pass2'), confirmWrap: $('acct-confirm-wrap'),
-          error: $('acct-error'), submit: $('acct-submit'), label: $('acct-label'), sub: $('account-sub'), title: $('account-title'), avatar: $('acct-avatar'),
+          error: $('acct-error'), submit: $('acct-submit'), label: $('acct-label'), initial: $('acct-initial'), sub: $('account-sub'), title: $('account-title'), avatar: $('acct-avatar'),
           dispName: $('acct-display-name'), userName: $('acct-username'), displayIn: $('acct-display'), sync: $('acct-sync'), note: $('acct-note'),
           emailWrap: $('acct-email-wrap'), email: $('acct-email'), emailIn: $('acct-email-in'), emailMsg: $('acct-email-msg') };
         if (!el.overlay) return;
