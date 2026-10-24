@@ -716,6 +716,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .acct-initial { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-accent); border: 2px solid var(--ink); font-size: 12px; font-weight: 800; text-transform: uppercase; }
 .acct-initial[hidden] { display: none; }
 #side-account.logged-in .acct-ico { display: none; }
+.dialog-overlay { z-index: 700; }
+.dialog-panel { width: min(92vw, 400px); }
+.dialog-text { margin-bottom: 18px; font-size: 17px; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.dialog-actions .acct-submit { margin-top: 0; }
+.dialog-actions [hidden] { display: none; }
 .toast { position: fixed; left: 50%; bottom: 24px; z-index: 600; transform: translate(-50%, 20px); max-width: 90vw; padding: 10px 18px; background: var(--surface); color: var(--text); border: 2px solid var(--ink); border-radius: 999px; box-shadow: 4px 4px 0 var(--accent); font-weight: 800; opacity: 0; pointer-events: none; transition: opacity .2s, transform .25s var(--pop); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 .side-account-row .side-tool > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -782,6 +788,15 @@ select.acct-input { cursor: pointer; }
 .support-msg { margin: 8px 0 10px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
 .support-tools { display: flex; gap: 8px; }
 .support-empty { color: var(--muted); }
+.support-waiting { color: var(--muted); font-size: 14px; }
+.support-thread { list-style: none; display: grid; gap: 8px; margin: 4px 0 10px; padding-left: 14px; border-left: 3px solid var(--accent); }
+.support-reply { padding: 8px 12px; border-radius: 12px; background: var(--surface); border: 2px solid var(--line); }
+.support-reply.fresh { border-color: var(--accent); background: var(--soft); }
+.support-reply-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.support-reply .support-msg { margin: 6px 0 0; }
+.support-replyform { display: flex; gap: 8px; align-items: flex-end; margin: 4px 0 10px; }
+.support-replyform textarea { flex: 1; min-height: 0; }
+.support-replyform .admin-add { flex: none; }
 .acct-row { display: flex; gap: 8px; }
 .admin-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; padding: 10px 12px; border: 2px dashed var(--ink); border-radius: 18px; background: var(--soft); }
 .admin-tag { padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
@@ -860,7 +875,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     <div class="side-group">
       <p class="side-label">Help</p>
       <nav class="topbar-nav" aria-label="Help">
-        <button type="button" class="topbar-link" data-nav="support"><span class="topbar-text">Support</span></button>
+        <button type="button" class="topbar-link" data-nav="support"><span class="topbar-text">Support</span><span class="topbar-count" id="nav-count-support"></span></button>
         <button type="button" class="topbar-link" data-nav="team"><span class="topbar-text">Team</span></button>
       </nav>
     </div>
@@ -1090,6 +1105,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           <p id="support-note" class="acct-error" role="status" hidden></p>
           <button id="support-send" class="acct-submit" type="submit">Send message</button>
         </form>
+      </section>
+
+      <section class="support-card" id="support-mine" aria-labelledby="mine-title" hidden>
+        <h3 id="mine-title" class="support-title">My messages</h3>
+        <ul id="support-mine-list" class="support-list"></ul>
       </section>
 
     </div>
@@ -2619,6 +2639,61 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     if (pager) fillPager(pager, idx);
   }
 
+  /* ---- Dialogs ----------------------------------------------- *
+   * In-page replacements for confirm() and alert(). Browsers silently
+   * block those inside sandboxed frames, so buttons that asked "are you
+   * sure?" quietly did nothing there.
+   */
+  var Dialog = (function () {
+    var overlay, text, ok, cancel, done = null, last = null, queue = Promise.resolve();
+    function el(tag, cls, t) { var n = document.createElement(tag); if (cls) n.className = cls; if (t != null) n.textContent = t; return n; }
+    function build() {
+      overlay = el('div', 'customize-overlay dialog-overlay'); overlay.setAttribute('aria-hidden', 'true');
+      var panel = el('div', 'customize-panel dialog-panel');
+      panel.setAttribute('role', 'alertdialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-describedby', 'dialog-text');
+      text = el('p', 'dialog-text'); text.id = 'dialog-text';
+      var actions = el('div', 'dialog-actions');
+      cancel = el('button', 'admin-ghost', 'Cancel'); cancel.type = 'button';
+      ok = el('button', 'acct-submit', 'OK'); ok.type = 'button';
+      actions.appendChild(cancel); actions.appendChild(ok);
+      panel.appendChild(text); panel.appendChild(actions); overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+      ok.addEventListener('click', function () { finish(true); });
+      cancel.addEventListener('click', function () { finish(false); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) finish(false); });
+      document.addEventListener('keydown', function (e) {
+        if (!done || e.key !== 'Escape') return;
+        e.preventDefault(); e.stopPropagation(); finish(false);
+      }, true);
+    }
+    function finish(v) {
+      if (!done) return;
+      var d = done; done = null;
+      overlay.classList.remove('open'); overlay.setAttribute('aria-hidden', 'true');
+      if (last && last.focus) { try { last.focus(); } catch (e) {} }
+      d(v);
+    }
+    function show(message, opts) {
+      var p = queue.then(function () {
+        return new Promise(function (resolve) {
+          if (!overlay) build();
+          last = document.activeElement;
+          text.textContent = message;
+          ok.textContent = opts.ok; cancel.hidden = !opts.cancel;
+          done = resolve;
+          overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false');
+          setTimeout(function () { ok.focus(); }, 30);
+        });
+      });
+      queue = p.then(function () {}, function () {});
+      return p;
+    }
+    return {
+      confirm: function (message, label) { return show(message, { cancel: true, ok: label || 'Confirm' }); },
+      alert: function (message) { return show(message, { cancel: false, ok: 'OK' }); }
+    };
+  })();
+
   /* ---- Accounts --------------------------------------------- *
    * With SUPABASE_URL and SUPABASE_ANON_KEY filled in, accounts live in
    * Supabase (Auth + a `profiles` table, see supabase.sql) and work on
@@ -2634,7 +2709,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
     function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
     var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
-    var APP_VERSION = '2026.10.24-f';
+    var APP_VERSION = '2026.10.24-h';
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
@@ -2905,11 +2980,14 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       paint();
     }
     function deleteAccount() {
-      if (!cur || !window.confirm('Delete the account @' + cur.username + '? This cannot be undone.')) return;
-      if (REMOTE) {
-        token().then(function (t) { return sb('/rest/v1/rpc/delete_own_account', { method: 'POST', body: {} }, t); })
-          .then(logout).catch(function (e) { window.alert(e.message || 'Could not delete the account.'); });
-      } else { delete accounts[curKey]; persist(); logout(); }
+      if (!cur) return;
+      Dialog.confirm('Delete the account @' + cur.username + '? This cannot be undone.', 'Delete account').then(function (yes) {
+        if (!yes) return;
+        if (REMOTE) {
+          token().then(function (t) { return sb('/rest/v1/rpc/delete_own_account', { method: 'POST', body: {} }, t); })
+            .then(logout).catch(function (e) { Dialog.alert(e.message || 'Could not delete the account.'); });
+        } else { delete accounts[curKey]; persist(); logout(); }
+      });
     }
 
     return {
@@ -3036,7 +3114,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     }
 
     function write(req) {
-      return req.then(refresh).catch(function (e) { window.alert(e.message || 'Could not save that change.'); });
+      return req.then(refresh).catch(function (e) { Dialog.alert(e.message || 'Could not save that change.'); });
     }
 
     /* ---- ordering ---- */
@@ -3066,7 +3144,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     function saveOrder(scope, keys) {
       return Account.api('/rest/v1/order_edits?on_conflict=scope',
         { method: 'POST', body: { scope: scope, items: keys, updated_at: new Date().toISOString() }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }, true)
-        .then(refreshOrders).catch(function (e) { window.alert(e.message || 'Could not save the new order.'); });
+        .then(refreshOrders).catch(function (e) { Dialog.alert(e.message || 'Could not save the new order.'); });
     }
     function applyOrders(rows) {
       orders = {};
@@ -3168,9 +3246,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (overrides[site.id] && !site.custom) {
         var reset = make('button', 'admin-ghost', 'Reset to original'); reset.type = 'button';
         reset.addEventListener('click', function () {
-          if (!window.confirm('Put the original text back?')) return;
-          Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(site.id), { method: 'DELETE' }, true)
-            .then(refreshOverrides).then(onClose).catch(function (e) { msg.textContent = e.message || 'Could not reset.'; });
+          Dialog.confirm('Put the original text back?', 'Reset').then(function (yes) {
+            if (!yes) return;
+            Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(site.id), { method: 'DELETE' }, true)
+              .then(refreshOverrides).then(onClose).catch(function (e) { msg.textContent = e.message || 'Could not reset.'; });
+          });
         });
         box.appendChild(reset);
       }
@@ -3362,13 +3442,15 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         if (cs && cs.custom) {
           var del = make('button', 'admin-danger', 'Delete site'); del.type = 'button';
           del.addEventListener('click', function () {
-            if (!window.confirm('Delete the site "' + cs.label + '" and all its links for everyone?')) return;
-            Account.api('/rest/v1/link_edits?kind=eq.site&target=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true)
-              .then(function () { return Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true).catch(function () {}); })
-              .then(function () { return Account.api('/rest/v1/custom_sites?id=eq.' + cs.dbId, { method: 'DELETE' }, true); })
-              .then(function () { return Promise.all([refresh(), refreshSites()]); })
-              .then(function () { setMode('websites'); })
-              .catch(function (e) { msg.textContent = e.message || 'Could not delete that site.'; });
+            Dialog.confirm('Delete the site "' + cs.label + '" and all its links for everyone?', 'Delete site').then(function (yes) {
+              if (!yes) return;
+              Account.api('/rest/v1/link_edits?kind=eq.site&target=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true)
+                .then(function () { return Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true).catch(function () {}); })
+                .then(function () { return Account.api('/rest/v1/custom_sites?id=eq.' + cs.dbId, { method: 'DELETE' }, true); })
+                .then(function () { return Promise.all([refresh(), refreshSites()]); })
+                .then(function () { setMode('websites'); })
+                .catch(function (e) { msg.textContent = e.message || 'Could not delete that site.'; });
+            });
           });
           f.appendChild(del);
         }
@@ -3393,10 +3475,12 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         b.innerHTML = X;
         b.addEventListener('click', function (ev) {
           ev.preventDefault(); ev.stopPropagation();
-          if (!window.confirm('Remove this link for everyone?')) return;
-          write(editId
-            ? Account.api('/rest/v1/link_edits?id=eq.' + editId, { method: 'DELETE' }, true)
-            : Account.api('/rest/v1/link_edits', { method: 'POST', body: { kind: kind, target: target, op: 'remove', url: norm(url) }, headers: { Prefer: 'return=minimal' } }, true));
+          Dialog.confirm('Remove this link for everyone?', 'Remove').then(function (yes) {
+            if (!yes) return;
+            write(editId
+              ? Account.api('/rest/v1/link_edits?id=eq.' + editId, { method: 'DELETE' }, true)
+              : Account.api('/rest/v1/link_edits', { method: 'POST', body: { kind: kind, target: target, op: 'remove', url: norm(url) }, headers: { Prefer: 'return=minimal' } }, true));
+          });
         });
         return b;
       }
@@ -3439,7 +3523,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     function call(req) {
       if (busy) return;
       busy = true;
-      req.then(reload).catch(function (e) { window.alert(e.message || 'Could not save that change.'); }).then(function () { busy = false; });
+      req.then(reload).catch(function (e) { Dialog.alert(e.message || 'Could not save that change.'); }).then(function () { busy = false; });
     }
     function api(path, opts) { return Account.api('/rest/v1/changelog_entries' + path, opts, true); }
     function reload() {
@@ -3524,7 +3608,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           if (i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
           tools.appendChild(iconBtn('admin-mv', 'edit', 'Edit entry', function () { li.textContent = ''; li.appendChild(editForm(it.row)); }));
           tools.appendChild(iconBtn('admin-del', 'x', 'Delete entry', function () {
-            if (window.confirm('Delete this changelog entry for everyone?')) call(api('?id=eq.' + it.row.id, { method: 'DELETE' }));
+            Dialog.confirm('Delete this changelog entry for everyone?', 'Delete').then(function (yes) { if (yes) call(api('?id=eq.' + it.row.id, { method: 'DELETE' })); });
           }));
           meta.appendChild(tools);
         }
@@ -3571,6 +3655,70 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (on) note('');
     }
 
+    function fmtTime(t) { return new Date(t).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
+    function groupBy(reps) {
+      var g = {};
+      (reps || []).forEach(function (x) { (g[x.request_id] = g[x.request_id] || []).push(x); });
+      return g;
+    }
+    function threadEl(list, seenBefore, me) {
+      var ul = make('ul', 'support-thread');
+      list.forEach(function (x) {
+        var li = make('li', 'support-reply' + (me && x.id > seenBefore && x.author.toLowerCase() !== me ? ' fresh' : ''));
+        var head = make('div', 'support-reply-head');
+        head.appendChild(make('strong', null, '@' + x.author));
+        head.appendChild(make('span', 'link-badge', 'Team'));
+        head.appendChild(make('span', 'support-when', fmtTime(x.created_at)));
+        li.appendChild(head);
+        li.appendChild(make('p', 'support-msg', x.body));
+        ul.appendChild(li);
+      });
+      return ul;
+    }
+    function setBadge(n) { if (el.supportBadge) el.supportBadge.textContent = n || ''; }
+    function seenKey() { return 'whiskered-support-seen-' + Account.username().toLowerCase(); }
+
+    /* "My messages": the sender's own tickets and any replies */
+    function refreshMine() {
+      if (!el.mineCard) return;
+      if (!Account.loggedIn()) { el.mineCard.hidden = true; setBadge(0); return; }
+      var me = Account.username();
+      Account.api('/rest/v1/support_requests?select=*&username=eq.' + encodeURIComponent(me) + '&order=id.desc&limit=30', {}, true).then(function (rows) {
+        rows = rows || [];
+        var ids = rows.map(function (r) { return r.id; }).join(',');
+        var reps = ids ? Account.api('/rest/v1/support_replies?select=*&order=id.asc&request_id=in.(' + ids + ')', {}, true) : Promise.resolve([]);
+        return reps.then(function (rp) { renderMine(rows, rp || []); });
+      }).catch(function () { el.mineCard.hidden = true; });
+    }
+    function renderMine(rows, reps) {
+      var me = Account.username().toLowerCase(), by = groupBy(reps), seen = 0;
+      try { seen = +localStorage.getItem(seenKey()) || 0; } catch (e) {}
+      var maxId = seen, unread = 0;
+      reps.forEach(function (x) {
+        if (x.id > maxId) maxId = x.id;
+        if (x.id > seen && x.author.toLowerCase() !== me) unread++;
+      });
+      var sv = document.getElementById('support-view');
+      var onPage = sv && sv.style.display !== 'none';
+      el.mineCard.hidden = !rows.length;
+      el.mineList.textContent = '';
+      rows.forEach(function (r) {
+        var li = make('li', 'support-item' + (r.status === 'done' ? ' done' : ''));
+        var head = make('div', 'support-item-head');
+        head.appendChild(make('span', 'link-badge', KINDS[r.kind] || r.kind));
+        if (r.status === 'done') head.appendChild(make('span', 'link-badge', 'Done'));
+        head.appendChild(make('span', 'support-when', fmtTime(r.created_at)));
+        li.appendChild(head);
+        li.appendChild(make('p', 'support-msg', r.message));
+        var th = by[r.id] || [];
+        if (th.length) li.appendChild(threadEl(th, seen, me));
+        else li.appendChild(make('p', 'support-waiting', 'No reply yet.'));
+        el.mineList.appendChild(li);
+      });
+      if (onPage) { try { localStorage.setItem(seenKey(), String(maxId)); } catch (e) {} setBadge(0); }
+      else setBadge(unread);
+    }
+
     function loadInbox() {
       var admin = Account.isAdmin();
       if (el.navBtn) el.navBtn.hidden = !admin;
@@ -3588,7 +3736,10 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       ]).then(function (res) {
           var map = {};
           (res[1] || []).forEach(function (p) { map[p.username.toLowerCase()] = p.email; });
-          renderInbox(res[0], map);
+          var rows = res[0] || [];
+          var ids = rows.map(function (r) { return r.id; }).join(',');
+          var reps = ids ? Account.api('/rest/v1/support_replies?select=*&order=id.asc&request_id=in.(' + ids + ')', {}, true).catch(function () { return []; }) : Promise.resolve([]);
+          return reps.then(function (rp) { renderInbox(rows, map, groupBy(rp)); });
         })
         .catch(function (e) { el.list.textContent = ''; el.list.appendChild(make('li', 'support-empty', e.message || 'Could not load messages.')); });
     }
@@ -3609,9 +3760,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
             var rm = make('button', 'admin-ghost', 'Remove admin'); rm.type = 'button';
             rm.style.marginLeft = 'auto';
             rm.addEventListener('click', function () {
-              if (!window.confirm('Remove admin rights from @' + r.name + '?')) return;
-              Account.api('/rest/v1/rpc/demote_admin', { method: 'POST', body: { target: r.name } }, true)
-                .then(loadAdmins).catch(function (e) { window.alert(e.message || 'Could not remove that admin.'); });
+              Dialog.confirm('Remove admin rights from @' + r.name + '?', 'Remove admin').then(function (yes) {
+                if (!yes) return;
+                Account.api('/rest/v1/rpc/demote_admin', { method: 'POST', body: { target: r.name } }, true)
+                  .then(loadAdmins).catch(function (e) { Dialog.alert(e.message || 'Could not remove that admin.'); });
+              });
             });
             head.appendChild(rm);
           }
@@ -3634,10 +3787,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           .catch(function (e) { msg.textContent = e.message || 'Could not promote that account.'; });
       });
     }
-    function act(req) { req.then(loadInbox).catch(function (e) { window.alert(e.message || 'Could not save that change.'); }); }
+    function act(req) { req.then(loadInbox).catch(function (e) { Dialog.alert(e.message || 'Could not save that change.'); }); }
 
-    function renderInbox(rows, emails) {
+    function renderInbox(rows, emails, threads) {
       emails = emails || {};
+      threads = threads || {};
       rows = rows || [];
       var open = rows.filter(function (r) { return r.status === 'open'; }).length;
       el.count.textContent = open + ' open';
@@ -3654,6 +3808,21 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         head.appendChild(make('span', 'support-when', new Date(r.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })));
         li.appendChild(head);
         li.appendChild(make('p', 'support-msg', r.message));
+        if ((threads[r.id] || []).length) li.appendChild(threadEl(threads[r.id], 0, ''));
+        var rf = make('form', 'support-replyform');
+        var rt = make('textarea', 'acct-input'); rt.rows = 2; rt.maxLength = 1000; rt.placeholder = 'Write a reply...'; rt.setAttribute('aria-label', 'Reply to @' + (r.username || 'user'));
+        var rb = make('button', 'admin-add', 'Send reply'); rb.type = 'submit';
+        rf.appendChild(rt); rf.appendChild(rb);
+        rf.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var body = rt.value.trim();
+          if (!body) return;
+          rb.disabled = true;
+          Account.api('/rest/v1/support_replies', { method: 'POST', body: { request_id: r.id, author: Account.username(), body: body }, headers: { Prefer: 'return=minimal' } }, true)
+            .then(loadInbox)
+            .catch(function (e) { rb.disabled = false; Dialog.alert(e.message || 'Could not send that reply.'); });
+        });
+        li.appendChild(rf);
         var tools = make('div', 'support-tools');
         var toggle = make('button', 'admin-ghost', r.status === 'done' ? 'Reopen' : 'Mark done'); toggle.type = 'button';
         toggle.addEventListener('click', function () {
@@ -3661,7 +3830,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         });
         var del = make('button', 'admin-ghost', 'Delete'); del.type = 'button';
         del.addEventListener('click', function () {
-          if (window.confirm('Delete this message?')) act(Account.api('/rest/v1/support_requests?id=eq.' + r.id, { method: 'DELETE' }, true));
+          Dialog.confirm('Delete this message?', 'Delete').then(function (yes) { if (yes) act(Account.api('/rest/v1/support_requests?id=eq.' + r.id, { method: 'DELETE' }, true)); });
         });
         tools.appendChild(toggle); tools.appendChild(del);
         li.appendChild(tools);
@@ -3696,16 +3865,17 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         var $ = function (i) { return document.getElementById(i); };
         el = { form: $('support-form'), kind: $('support-kind'), message: $('support-message'), user: $('support-user'), hp: $('support-website'),
           send: $('support-send'), note: $('support-note'), list: $('support-list'), count: $('support-count'), wrap: $('support-form-wrap'),
-          navBtn: document.getElementById('admin-group'), navCount: $('nav-count-inbox'), gate: $('support-gate'), login: $('support-login') };
+          navBtn: document.getElementById('admin-group'), navCount: $('nav-count-inbox'), gate: $('support-gate'), login: $('support-login'),
+          mineCard: $('support-mine'), mineList: $('support-mine-list'), supportBadge: $('nav-count-support') };
         if (!el.form) return;
         if (!Account.remote) { el.wrap.hidden = true; return; }
         el.form.addEventListener('submit', submit);
         el.login.addEventListener('click', Account.open);
         bindAdmins();
         gate();
-        Account.onChange(function () { gate(); loadInbox(); });
+        Account.onChange(function () { gate(); loadInbox(); refreshMine(); });
       },
-      show: function () { gate(); },
+      show: function () { gate(); refreshMine(); },
       showInbox: function () { loadInbox(); }
     };
   })();
