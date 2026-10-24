@@ -745,6 +745,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .acct-profile small { color: var(--muted); font: 400 13px var(--mono); }
 .acct-avatar { display: grid; place-items: center; width: 56px; height: 56px; border: 2px solid var(--ink); border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 24px; font-weight: 800; text-transform: uppercase; }
 .topbar-link[hidden], .side-group[hidden] { display: none !important; }
+a.topbar-link { text-decoration: none; color: inherit; }
 .team-view { max-width: 760px; }
 .team-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 .team-card { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--surface); border: 2px solid var(--ink); border-radius: 22px; box-shadow: 4px 4px 0 var(--hard); animation: fadeUp .4s var(--ease) both; transition: transform .2s var(--pop), box-shadow .2s; }
@@ -870,6 +871,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         <button type="button" class="topbar-link" data-nav="home"><span class="topbar-text">Home</span></button>
         <button type="button" class="topbar-link" data-nav="itchio"><span class="topbar-text">Games</span><span class="topbar-count" id="nav-count-games"></span></button>
         <button type="button" class="topbar-link" data-nav="websites"><span class="topbar-text">Websites</span><span class="topbar-count" id="nav-count-sites"></span></button>
+        <a class="topbar-link" id="nav-proxy" href="#" target="_blank" rel="noopener noreferrer" hidden><span class="topbar-text">Proxy</span></a>
       </nav>
     </div>
     <div class="side-group">
@@ -2702,6 +2704,9 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
    * Only ever put the public anon key here, never the service_role key.
    */
   var SUPABASE_URL = 'https://pxtbxsvfufrhjdtlktsd.supabase.co';
+  /* Address of your deployed proxy (see proxy/README.md), e.g. 'https://whiskered-proxy.onrender.com'.
+   * Leave empty to hide the Proxy link. */
+  var PROXY_URL = '';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4dGJ4c3ZmdWZyaGpkdGxrdHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3OTM5NzYsImV4cCI6MjEwODM2OTk3Nn0.QR2WI9QvGkmuS7-aSkY_kRPZt-5J13uzHEnrq9qq7H4';  // public anon key
   var Account = (function () {
     var REMOTE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
@@ -3952,6 +3957,8 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
   /* ---- Boot ------------------------------------------------ */
   function init() {
     document.body.classList.remove('no-js');
+    var proxyLink = document.getElementById('nav-proxy');
+    if (proxyLink && /^https?:\/\//i.test(PROXY_URL)) { proxyLink.href = PROXY_URL; proxyLink.hidden = false; }
     installFormShim();
     var homeLink = document.querySelector('.topbar-link[data-nav="home"]');
     if (homeLink) homeLink.classList.add('active');

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Whiskered Proxy</title>
+	<link rel="stylesheet" href="proxy.css">
+	<script src="/scram/scramjet.all.js"></script>
+	<script src="/baremux/index.js"></script>
+	<script src="proxy.js" defer></script>
+</head>
+<body>
+	<header class="bar">
+		<div class="nav">
+			<button type="button" id="back" class="btn" title="Back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+			<button type="button" id="forward" class="btn" title="Forward" aria-label="Forward"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+			<button type="button" id="reload" class="btn" title="Reload" aria-label="Reload"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.5-5.8M20 4v5h-5"/></svg></button>
+			<button type="button" id="home" class="btn" title="Home" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg></button>
+		</div>
+		<form id="address-form" class="address" autocomplete="off">
+			<input id="address" type="text" placeholder="Search or type a web address" aria-label="Address" spellcheck="false" autocapitalize="off">
+		</form>
+		<div class="tools">
+			<button type="button" id="inspect" class="btn wide" title="Open dev tools (Elements, Network, Console)"><svg viewBox="0 0 24 24"><path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/></svg><span>Inspect</span></button>
+			<button type="button" id="links" class="btn wide" title="List the game links on this page"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg><span>Game links</span></button>
+		</div>
+	</header>
+
+	<main class="stage" id="stage">
+		<section class="home" id="home-view">
+			<div class="cat" aria-hidden="true">
+				<svg viewBox="0 0 40 40"><path d="M7 17 6 5l8 5.5a14 14 0 0 1 12 0L34 5l-1 12c1.4 2 2 4 2 6.5C35 31 28 35 20 35S5 31 5 23.5C5 21 5.6 19 7 17Z"/><circle cx="14" cy="22" r="1.6" fill="currentColor" stroke="none"/><circle cx="26" cy="22" r="1.6" fill="currentColor" stroke="none"/><path d="M18.5 26.5h3L20 28.5ZM20 28.5v1.5M20 30c-1.2 1.4-3 1.4-4 .4M20 30c1.2 1.4 3 1.4 4 .4"/><path d="M2 25l7 1M2 29l7-1.5M38 25l-7 1M38 29l-7-1.5"/></svg>
+			</div>
+			<h1>Whiskered Proxy</h1>
+			<form id="home-form" class="home-search" autocomplete="off">
+				<input id="home-address" type="text" placeholder="Search the web, or type an address" aria-label="Search or address" spellcheck="false" autocapitalize="off" autofocus>
+				<button type="submit" class="go">Go</button>
+			</form>
+			<div class="quick">
+				<button type="button" data-url="https://itch.io/games/html5">itch.io games</button>
+				<button type="button" data-url="https://duckduckgo.com">DuckDuckGo</button>
+				<button type="button" data-url="https://www.wikipedia.org">Wikipedia</button>
+				<button type="button" data-url="https://www.youtube.com">YouTube</button>
+			</div>
+			<p id="status" class="status" role="status"></p>
+		</section>
+	</main>
+
+	<aside id="links-panel" class="panel" aria-label="Game links" hidden>
+		<div class="panel-head">
+			<h2>Game links</h2>
+			<button type="button" id="links-close" class="btn" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+		</div>
+		<p class="panel-hint">On itch.io, open a game page and press <b>Run game</b>. The game's own address shows up here. It's checked every second.</p>
+		<ul id="links-list" class="links-list"></ul>
+	</aside>
+
+	<div id="toast" class="toast" role="status"></div>
+</body>
+</html>

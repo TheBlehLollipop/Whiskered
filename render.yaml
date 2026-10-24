@@ -1,0 +1,13 @@
+# One-click setup for Render (https://render.com): New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: whiskered-proxy
+    runtime: node
+    rootDir: proxy
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: PROXY_PASSWORD
+        sync: false   # optional: set a password so only people you tell can use it
