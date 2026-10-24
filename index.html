@@ -2634,7 +2634,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
     function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
     var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
-    var APP_VERSION = '2026.10.24-d';
+    var APP_VERSION = '2026.10.24-f';
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
@@ -2673,7 +2673,12 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       var headers = Object.assign({ apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json', Authorization: 'Bearer ' + (token || SUPABASE_ANON_KEY) }, opts.headers || {});
       var ctl = window.AbortController ? new AbortController() : null, timedOut = false;
       var timer = setTimeout(function () { timedOut = true; if (ctl) ctl.abort(); }, 15000);
-      return fetch(BASE + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctl ? ctl.signal : undefined })
+      var init = { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined };
+      if (ctl) init.signal = ctl.signal;
+      var req;
+      try { req = fetch(BASE + path, init); }
+      catch (err) { clearTimeout(timer); return Promise.reject(new Error('Your browser stopped the request: ' + (err && err.message ? err.message : err))); }
+      return req
         .catch(function () {
           clearTimeout(timer);
           throw new Error(timedOut ? 'The server took too long to answer. Your network may be blocking Supabase.' : 'Could not reach the server. Check your connection.');
@@ -2749,12 +2754,19 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         if (el.ready) applyPrefs();
       }
     }
+    var lastError = '';
+    function reportError(msg) {
+      lastError = String(msg || '').slice(0, 140);
+      if (el.diag && lastError) el.diag.textContent = el.diag.textContent.split(' \u00b7 Error:')[0] + ' \u00b7 Error: ' + lastError;
+    }
+    window.addEventListener('error', function (e) { reportError(e.message); });
+    window.addEventListener('unhandledrejection', function (e) { reportError(e.reason && e.reason.message ? e.reason.message : e.reason); });
     function checkServer() {
       if (!el.diag) return;
-      el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: checking...';
+      el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: checking...' + (lastError ? ' \u00b7 Error: ' + lastError : '');
       var t0 = Date.now();
       sb('/auth/v1/settings').then(function () {
-        el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: reachable (' + (Date.now() - t0) + ' ms)';
+        el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: reachable (' + (Date.now() - t0) + ' ms)' + (lastError ? ' \u00b7 Error: ' + lastError : '');
       }).catch(function (e) {
         el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: ' + (e.message || 'not reachable');
       });
@@ -2773,7 +2785,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       busy = false; announce = false; el.submit.disabled = false;
       el.submit.textContent = tab === 'signup' ? 'Create account' : 'Log in';
     }
-    function fail(e) { showError(e.message || 'Something went wrong.'); }
+    function fail(e) { showError((e && e.message) || String(e || 'Something went wrong.')); }
 
     function enter(profile, key) {
       cur = profile; curKey = key || null;
@@ -2812,7 +2824,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       } else if (!pw) return showError('Enter your password.');
       busy = true; announce = true; el.submit.disabled = true; showError('');
       el.submit.textContent = tab === 'signup' ? 'Creating account...' : 'Logging in...';
-      (REMOTE ? remoteSubmit(name, pw, email) : localSubmit(name, pw, email)).catch(fail).then(done);
+      Promise.resolve().then(function () { return REMOTE ? remoteSubmit(name, pw, email) : localSubmit(name, pw, email); }).catch(fail).then(done);
     }
 
     function remoteSubmit(name, pw, contact) {
@@ -3741,9 +3753,36 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     };
   })();
 
+  /* ---- Forms inside sandboxed frames ------------------------- *
+   * If this page is shown inside a frame that has no "allow-forms"
+   * permission, the browser silently drops every form submit and none of
+   * the buttons do anything. So buttons and the Enter key trigger the
+   * forms' submit handlers directly instead of relying on the browser.
+   */
+  function installFormShim() {
+    function fire(form) { form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })); }
+    document.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('button, input[type="submit"]') : null;
+      if (!b || b.disabled || !b.form) return;
+      var type = (b.getAttribute('type') || (b.tagName === 'BUTTON' ? 'submit' : '')).toLowerCase();
+      if (type !== 'submit') return;
+      e.preventDefault();
+      fire(b.form);
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || e.isComposing || e.shiftKey) return;
+      var t = e.target;
+      if (!t || t.tagName !== 'INPUT' || !t.form || /^(button|submit|checkbox|radio|file|reset)$/i.test(t.type)) return;
+      if (!t.form.querySelector('button[type="submit"], button:not([type]), input[type="submit"]')) return;
+      e.preventDefault();
+      fire(t.form);
+    }, true);
+  }
+
   /* ---- Boot ------------------------------------------------ */
   function init() {
     document.body.classList.remove('no-js');
+    installFormShim();
     var homeLink = document.querySelector('.topbar-link[data-nav="home"]');
     if (homeLink) homeLink.classList.add('active');
     loadPrefs();
