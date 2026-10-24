@@ -788,6 +788,10 @@ select.acct-input { cursor: pointer; }
 .support-msg { margin: 8px 0 10px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
 .support-tools { display: flex; gap: 8px; }
 .support-empty { color: var(--muted); }
+.support-sub { margin: 20px 0 8px; font-size: 16px; letter-spacing: -.01em; }
+.ban-reason { flex: 1; min-width: 120px; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: var(--bg); color: var(--text); font: inherit; font-size: 13px; }
+.ban-btn:disabled { opacity: .5; cursor: not-allowed; }
+.admin-ghost.danger:hover { background: #e5484d; border-color: #e5484d; color: #fff; }
 .support-waiting { color: var(--muted); font-size: 14px; }
 .support-thread { list-style: none; display: grid; gap: 8px; margin: 4px 0 10px; padding-left: 14px; border-left: 3px solid var(--accent); }
 .support-reply { padding: 8px 12px; border-radius: 12px; background: var(--surface); border: 2px solid var(--line); }
@@ -1163,6 +1167,18 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           <span id="admins-msg" class="admin-msg" role="alert"></span>
         </form>
         <ul id="admins-list" class="support-list"></ul>
+      </section>
+
+      <section class="support-card" id="users-card" aria-labelledby="users-title" hidden>
+        <h3 id="users-title" class="support-title">Users <span class="admin-tag">Admin</span></h3>
+        <p class="admin-note">Search for an account to ban it. A banned account is signed out everywhere and can't log in or send messages. Only the owner can ban another admin.</p>
+        <form id="users-form" class="admin-bar" autocomplete="off">
+          <input id="users-q" class="admin-input" type="text" maxlength="20" placeholder="Search usernames (empty shows the newest)" aria-label="Search usernames">
+          <button class="admin-add" type="submit">Search</button>
+        </form>
+        <ul id="users-list" class="support-list"></ul>
+        <h4 class="support-sub">Banned accounts</h4>
+        <ul id="bans-list" class="support-list"></ul>
       </section>
     </div>
 
@@ -2739,7 +2755,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
     function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
     var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
-    var APP_VERSION = '2026.10.24-j';
+    var APP_VERSION = '2026.10.24-k';
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
@@ -2805,7 +2821,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (!sess) return Promise.reject(new Error('Not signed in.'));
       if (sess.expires_at > Date.now()) return Promise.resolve(sess.access_token);
       return sb('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: sess.refresh_token } })
-        .then(function (j) { setSession(j); return sess.access_token; });
+        .then(function (j) { setSession(j); return sess.access_token; })
+        .catch(function (e) {
+          if (/banned/i.test(e.message)) { logout(); toast('This account has been banned.'); }
+          throw e;
+        });
     }
     function fetchProfile() {
       return token().then(function (t) {
@@ -3036,6 +3056,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       }
       return sb('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email, password: pw } }).catch(function (e) {
         if (/invalid login/i.test(e.message)) throw new Error('Wrong username or password.');
+        if (/banned/i.test(e.message)) throw new Error('This account has been banned.');
         throw e;
       }).then(function (j) {
         setSession(j);
@@ -3858,9 +3879,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         var iv = document.getElementById('admin-view');
         if (iv && iv.style.display !== 'none') setMode('support');
         loadAdmins();
+        loadUsers();
         return;
       }
       loadAdmins();
+      loadUsers();
       Promise.all([
         Account.api('/rest/v1/support_requests?select=*&order=id.desc&limit=100', {}, true),
         Account.api('/rest/v1/profiles?select=username,email&email=not.is.null', {}, true).catch(function () { return []; })
@@ -3873,6 +3896,80 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           return reps.then(function (rp) { renderInbox(rows, map, groupBy(rp)); });
         })
         .catch(function (e) { el.list.textContent = ''; el.list.appendChild(make('li', 'support-empty', e.message || 'Could not load messages.')); });
+    }
+    function loadUsers() {
+      var card = document.getElementById('users-card');
+      if (!card) return;
+      card.hidden = !Account.isAdmin();
+      if (!Account.isAdmin()) return;
+      var q = document.getElementById('users-q').value.trim();
+      var ul = document.getElementById('users-list'), bl = document.getElementById('bans-list');
+      Account.api('/rest/v1/rpc/list_users', { method: 'POST', body: { q: q } }, true).then(function (rows) { renderUsers(ul, rows || []); })
+        .catch(function (e) { ul.textContent = ''; ul.appendChild(make('li', 'support-empty', e.message || 'Could not load users.')); });
+      Account.api('/rest/v1/rpc/list_bans', { method: 'POST', body: {} }, true).then(function (rows) { renderBans(bl, rows || []); })
+        .catch(function () { bl.textContent = ''; });
+    }
+    function banAction(path, body) {
+      return Account.api('/rest/v1/rpc/' + path, { method: 'POST', body: body }, true).then(function (r) {
+        if (!r.ok) Dialog.alert(r.message);
+        loadUsers();
+      }).catch(function (e) { Dialog.alert(e.message || 'Something went wrong.'); });
+    }
+    function unbanButton(name) {
+      var b = make('button', 'admin-ghost', 'Unban'); b.type = 'button';
+      b.addEventListener('click', function () { banAction('unban_user', { target: name }); });
+      return b;
+    }
+    function renderUsers(ul, rows) {
+      ul.textContent = '';
+      if (!rows.length) { ul.appendChild(make('li', 'support-empty', 'No accounts match.')); return; }
+      var me = Account.username().toLowerCase();
+      rows.forEach(function (u) {
+        var li = make('li', 'support-item' + (u.banned ? ' done' : ''));
+        var head = make('div', 'support-item-head');
+        head.appendChild(make('span', 'support-who', '@' + u.name));
+        if (u.display && u.display !== u.name) head.appendChild(make('span', 'support-when', u.display));
+        if (u.is_owner) head.appendChild(make('span', 'link-badge', 'Owner'));
+        else if (u.is_admin) head.appendChild(make('span', 'link-badge', 'Admin'));
+        if (u.banned) head.appendChild(make('span', 'link-badge', 'Banned'));
+        li.appendChild(head);
+        if (u.banned && u.reason) li.appendChild(make('p', 'support-msg', 'Reason: ' + u.reason));
+        if (!u.is_owner && u.name.toLowerCase() !== me) {
+          var tools = make('div', 'support-tools');
+          if (u.banned) tools.appendChild(unbanButton(u.name));
+          else {
+            var why = make('input', 'ban-reason'); why.type = 'text'; why.maxLength = 300; why.placeholder = 'Reason (optional)'; why.setAttribute('aria-label', 'Reason for banning @' + u.name);
+            var ban = make('button', 'admin-ghost danger ban-btn', 'Ban'); ban.type = 'button';
+            if (u.is_admin && !Account.isOwner()) { ban.disabled = true; ban.title = 'Only the owner can ban another admin'; }
+            ban.addEventListener('click', function () {
+              Dialog.confirm('Ban @' + u.name + '? They will be signed out everywhere and can\'t log in or send messages until you unban them.', 'Ban').then(function (yes) {
+                if (yes) banAction('ban_user', { target: u.name, why: why.value.trim() });
+              });
+            });
+            tools.appendChild(why); tools.appendChild(ban);
+          }
+          li.appendChild(tools);
+        }
+        ul.appendChild(li);
+      });
+    }
+    function renderBans(ul, rows) {
+      ul.textContent = '';
+      if (!rows.length) { ul.appendChild(make('li', 'support-empty', 'Nobody is banned.')); return; }
+      rows.forEach(function (b) {
+        var li = make('li', 'support-item');
+        var head = make('div', 'support-item-head');
+        head.appendChild(make('span', 'support-who', '@' + b.name));
+        head.appendChild(make('span', 'support-when', 'by @' + b.banned_by + ' · ' + fmtTime(b.banned_at)));
+        li.appendChild(head);
+        if (b.reason) li.appendChild(make('p', 'support-msg', 'Reason: ' + b.reason));
+        var tools = make('div', 'support-tools'); tools.appendChild(unbanButton(b.name)); li.appendChild(tools);
+        ul.appendChild(li);
+      });
+    }
+    function bindUsers() {
+      var f = document.getElementById('users-form');
+      if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); loadUsers(); });
     }
     function loadAdmins() {
       var card = document.getElementById('admins-card');
@@ -4003,6 +4100,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         el.form.addEventListener('submit', submit);
         el.login.addEventListener('click', Account.open);
         bindAdmins();
+        bindUsers();
         gate();
         Account.onChange(function () { gate(); loadInbox(); refreshMine(); });
       },
