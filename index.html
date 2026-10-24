@@ -834,7 +834,11 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
 .itchio-placeholder-btn { position: relative; }
 .itchio-placeholder-btn .admin-del { position: absolute; top: 8px; right: 8px; z-index: 2; }
 .acct-note { display: block; margin-top: 16px; }
-#acct-guest[hidden], #acct-user-view[hidden], .acct-error[hidden], #acct-confirm-wrap[hidden], #acct-email-wrap[hidden] { display: none; }
+#acct-guest[hidden], #acct-user-view[hidden], .acct-error[hidden], #acct-guest .option-row[hidden], #acct-form[hidden], #acct-confirm-wrap[hidden], #acct-email-wrap[hidden], #acct-verify[hidden], #acct-verify-row[hidden], #acct-reset-step2[hidden], #acct-reset-form[hidden], #acct-forgot[hidden] { display: none; }
+.acct-linkbtn { margin-top: 12px; padding: 4px 0; border: 0; background: none; color: var(--accent-text); font: inherit; font-size: 14px; font-weight: 700; text-decoration: underline; cursor: pointer; }
+#acct-reset-msg.ok { background: var(--soft); }
+#acct-verify .choice-chip { margin-top: 4px; }
+#acct-verify-row { margin-top: 8px; }
 .acct-hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.4; }
 
 @media (max-height: 780px) { .topbar { gap: 14px; padding-top: 20px; } }
@@ -996,6 +1000,24 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           <p id="acct-error" class="acct-error" role="alert" hidden></p>
           <button id="acct-submit" class="acct-submit" type="submit">Log in</button>
         </form>
+        <button id="acct-forgot" class="acct-linkbtn" type="button">Forgot password?</button>
+
+        <form id="acct-reset-form" class="acct-form" autocomplete="off" novalidate hidden>
+          <p class="acct-hint" id="acct-reset-intro">Enter your username. If your account has a verified email, we'll send a code to it.</p>
+          <label class="customize-label" for="acct-reset-user">Username</label>
+          <input id="acct-reset-user" class="acct-input" type="text" maxlength="20" autocapitalize="off" spellcheck="false">
+          <div id="acct-reset-step2" hidden>
+            <label class="customize-label" for="acct-reset-code">Code from the email</label>
+            <input id="acct-reset-code" class="acct-input" type="text" maxlength="12" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="ABCD-2345">
+            <label class="customize-label" for="acct-reset-pass">New password</label>
+            <input id="acct-reset-pass" class="acct-input" type="password" autocomplete="new-password" maxlength="72">
+            <label class="customize-label" for="acct-reset-pass2">Confirm new password</label>
+            <input id="acct-reset-pass2" class="acct-input" type="password" autocomplete="new-password" maxlength="72">
+          </div>
+          <p id="acct-reset-msg" class="acct-error" role="status" hidden></p>
+          <button id="acct-reset-submit" class="acct-submit" type="submit">Send code</button>
+          <button id="acct-reset-back" class="acct-linkbtn" type="button">Back to log in</button>
+        </form>
       </div>
 
       <div id="acct-user-view" hidden>
@@ -1016,7 +1038,15 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
             <input id="acct-email-in" class="acct-input" type="email" maxlength="120" placeholder="you@example.com">
             <button id="acct-save-email" class="choice-chip" type="button">Save</button>
           </div>
-          <p id="acct-email-msg" class="acct-hint">Only the admin can see this. It isn't used to send automatic emails or reset passwords.</p>
+          <p id="acct-email-msg" class="acct-hint">Only the admin can see this. Verify it to reset your password by email.</p>
+          <div id="acct-verify" hidden>
+            <p id="acct-verify-status" class="acct-hint"></p>
+            <button id="acct-verify-send" class="choice-chip" type="button">Send verification code</button>
+            <div class="acct-row" id="acct-verify-row" hidden>
+              <input id="acct-verify-code" class="acct-input" type="text" maxlength="12" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="ABCD-2345" aria-label="Verification code">
+              <button id="acct-verify-confirm" class="choice-chip" type="button">Confirm</button>
+            </div>
+          </div>
         </div>
         <div class="customize-section switch-row">
           <span class="switch-text"><span class="switch-label">Sync my settings</span><span class="switch-desc">Theme, accent and layout follow this account in this browser</span></span>
@@ -1078,7 +1108,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         <details class="faq"><summary>Do I need an account?</summary>
           <p>No. Everything works without one. An account just remembers your theme, accent colour and layout, and brings them with you on other devices.</p></details>
         <details class="faq"><summary>I forgot my password</summary>
-          <p>There's no automatic reset. Send an <strong>Account help</strong> message below and the admin can sort it out. If you added an optional email to your account, they can use it to reach you.</p></details>
+          <p>On the log in screen choose <strong>Forgot password?</strong>. If you added an email to your account and verified it (Account window, Email section), we send a code to it. If you didn't, send an <strong>Account help</strong> message below and the admin can sort it out.</p></details>
         <details class="faq"><summary>How do I change how the site looks?</summary>
           <p>Open <strong>Customize</strong> (the gear in the sidebar) to switch between light and dark, pick an accent colour, and change the layout density.</p></details>
       </section>
@@ -2709,7 +2739,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
     function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
     var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
-    var APP_VERSION = '2026.10.24-h';
+    var APP_VERSION = '2026.10.24-j';
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
@@ -2780,10 +2810,13 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     function fetchProfile() {
       return token().then(function (t) {
         var base = '/rest/v1/profiles?id=eq.' + sess.uid + '&select=username,display,prefs,sync';
-        return sb(base + ',email', {}, t).catch(function (e) {
+        return sb(base + ',email,email_verified', {}, t).catch(function (e) {
           if (!/email|column/i.test(e.message)) throw e;
-          emailOk = false;
-          return sb(base, {}, t);
+          return sb(base + ',email', {}, t).catch(function (e2) {
+            if (!/email|column/i.test(e2.message)) throw e2;
+            emailOk = false;
+            return sb(base, {}, t);
+          });
         });
       }).then(function (rows) { if (!rows || !rows[0]) throw new Error('Profile not found.'); return rows[0]; });
     }
@@ -2802,6 +2835,88 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       el.submit.textContent = t === 'signup' ? 'Create account' : 'Log in';
       el.pass.autocomplete = t === 'signup' ? 'new-password' : 'current-password';
     }
+    function paintVerify() {
+      var a = cur;
+      var show = !!(REMOTE && a && a.email && emailOk);
+      el.verify.hidden = !show;
+      if (!show) return;
+      var ok = !!a.email_verified;
+      el.verifyStatus.textContent = ok ? 'Verified. You can reset your password with a code sent to this email.' : 'Not verified yet. Verify it to use it for password resets.';
+      el.verifySend.hidden = ok;
+      if (ok) el.verifyRow.hidden = true;
+    }
+    function verifyMsg(t) { el.verifyStatus.textContent = t; }
+    function sendVerification() {
+      verifyMsg('Sending...'); el.verifySend.disabled = true;
+      token().then(function (t) { return sb('/rest/v1/rpc/request_email_verification', { method: 'POST', body: {} }, t); })
+        .then(function (r) { verifyMsg(r.message); if (r.ok) { el.verifyRow.hidden = false; el.verifyCode.focus(); } })
+        .catch(function (e) { verifyMsg(e.message || 'Could not send a code.'); })
+        .then(function () { el.verifySend.disabled = false; });
+    }
+    function confirmVerification() {
+      var code = el.verifyCode.value.trim();
+      if (!code) return verifyMsg('Type the code from the email.');
+      el.verifyConfirm.disabled = true;
+      token().then(function (t) { return sb('/rest/v1/rpc/confirm_email', { method: 'POST', body: { code: code } }, t); })
+        .then(function (r) {
+          if (r.ok) { cur.email_verified = true; el.verifyCode.value = ''; paintVerify(); toast('Email verified'); }
+          else verifyMsg(r.message);
+        })
+        .catch(function (e) { verifyMsg(e.message || 'Could not check that code.'); })
+        .then(function () { el.verifyConfirm.disabled = false; });
+    }
+
+    /* forgot password: ask for a code, then set a new password */
+    var resetStep = 1;
+    function resetMsg(t, bad) { el.resetMsg.textContent = t || ''; el.resetMsg.hidden = !t; el.resetMsg.classList.toggle('ok', !bad); }
+    function showReset(on) {
+      el.resetForm.hidden = !on;
+      el.form.hidden = on;
+      el.forgot.hidden = on || !REMOTE;
+      document.querySelectorAll('#acct-guest .option-row').forEach(function (r) { r.hidden = on; });
+      if (on) {
+        resetStep = 1; el.resetStep2.hidden = true; el.resetSubmit.textContent = 'Send code'; resetMsg('');
+        el.resetUser.value = el.user.value.trim() || el.resetUser.value;
+        el.resetUser.readOnly = false;
+        setTimeout(function () { el.resetUser.focus(); }, 30);
+      } else {
+        el.resetCode.value = ''; el.resetPass.value = ''; el.resetPass2.value = '';
+      }
+    }
+    function submitReset(ev) {
+      ev.preventDefault();
+      if (busy) return;
+      var name = el.resetUser.value.trim();
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) return resetMsg('Enter your username.', true);
+      busy = true; el.resetSubmit.disabled = true; resetMsg('');
+      var req;
+      if (resetStep === 1) {
+        req = sb('/rest/v1/rpc/request_password_reset', { method: 'POST', body: { uname: name } }).then(function (r) {
+          resetMsg(r.message, !r.ok);
+          if (r.ok) {
+            resetStep = 2; el.resetStep2.hidden = false; el.resetUser.readOnly = true;
+            el.resetSubmit.textContent = 'Reset password'; el.resetCode.focus();
+          }
+        });
+      } else {
+        var code = el.resetCode.value.trim(), pw = el.resetPass.value;
+        if (!code) req = Promise.reject(new Error('Type the code from the email.'));
+        else if (pw.length < 6) req = Promise.reject(new Error('The password must be at least 6 characters.'));
+        else if (pw !== el.resetPass2.value) req = Promise.reject(new Error('The passwords do not match.'));
+        else req = sb('/rest/v1/rpc/complete_password_reset', { method: 'POST', body: { uname: name, code: code, new_password: pw } }).then(function (r) {
+          if (!r.ok) return resetMsg(r.message, true);
+          var u = name;
+          showReset(false);
+          el.user.value = u; el.pass.value = '';
+          setTab('login');
+          toast('Password changed. Log in with your new password.');
+          el.pass.focus();
+        });
+      }
+      req.catch(function (e) { resetMsg((e && e.message) || 'Something went wrong.', true); })
+        .then(function () { busy = false; el.resetSubmit.disabled = false; });
+    }
+
     function paint() {
       var a = cur;
       el.guest.hidden = !!a; el.userView.hidden = !a;
@@ -2818,6 +2933,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         el.userName.textContent = '@' + a.username;
         el.displayIn.value = a.display;
         el.emailIn.value = a.email || '';
+        paintVerify();
         el.sync.setAttribute('aria-pressed', a.sync ? 'true' : 'false');
         el.sync.classList.toggle('active', !!a.sync);
       }
@@ -2855,6 +2971,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     function close() {
       el.overlay.classList.remove('open'); el.overlay.setAttribute('aria-hidden', 'true');
       showError(''); el.pass.value = ''; el.pass2.value = ''; el.email.value = '';
+      if (!el.resetForm.hidden) showReset(false);
     }
     function done() {
       busy = false; announce = false; el.submit.disabled = false;
@@ -2966,7 +3083,12 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       if (REMOTE) {
         if (!emailOk) return msg('Saving an email isn\'t set up yet.');
         token().then(function (t) { return sb('/rest/v1/profiles?id=eq.' + sess.uid, { method: 'PATCH', body: { email: v || null }, headers: { Prefer: 'return=minimal' } }, t); })
-          .then(function () { cur.email = v || null; msg(v ? 'Saved.' : 'Email removed.'); })
+          .then(function () {
+            if (cur.email !== (v || null)) cur.email_verified = false;
+            cur.email = v || null;
+            msg(v ? 'Saved. Verify it below to use it for password resets.' : 'Email removed.');
+            paintVerify();
+          })
           .catch(function (e) { msg(e.message || 'Could not save.'); });
       } else {
         cur.email = v; persist(); msg(v ? 'Saved.' : 'Email removed.');
@@ -2997,7 +3119,10 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
           pass: $('acct-pass'), pass2: $('acct-pass2'), confirmWrap: $('acct-confirm-wrap'),
           error: $('acct-error'), submit: $('acct-submit'), label: $('acct-label'), initial: $('acct-initial'), sub: $('account-sub'), title: $('account-title'), avatar: $('acct-avatar'),
           dispName: $('acct-display-name'), userName: $('acct-username'), displayIn: $('acct-display'), sync: $('acct-sync'), note: $('acct-note'), diag: $('acct-diag'),
-          emailWrap: $('acct-email-wrap'), email: $('acct-email'), emailIn: $('acct-email-in'), emailMsg: $('acct-email-msg') };
+          emailWrap: $('acct-email-wrap'), email: $('acct-email'), emailIn: $('acct-email-in'), emailMsg: $('acct-email-msg'),
+          verify: $('acct-verify'), verifyStatus: $('acct-verify-status'), verifySend: $('acct-verify-send'), verifyRow: $('acct-verify-row'), verifyCode: $('acct-verify-code'), verifyConfirm: $('acct-verify-confirm'),
+          forgot: $('acct-forgot'), resetForm: $('acct-reset-form'), resetUser: $('acct-reset-user'), resetStep2: $('acct-reset-step2'), resetCode: $('acct-reset-code'),
+          resetPass: $('acct-reset-pass'), resetPass2: $('acct-reset-pass2'), resetMsg: $('acct-reset-msg'), resetSubmit: $('acct-reset-submit') };
         if (!el.overlay) return;
         el.note.textContent = REMOTE ? 'Your account is stored securely online, so it works on any device.' : 'Accounts are stored in this browser only. They don\'t sync between devices.';
         el.ready = false;
@@ -3020,6 +3145,12 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         $('acct-logout').addEventListener('click', logout);
         $('acct-save-name').addEventListener('click', saveName);
         $('acct-save-email').addEventListener('click', saveEmail);
+        el.verifySend.addEventListener('click', sendVerification);
+        el.verifyConfirm.addEventListener('click', confirmVerification);
+        el.forgot.hidden = !REMOTE;
+        el.forgot.addEventListener('click', function () { showReset(true); });
+        $('acct-reset-back').addEventListener('click', function () { showReset(false); });
+        el.resetForm.addEventListener('submit', submitReset);
         el.sync.addEventListener('click', toggleSync);
         $('acct-delete').addEventListener('click', deleteAccount);
         setTab('login');
