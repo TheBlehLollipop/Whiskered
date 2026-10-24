@@ -401,11 +401,6 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 }
 .links-filter:focus { outline: none; box-shadow: 3px 3px 0 var(--accent-text); }
 .links-filter::placeholder { color: var(--muted); }
-.links-copyall {
-  margin-left: auto; padding: 9px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--accent); color: var(--on-accent);
-  font-size: 14px; font-weight: 800; cursor: pointer; transition: transform .2s var(--pop), box-shadow .2s;
-}
-.links-copyall:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--hard); }
 
 .link-list { list-style: none; display: grid; gap: 12px; counter-reset: none; }
 .link-card {
@@ -532,6 +527,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 .changelog-list { list-style: none; display: grid; gap: 12px; }
 .changelog-entry { padding: 14px 16px; border: 2px solid var(--ink); border-radius: var(--r-sm); background: var(--surface-2); }
 .changelog-entry p { margin-top: 8px; line-height: 1.45; }
+.changelog-meta { display: flex; align-items: center; gap: 6px; }
+.cl-tools { margin-left: auto; display: inline-flex; gap: 4px; }
+.changelog-entry .admin-edit { margin: 0; border: 0; padding: 0; background: none; }
+.changelog-box .admin-bar { margin-bottom: 0; }
+.changelog-box .admin-input { flex-basis: 100%; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 
 /* ---- Page transitions ------------------------------------- */
@@ -698,14 +698,132 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 }
 .side-tool:hover { background: var(--accent); color: var(--on-accent); transform: translateY(-2px); }
 .side-tool-icon { flex: 0 0 46px; padding: 10px 0; font-size: 17px; }
-.theme-glyph::before { content: "\263E"; }
-:root[data-theme="light"] .theme-glyph::before { content: "\2600"; }
+.theme-glyph { display: inline-flex; }
+.theme-glyph .ico-sun { display: none; }
+:root[data-theme="light"] .theme-glyph .ico-sun { display: block; }
+:root[data-theme="light"] .theme-glyph .ico-moon { display: none; }
+.ico { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.14em; }
+.mode-icon .ico { width: 1em; height: 1em; stroke-width: 2.4; }
+.htu-tip-icon .ico { width: 20px; height: 20px; color: var(--accent-text); }
+.customize-close .ico, .changelog-close .ico { display: block; margin: auto; width: 16px; height: 16px; stroke-width: 2.6; }
+.ico-star { width: .9em; height: .9em; margin-left: 3px; fill: currentColor; stroke-width: 1.6; vertical-align: -.1em; }
+.chip-ico { display: inline-flex; vertical-align: middle; }
+.side-tool .ico { width: 16px; height: 16px; }
+.side-tool-icon .ico { width: 19px; height: 19px; }
+.customize-pill .ico { width: 1.1em; height: 1.1em; }
 .customize-pill { margin-top: 0; }
+.side-account-row .side-tool { width: 100%; }
+.side-account-row .side-tool > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acct-form { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; }
+.acct-form .customize-label { margin: 8px 0 4px; }
+.acct-input {
+  width: 100%; padding: 10px 14px; border: 2px solid var(--ink); border-radius: 12px; background: var(--bg);
+  color: var(--text); font: inherit; font-size: 15px;
+}
+.acct-input:focus { outline: none; box-shadow: 3px 3px 0 var(--accent-text); }
+.acct-error { margin-top: 8px; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 12px; background: var(--soft); font-size: 14px; font-weight: 700; }
+.acct-submit {
+  margin-top: 14px; padding: 11px 18px; border: 2px solid var(--ink); border-radius: 999px; background: var(--accent); color: var(--on-accent);
+  font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 3px 3px 0 var(--hard); transition: transform .15s var(--pop);
+}
+.acct-submit:hover { transform: translateY(-2px); }
+.acct-submit:disabled { opacity: .6; cursor: wait; }
+.customize-footer .acct-submit { margin-top: 0; }
+.acct-profile { display: flex; align-items: center; gap: 14px; }
+.acct-profile b { display: block; font-size: 20px; letter-spacing: -.02em; }
+.acct-profile small { color: var(--muted); font: 400 13px var(--mono); }
+.acct-avatar { display: grid; place-items: center; width: 56px; height: 56px; border: 2px solid var(--ink); border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 24px; font-weight: 800; text-transform: uppercase; }
+.topbar-link[hidden], .side-group[hidden] { display: none !important; }
+.team-view { max-width: 760px; }
+.team-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.team-card { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--surface); border: 2px solid var(--ink); border-radius: 22px; box-shadow: 4px 4px 0 var(--hard); animation: fadeUp .4s var(--ease) both; transition: transform .2s var(--pop), box-shadow .2s; }
+.team-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--accent-text); }
+.team-card.owner { background: var(--soft); }
+.team-avatar { flex: none; display: grid; place-items: center; width: 52px; height: 52px; border: 2px solid var(--ink); border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 22px; font-weight: 800; text-transform: uppercase; }
+.team-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.team-name { font-size: 18px; letter-spacing: -.02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-handle { font: 400 13px var(--mono); color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
+.team-note { color: var(--muted); font-weight: 700; }
+.team-note[hidden] { display: none; }
+.support-view { max-width: 760px; }
+.support-card { margin-bottom: 22px; padding: 22px; background: var(--surface); border: 2px solid var(--ink); border-radius: 24px; box-shadow: 5px 5px 0 var(--hard); }
+.support-card[hidden] { display: none; }
+.support-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
+.support-count { margin-left: auto; font: 700 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.faq { border-top: 2px dashed var(--line); }
+.faq summary { padding: 14px 4px; font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font: 700 20px var(--mono); color: var(--accent-text); transition: transform .2s var(--pop); }
+.faq[open] summary::after { transform: rotate(45deg); }
+.faq p { padding: 0 4px 16px; color: var(--muted); line-height: 1.55; }
+.faq p strong { color: var(--text); }
+.support-form { display: flex; flex-direction: column; gap: 4px; }
+.support-form .customize-label { margin: 8px 0 4px; }
+textarea.acct-input { resize: vertical; min-height: 110px; line-height: 1.45; }
+select.acct-input { cursor: pointer; }
+.support-gate { padding: 18px; border: 2px dashed var(--ink); border-radius: 18px; background: var(--soft); }
+.support-gate p { margin-bottom: 12px; font-weight: 700; }
+.support-gate .acct-submit { margin-top: 0; }
+.support-gate[hidden], .support-form[hidden] { display: none; }
+.support-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.support-form .acct-submit { align-self: flex-start; }
+.support-list { list-style: none; display: grid; gap: 12px; }
+.support-item { padding: 14px 16px; border: 2px solid var(--ink); border-radius: var(--r-sm); background: var(--surface-2); }
+.support-item.done { opacity: .6; }
+.support-item-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.support-who { font-weight: 700; }
+.support-email { font: 400 13px var(--mono); color: var(--accent-text); overflow-wrap: anywhere; }
+.support-when { margin-left: auto; font: 400 12px var(--mono); color: var(--muted); }
+.support-msg { margin: 8px 0 10px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.support-tools { display: flex; gap: 8px; }
+.support-empty { color: var(--muted); }
+.acct-row { display: flex; gap: 8px; }
+.admin-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 18px; padding: 10px 12px; border: 2px dashed var(--ink); border-radius: 18px; background: var(--soft); }
+.admin-tag { padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.admin-input { flex: 1 1 160px; min-width: 0; padding: 8px 14px; border: 2px solid var(--ink); border-radius: 999px; background: var(--bg); color: var(--text); font: inherit; font-size: 14px; }
+.admin-input:focus { outline: none; box-shadow: 3px 3px 0 var(--accent-text); }
+.admin-add { padding: 8px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--accent); color: var(--on-accent); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+.admin-add:disabled { opacity: .6; cursor: wait; }
+.admin-ghost { padding: 8px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+.admin-ghost:hover { background: var(--accent); color: var(--on-accent); }
+.admin-edit { margin-top: -6px; border-style: solid; }
+.admin-edit .admin-input { flex-basis: 100%; }
+textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; line-height: 1.45; }
+.admin-move { display: inline-flex; gap: 4px; flex: none; }
+.admin-mv { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 2px solid var(--ink); border-radius: 50%; background: var(--surface); color: var(--text); cursor: pointer; transition: transform .15s var(--pop), background .15s; }
+.admin-mv:hover { background: var(--accent); color: var(--on-accent); transform: scale(1.1); }
+.admin-mv .ico { width: 14px; height: 14px; stroke-width: 2.8; }
+.link-card .admin-move { margin: auto 8px auto 0; }
+.itchio-placeholder-btn .admin-move { position: absolute; top: 8px; left: 8px; z-index: 2; }
+.sortable { cursor: grab; }
+.sortable.dragging { opacity: .4; }
+.admin-wrap { margin: 0 0 18px; }
+.admin-wrap > .admin-bar { margin-bottom: 8px; }
+.admin-orderbox { flex-direction: column; align-items: stretch; margin-bottom: 0; }
+.admin-note { font-size: 13px; color: var(--muted); }
+.admin-order { list-style: none; display: grid; gap: 6px; max-height: 360px; overflow-y: auto; padding: 2px; }
+.admin-order-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 8px 6px 14px; border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); font-weight: 700; }
+.admin-danger { padding: 8px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); color: var(--text); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
+.admin-danger:hover { background: #e5484d; color: #fff; }
+.admin-msg { flex-basis: 100%; font-size: 13px; font-weight: 700; }
+.admin-msg:empty { display: none; }
+.admin-del { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 2px solid var(--ink); border-radius: 50%; background: var(--surface); color: var(--text); cursor: pointer; transition: transform .15s var(--pop), background .15s; }
+.admin-del:hover { background: #e5484d; color: #fff; transform: scale(1.1); }
+.admin-del .ico { width: 14px; height: 14px; stroke-width: 2.8; }
+.link-card .admin-del { margin: auto 10px auto 0; }
+.itchio-placeholder-btn { position: relative; }
+.itchio-placeholder-btn .admin-del { position: absolute; top: 8px; right: 8px; z-index: 2; }
+.acct-note { display: block; margin-top: 16px; }
+#acct-guest[hidden], #acct-user-view[hidden], .acct-error[hidden], #acct-confirm-wrap[hidden], #acct-email-wrap[hidden] { display: none; }
+.acct-hint { margin-top: 8px; font-size: 13px; color: var(--muted); line-height: 1.4; }
 
 @media (max-height: 780px) { .topbar { gap: 14px; padding-top: 20px; } }
 @media (max-height: 420px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
 @media (max-width: 900px) {
   .topbar-name, .side-label, .topbar-count, .side-tools { display: none; }
+  .side-account-row { display: flex; margin-left: auto; margin-top: 0; }
+  .side-account-row .side-tool { padding: 8px 10px; }
+  .acct-label { display: none; }
   .side-group { display: contents; }
 }
 
@@ -729,6 +847,19 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         <button type="button" class="topbar-link" data-nav="websites"><span class="topbar-text">Websites</span><span class="topbar-count" id="nav-count-sites"></span></button>
       </nav>
     </div>
+    <div class="side-group">
+      <p class="side-label">Help</p>
+      <nav class="topbar-nav" aria-label="Help">
+        <button type="button" class="topbar-link" data-nav="support"><span class="topbar-text">Support</span></button>
+        <button type="button" class="topbar-link" data-nav="team"><span class="topbar-text">Team</span></button>
+      </nav>
+    </div>
+    <div class="side-group" id="admin-group" hidden>
+      <p class="side-label">Manage</p>
+      <nav class="topbar-nav" aria-label="Admin">
+        <button type="button" class="topbar-link" data-nav="admin"><span class="topbar-text">Admin</span><span class="topbar-count" id="nav-count-inbox"></span></button>
+      </nav>
+    </div>
 <div class="side-cat" aria-hidden="true">
       <svg viewBox="0 0 200 110" preserveAspectRatio="xMidYMax meet" width="100%" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M20 96h160" opacity=".35"/>
@@ -742,10 +873,13 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       <span class="side-cat-note"><span class="note-idle">shh, the cat is napping</span><span class="note-awake">purrrrrr&hellip;</span></span>
     </div>
     <div class="side-tools">
-      <button type="button" id="side-theme" class="side-tool side-tool-icon" aria-label="Switch between light and dark theme" title="Light / dark"><span aria-hidden="true" class="theme-glyph"></span></button>
-      <button type="button" id="side-changelog" class="side-tool"><span aria-hidden="true">&#128220;</span> Changelog</button>
+      <button type="button" id="side-theme" class="side-tool side-tool-icon" aria-label="Switch between light and dark theme" title="Light / dark"><span aria-hidden="true" class="theme-glyph"><svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg><svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></span></button>
+      <button type="button" id="side-changelog" class="side-tool"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9.5 12h6M9.5 16h6"/></svg></span> Changelog</button>
     </div>
-    <button id="open-customize" class="customize-pill" type="button" aria-haspopup="dialog" aria-controls="customize-overlay" aria-label="Customize"><span aria-hidden="true">⚙</span><span class="pill-label">Customize</span></button>
+    <div class="side-tools side-account-row">
+      <button type="button" id="side-account" class="side-tool" aria-haspopup="dialog" aria-controls="account-overlay"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.6-7 8-7s8 2.5 8 7"/></svg></span> <span class="acct-label" id="acct-label">Log in</span></button>
+    </div>
+    <button id="open-customize" class="customize-pill" type="button" aria-haspopup="dialog" aria-controls="customize-overlay" aria-label="Customize"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></span><span class="pill-label">Customize</span></button>
   </header>
 
   <div id="customize-overlay" class="customize-overlay" aria-hidden="true">
@@ -756,14 +890,14 @@ body.hide-welcome-guidance .how-to-use { display: none; }
           <h2 id="customize-title">Customize Whiskered</h2>
           <p class="customize-sub">Changes save automatically.</p>
         </div>
-        <button id="close-customize" class="customize-close" type="button" aria-label="Close customization panel">✕</button>
+        <button id="close-customize" class="customize-close" type="button" aria-label="Close customization panel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </div>
 
       <div class="customize-section">
         <label class="customize-label">Theme</label>
         <div class="option-row segmented">
-          <button class="choice-chip" type="button" data-theme-choice="light">&#9728; Light</button>
-          <button class="choice-chip" type="button" data-theme-choice="dark">&#9790; Dark</button>
+          <button class="choice-chip" type="button" data-theme-choice="light"><span aria-hidden="true" class="chip-ico"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg></span> Light</button>
+          <button class="choice-chip" type="button" data-theme-choice="dark"><span aria-hidden="true" class="chip-ico"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></span> Dark</button>
         </div>
       </div>
 
@@ -805,6 +939,74 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     </div>
   </div>
 
+  <div id="account-overlay" class="customize-overlay" aria-hidden="true">
+    <div class="customize-panel" role="dialog" aria-modal="true" aria-labelledby="account-title">
+      <div class="customize-header">
+        <div>
+          <p class="customize-kicker">Account</p>
+          <h2 id="account-title">Account</h2>
+          <p class="customize-sub" id="account-sub"></p>
+        </div>
+        <button id="close-account" class="customize-close" type="button" aria-label="Close account panel"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </div>
+
+      <div id="acct-guest">
+        <div class="option-row segmented">
+          <button class="choice-chip active" type="button" data-acct-tab="login">Log in</button>
+          <button class="choice-chip" type="button" data-acct-tab="signup">Sign up</button>
+        </div>
+        <form id="acct-form" class="acct-form" autocomplete="on" novalidate>
+          <label class="customize-label" for="acct-user">Username</label>
+          <input id="acct-user" class="acct-input" type="text" autocomplete="username" maxlength="20">
+          <label class="customize-label" for="acct-pass">Password</label>
+          <input id="acct-pass" class="acct-input" type="password" autocomplete="current-password" maxlength="100" required>
+          <div id="acct-confirm-wrap" hidden>
+            <label class="customize-label" for="acct-pass2">Confirm password</label>
+            <input id="acct-pass2" class="acct-input" type="password" autocomplete="new-password" maxlength="100">
+          </div>
+          <div id="acct-email-wrap" hidden>
+            <label class="customize-label" for="acct-email">Email (optional)</label>
+            <input id="acct-email" class="acct-input" type="email" autocomplete="email" maxlength="120" placeholder="So the admin can reach you">
+          </div>
+          <p id="acct-error" class="acct-error" role="alert" hidden></p>
+          <button id="acct-submit" class="acct-submit" type="submit">Log in</button>
+        </form>
+      </div>
+
+      <div id="acct-user-view" hidden>
+        <div class="acct-profile">
+          <span class="acct-avatar" id="acct-avatar" aria-hidden="true"></span>
+          <div><b id="acct-display-name"></b><small id="acct-username"></small></div>
+        </div>
+        <div class="customize-section">
+          <label class="customize-label" for="acct-display">Display name</label>
+          <div class="acct-row">
+            <input id="acct-display" class="acct-input" type="text" maxlength="24">
+            <button id="acct-save-name" class="choice-chip" type="button">Save</button>
+          </div>
+        </div>
+        <div class="customize-section">
+          <label class="customize-label" for="acct-email-in">Email (optional)</label>
+          <div class="acct-row">
+            <input id="acct-email-in" class="acct-input" type="email" maxlength="120" placeholder="you@example.com">
+            <button id="acct-save-email" class="choice-chip" type="button">Save</button>
+          </div>
+          <p id="acct-email-msg" class="acct-hint">Only the admin can see this. It isn't used to send automatic emails or reset passwords.</p>
+        </div>
+        <div class="customize-section switch-row">
+          <span class="switch-text"><span class="switch-label">Sync my settings</span><span class="switch-desc">Theme, accent and layout follow this account in this browser</span></span>
+          <button class="switch" type="button" id="acct-sync" aria-label="Toggle settings sync" aria-pressed="true"></button>
+        </div>
+        <div class="customize-footer">
+          <button class="reset-btn" type="button" id="acct-delete">Delete account</button>
+          <button class="acct-submit" type="button" id="acct-logout">Log out</button>
+        </div>
+      </div>
+
+      <p class="customize-note acct-note" id="acct-note"></p>
+    </div>
+  </div>
+
   <main id="main" class="content-area">
 
     <div id="itchio-view" class="itchio-view" style="display:none">
@@ -835,6 +1037,83 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       <div id="websites-grid" class="websites-grid"></div>
     </div>
 
+    <div id="support-view" class="support-view" style="display:none">
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Support</h2>
+        <p class="itchio-subheading">Stuck? The cats can help</p>
+      </header>
+
+      <section class="support-card" aria-labelledby="faq-title">
+        <h3 id="faq-title" class="support-title">Common questions</h3>
+        <details class="faq"><summary>A link isn't working</summary>
+          <p>Sites move around and get blocked a lot. Try the other links listed on that site's page first. If none of them work, tell us below and we'll swap them out.</p></details>
+        <details class="faq"><summary>How do I suggest a game or a site?</summary>
+          <p>Use the form below and pick <strong>Suggest a link</strong>. Include the address and, for games, the genre you think it belongs in.</p></details>
+        <details class="faq"><summary>Do I need an account?</summary>
+          <p>No. Everything works without one. An account just remembers your theme, accent colour and layout, and brings them with you on other devices.</p></details>
+        <details class="faq"><summary>I forgot my password</summary>
+          <p>There's no automatic reset. Send an <strong>Account help</strong> message below and the admin can sort it out. If you added an optional email to your account, they can use it to reach you.</p></details>
+        <details class="faq"><summary>How do I change how the site looks?</summary>
+          <p>Open <strong>Customize</strong> (the gear in the sidebar) to switch between light and dark, pick an accent colour, and change the layout density.</p></details>
+      </section>
+
+      <section class="support-card" id="support-form-wrap" aria-labelledby="contact-title">
+        <h3 id="contact-title" class="support-title">Send a message</h3>
+        <div id="support-gate" class="support-gate">
+          <p>You need an account to send a message, so we know who to reply to.</p>
+          <button id="support-login" class="acct-submit" type="button">Log in or sign up</button>
+        </div>
+        <form id="support-form" class="support-form" autocomplete="off" novalidate>
+          <label class="customize-label" for="support-kind">What's it about?</label>
+          <select id="support-kind" class="acct-input">
+            <option value="broken">A link is broken</option>
+            <option value="suggest">Suggest a link</option>
+            <option value="account">Account help</option>
+            <option value="other">Something else</option>
+          </select>
+          <label class="customize-label" for="support-message">Message</label>
+          <textarea id="support-message" class="acct-input" rows="5" maxlength="1000" placeholder="Tell us what's going on. Include the site or game name and the link if you can."></textarea>
+          <label class="customize-label" for="support-user">Your username</label>
+          <input id="support-user" class="acct-input" type="text" maxlength="30" readonly required>
+          <input id="support-website" class="support-hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p id="support-note" class="acct-error" role="status" hidden></p>
+          <button id="support-send" class="acct-submit" type="submit">Send message</button>
+        </form>
+      </section>
+
+    </div>
+
+    <div id="admin-view" class="support-view" style="display:none">
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Admin</h2>
+        <p class="itchio-subheading">Only you can see this</p>
+      </header>
+      <section class="support-card" id="support-inbox" aria-labelledby="inbox-title">
+        <h3 id="inbox-title" class="support-title">Inbox <span id="support-count" class="support-count"></span></h3>
+        <ul id="support-list" class="support-list"></ul>
+      </section>
+
+      <section class="support-card" id="admins-card" aria-labelledby="admins-title" hidden>
+        <h3 id="admins-title" class="support-title">Admins <span class="admin-tag">Owner</span></h3>
+        <p class="admin-note">Admins can edit links, sites and the changelog, and read support messages. Only you can add or remove admins.</p>
+        <form id="admins-form" class="admin-bar" autocomplete="off">
+          <input id="admins-name" class="admin-input" type="text" maxlength="20" placeholder="Username to promote" aria-label="Username to promote" required>
+          <button class="admin-add" type="submit">Make admin</button>
+          <span id="admins-msg" class="admin-msg" role="alert"></span>
+        </form>
+        <ul id="admins-list" class="support-list"></ul>
+      </section>
+    </div>
+
+    <div id="team-view" class="team-view" style="display:none">
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Team</h2>
+        <p class="itchio-subheading">The cats behind Whiskered</p>
+      </header>
+      <ul id="team-grid" class="team-grid"></ul>
+      <p id="team-note" class="team-note" hidden></p>
+    </div>
+
     <div id="welcome-screen" class="welcome-screen">
       <div class="bento">
         <div class="welcome-hero">
@@ -844,13 +1123,13 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         </div>
         <div class="home-mode-buttons">
           <button id="btn-itchio" class="home-mode-btn">
-            <span class="mode-icon" aria-hidden="true">&#128049;</span>
+            <span class="mode-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M7 17 6 5l8 5.5a14 14 0 0 1 12 0L34 5l-1 12c1.4 2 2 4 2 6.5C35 31 28 35 20 35S5 31 5 23.5C5 21 5.6 19 7 17Z"/><circle cx="14" cy="22" r="1.6" fill="currentColor" stroke="none"/><circle cx="26" cy="22" r="1.6" fill="currentColor" stroke="none"/><path d="M18.5 26.5h3L20 28.5ZM20 28.5v1.5M20 30c-1.2 1.4-3 1.4-4 .4M20 30c1.2 1.4 3 1.4 4 .4"/><path d="M2 25l7 1M2 29l7-1.5M38 25l-7 1M38 29l-7-1.5"/></svg></span>
             <span class="mode-title">Games</span>
             <span class="mode-desc">Chase browser games by genre</span>
             <span id="count-games" class="mode-count"></span>
           </button>
           <button id="btn-websites" class="home-mode-btn">
-            <span class="mode-icon" aria-hidden="true">&#129526;</span>
+            <span class="mode-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><circle cx="20" cy="19" r="13.5"/><path d="M7.5 14c8 4 17 4 25 0M6.5 21c9 4 18 4 27 0M11 29c6-3 12-3 18 0M20 5.5c-6 7-6 19 0 27M20 5.5c6 7 6 19 0 27"/><path d="M31 30c4 1 6 4 4 8s-7 2-9 0"/></svg></span>
             <span class="mode-title">Websites</span>
             <span class="mode-desc">Unravel curated platforms &amp; link lists</span>
             <span id="count-sites" class="mode-count"></span>
@@ -878,9 +1157,9 @@ body.hide-welcome-guidance .how-to-use { display: none; }
           </ol>
           <h3 class="htu-tips-title">Good to know</h3>
           <ul class="htu-tips">
-            <li><span class="htu-tip-icon" aria-hidden="true">&#128062;</span><span>Change the theme and accent colour with <strong>Customize</strong> in the top right.</span></li>
-            <li><span class="htu-tip-icon" aria-hidden="true">&#128269;</span><span>Big genres have a <strong>search box</strong> to find a game fast.</span></li>
-            <li><span class="htu-tip-icon" aria-hidden="true">&#8677;</span><span>Press <strong>Esc</strong> to close any pop-up.</span></li>
+            <li><span class="htu-tip-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><ellipse cx="12" cy="15.5" rx="4.6" ry="3.9"/><circle cx="5.2" cy="10.6" r="1.9"/><circle cx="9.3" cy="5.8" r="1.9"/><circle cx="14.7" cy="5.8" r="1.9"/><circle cx="18.8" cy="10.6" r="1.9"/></svg></span><span>Change the theme and accent colour with <strong>Customize</strong> in the top right.</span></li>
+            <li><span class="htu-tip-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span><span>Big genres have a <strong>search box</strong> to find a game fast.</span></li>
+            <li><span class="htu-tip-icon" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M8 10.5h8M8 13.5h5"/></svg></span><span>Press <strong>Esc</strong> to close any pop-up.</span></li>
           </ul>
         </section>
       </div>
@@ -895,7 +1174,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         <h2 id="changelog-title">Changelog</h2>
         <p class="changelog-sub">What's new in Whiskered</p>
       </div>
-      <button id="close-changelog" class="changelog-close" aria-label="Close changelog">&times;</button>
+      <button id="close-changelog" class="changelog-close" aria-label="Close changelog"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
 
     <ul id="changelog-list" class="changelog-list"></ul>
@@ -949,7 +1228,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         <div class="panel-image-placeholder" role="img" aria-label="Nexora illustration"></div>
         <p class="panel-description">Nexora is a sleek, modern unblocked gaming hub known for its carefully curated library of high-quality browser games. Fast loads, zero downloads, and always accessible — even on restricted school or work networks.</p>
         <div class="panel-tags"><span class="panel-tag">Unblocked</span><span class="panel-tag">Curated</span><span class="panel-tag">No Download</span></div>
-        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">320</span></div><div class="meta-item"><span class="meta-label">Daily Active</span><span class="meta-value">8K</span></div><div class="meta-item"><span class="meta-label">Rating</span><span class="meta-value">4.8★</span></div></div>
+        <div class="panel-meta"><div class="meta-item"><span class="meta-label">Games</span><span class="meta-value">320</span></div><div class="meta-item"><span class="meta-label">Daily Active</span><span class="meta-value">8K</span></div><div class="meta-item"><span class="meta-label">Rating</span><span class="meta-value">4.8<svg class="ico ico-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg></span></div></div>
         <div class="links-section">
           <a href="https://noterplusfire40.firebaseapp.com/" class="site-link" target="_blank" rel="noopener noreferrer">https://noterplusfire40.firebaseapp.com/</a>
           <hr class="link-divider">
@@ -1906,6 +2185,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 
   function savePrefs() {
     localStorage.setItem(CUSTOMIZE_STORAGE_KEY, JSON.stringify(prefs));
+    if (typeof Account !== 'undefined' && Account.syncPrefs) Account.syncPrefs();
   }
 
   function hexToRgba(hex, alpha) {
@@ -2015,7 +2295,10 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       document.getElementById('welcome-screen'),
       document.getElementById('itchio-view'),
       document.getElementById('itchio-genre-view'),
-      document.getElementById('websites-view')
+      document.getElementById('websites-view'),
+      document.getElementById('support-view'),
+      document.getElementById('admin-view'),
+      document.getElementById('team-view')
     ];
     for (var i = 0; i < views.length; i++) {
       if (views[i] && views[i].style.display !== 'none') return views[i];
@@ -2063,6 +2346,9 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     var itchioView = document.getElementById('itchio-view');
     var welcomeScreen = document.getElementById('welcome-screen');
     var websitesView = document.getElementById('websites-view');
+    var supportView = document.getElementById('support-view');
+    var inboxView = document.getElementById('admin-view');
+    var teamView = document.getElementById('team-view');
     var currentView = getActiveView();
 
     animateOut(currentView, function () {
@@ -2071,6 +2357,9 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       if (itchioGenreView) itchioGenreView.style.display = 'none';
       if (welcomeScreen) welcomeScreen.style.display = 'none';
       if (websitesView) websitesView.style.display = 'none';
+      if (supportView) supportView.style.display = 'none';
+      if (inboxView) inboxView.style.display = 'none';
+      if (teamView) teamView.style.display = 'none';
       document.querySelectorAll('.content-panel').forEach(function (p) {
         p.hidden = true;
         p.classList.remove('active');
@@ -2083,6 +2372,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         if (itchioView) { itchioView.style.display = 'flex'; target = itchioView; }
       } else if (mode === 'websites') {
         if (websitesView) { websitesView.style.display = ''; target = websitesView; }
+      } else if (mode === 'support') {
+        if (supportView) { supportView.style.display = ''; target = supportView; Support.show(); }
+      } else if (mode === 'team') {
+        if (teamView) { teamView.style.display = ''; target = teamView; Team.show(); }
+      } else if (mode === 'admin' && Account.isAdmin()) {
+        if (inboxView) { inboxView.style.display = ''; target = inboxView; Support.showInbox(); }
       } else {
         if (welcomeScreen) { welcomeScreen.style.display = ''; target = welcomeScreen; }
       }
@@ -2102,6 +2397,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       if (websitesView) websitesView.style.display = 'none';
       var welcomeEl = document.getElementById('welcome-screen');
       if (welcomeEl) welcomeEl.style.display = 'none';
+      var supportEl = document.getElementById('support-view');
+      if (supportEl) supportEl.style.display = 'none';
+      var inboxEl = document.getElementById('admin-view');
+      if (inboxEl) inboxEl.style.display = 'none';
+      var teamEl = document.getElementById('team-view');
+      if (teamEl) teamEl.style.display = 'none';
 
       if (prevPanel && prevPanel !== panel) {
         prevPanel.classList.remove('active');
@@ -2147,6 +2448,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 
   /* ---- Show individual genre page -------------------------- */
   function showGenre(genre) {
+    Links.setGenre(genre);
     setNavActive('itchio');
     var currentView = getActiveView();
     var genreView = document.getElementById('itchio-genre-view');
@@ -2199,9 +2501,15 @@ body.hide-welcome-guidance .how-to-use { display: none; }
           name.textContent = game.label;
           a.appendChild(cover);
           a.appendChild(name);
+          if (Links.admin()) {
+            a.dataset.key = Links.norm(game.url);
+            a.appendChild(Links.removeBtn('game', genre.id, game.url, game.editId));
+            a.appendChild(Links.moveBtns(a, '.itchio-placeholder-btn', 'game:' + genre.id, 'x'));
+          }
           container.appendChild(a);
         });
 
+        if (Links.admin()) Links.sortable(container, '.itchio-placeholder-btn', 'game:' + genre.id, 'x');
         var search = document.getElementById('game-search');
         if (search) {
           search.value = '';
@@ -2227,27 +2535,1165 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         }
       }
 
+      if (genreView) {
+        var oldBar = genreView.querySelector('.admin-bar');
+        if (oldBar) oldBar.remove();
+        var gs = document.getElementById('game-search');
+        if (Links.admin() && gs) gs.parentNode.insertBefore(Links.form('game', genre.id), gs);
+      }
       if (genreView) genreView.style.display = '';
       animateIn(genreView);
     });
   }
 
   /* ---- Build websites view --------------------------------- */
+  function escHtml(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  function updateSiteCounts() {
+    var cs = document.getElementById('count-sites');
+    var ncs = document.getElementById('nav-count-sites');
+    if (cs) cs.textContent = SITES.length + ' sites';
+    if (ncs) ncs.textContent = SITES.length;
+  }
+
   function buildWebsitesView() {
     var grid = document.getElementById('websites-grid');
     if (!grid) return;
+    grid.textContent = '';
 
     SITES.forEach(function (site) {
       var btn = document.createElement('button');
       btn.className = 'sites-card';
       btn.innerHTML =
-        '<span class="sites-card-icon" aria-hidden="true">' + site.icon + '</span>' +
-        '<span class="sites-card-name">' + site.label + '</span>' +
-        '<span class="sites-card-tagline">' + site.tagline + '</span>';
+        '<span class="sites-card-icon" aria-hidden="true">' + escHtml(site.icon) + '</span>' +
+        '<span class="sites-card-name">' + escHtml(site.label) + '</span>' +
+        '<span class="sites-card-tagline">' + escHtml(site.tagline) + '</span>';
       btn.addEventListener('click', function () { showPanel(site.id); });
       grid.appendChild(btn);
     });
+
+    var old = document.querySelector('#websites-view .admin-wrap');
+    if (old) old.remove();
+    if (Links.admin()) grid.parentNode.insertBefore(Links.siteForm(), grid);
   }
+
+  /* previous / next buttons on a site panel */
+  function fillPager(pager, siteIdx) {
+    pager.textContent = '';
+    [['prev', siteIdx - 1, 'Previous'], ['next', siteIdx + 1, 'Next']].forEach(function (cfg) {
+      var target = SITES[cfg[1]];
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'pager-btn ' + cfg[0];
+      b.innerHTML = '<span></span><strong></strong>';
+      b.firstChild.textContent = cfg[2];
+      if (target) {
+        b.lastChild.textContent = (cfg[0] === 'prev' ? '← ' : '') + target.label + (cfg[0] === 'next' ? ' →' : '');
+        b.addEventListener('click', function () { showPanel(target.id); });
+      } else { b.disabled = true; b.lastChild.textContent = '-'; }
+      pager.appendChild(b);
+    });
+  }
+
+  /* refresh the numbers on a panel after sites or links change */
+  function updatePanelMeta(panel) {
+    var idx = SITES.findIndex(function (x) { return x.id === panel.id.replace('panel-', ''); });
+    if (idx < 0) return;
+    var n = panel.querySelectorAll('.link-card').length;
+    var k = panel.querySelector('.ph-kicker');
+    if (k) k.textContent = 'Site ' + (idx < 9 ? '0' : '') + (idx + 1) + ' / ' + SITES.length + ' · ' + (n ? n + (n === 1 ? ' link' : ' links') : 'No links yet');
+    var facts = panel.querySelectorAll('.about-fact strong');
+    if (facts[0]) facts[0].textContent = n || '—';
+    if (facts[1]) facts[1].textContent = (idx + 1) + ' of ' + SITES.length;
+    var pager = panel.querySelector('.pager');
+    if (pager) fillPager(pager, idx);
+  }
+
+  /* ---- Accounts --------------------------------------------- *
+   * With SUPABASE_URL and SUPABASE_ANON_KEY filled in, accounts live in
+   * Supabase (Auth + a `profiles` table, see supabase.sql) and work on
+   * every device. Leave them empty and accounts fall back to this
+   * browser only: salted PBKDF2 hashes in localStorage.
+   * Only ever put the public anon key here, never the service_role key.
+   */
+  var SUPABASE_URL = 'https://pxtbxsvfufrhjdtlktsd.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4dGJ4c3ZmdWZyaGpkdGxrdHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3OTM5NzYsImV4cCI6MjEwODM2OTk3Nn0.QR2WI9QvGkmuS7-aSkY_kRPZt-5J13uzHEnrq9qq7H4';  // public anon key
+  var Account = (function () {
+    var REMOTE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+    var BASE = SUPABASE_URL.replace(/\/$/, '');
+    /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
+    function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
+    var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
+    var emailOk = true, role = { admin: false, owner: false };
+    function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
+    var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
+    function notify() { listeners.forEach(function (f) { try { f(); } catch (e) {} }); }
+
+    function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function save(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+    function drop(k) { try { localStorage.removeItem(k); } catch (e) {} }
+    function persist() { return save(ACC_KEY, JSON.stringify(accounts)); }
+    function clone(o) { return JSON.parse(JSON.stringify(o)); }
+    function b64(buf) { var a = new Uint8Array(buf), s = ''; for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
+    function unb64(str) { var s = atob(str), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+    function hash(pw, salt) {
+      if (!window.crypto || !crypto.subtle) return Promise.reject(new Error('Accounts need a secure (https) page.'));
+      return crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits'])
+        .then(function (k) { return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: ITER, hash: 'SHA-256' }, k, 256); })
+        .then(b64);
+    }
+    function same(a, b) {
+      if (a.length !== b.length) return false;
+      var d = 0; for (var i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+      return d === 0;
+    }
+
+    /* ---- Supabase REST (no SDK) ---- */
+    function sb(path, opts, token) {
+      opts = opts || {};
+      var headers = Object.assign({ apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json', Authorization: 'Bearer ' + (token || SUPABASE_ANON_KEY) }, opts.headers || {});
+      return fetch(BASE + path, { method: opts.method || 'GET', headers: headers, body: opts.body ? JSON.stringify(opts.body) : undefined })
+        .catch(function () { throw new Error('Could not reach the server. Check your connection.'); })
+        .then(function (r) {
+          return r.text().then(function (t) {
+            var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+            if (!r.ok) throw new Error((j && (j.msg || j.error_description || j.message)) || ('Request failed (' + r.status + ')'));
+            return j;
+          });
+        });
+    }
+    function setSession(j) {
+      sess = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Date.now() + ((j.expires_in || 3600) - 30) * 1000, uid: (j.user && j.user.id) || (sess && sess.uid) };
+      save(SB_KEY, JSON.stringify(sess));
+    }
+    function token() {
+      if (!sess) return Promise.reject(new Error('Not signed in.'));
+      if (sess.expires_at > Date.now()) return Promise.resolve(sess.access_token);
+      return sb('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: sess.refresh_token } })
+        .then(function (j) { setSession(j); return sess.access_token; });
+    }
+    function fetchProfile() {
+      return token().then(function (t) {
+        var base = '/rest/v1/profiles?id=eq.' + sess.uid + '&select=username,display,prefs,sync';
+        return sb(base + ',email', {}, t).catch(function (e) {
+          if (!/email|column/i.test(e.message)) throw e;
+          emailOk = false;
+          return sb(base, {}, t);
+        });
+      }).then(function (rows) { if (!rows || !rows[0]) throw new Error('Profile not found.'); return rows[0]; });
+    }
+    function pushProfile(fields) {
+      if (!REMOTE || !sess) return;
+      token().then(function (t) { return sb('/rest/v1/profiles?id=eq.' + sess.uid, { method: 'PATCH', body: fields, headers: { Prefer: 'return=minimal' } }, t); }).catch(function () {});
+    }
+
+    /* ---- UI ---- */
+    function showError(msg) { el.error.textContent = msg || ''; el.error.hidden = !msg; }
+    function setTab(t) {
+      tab = t; showError('');
+      document.querySelectorAll('[data-acct-tab]').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-acct-tab') === t); });
+      el.confirmWrap.hidden = t !== 'signup';
+      el.emailWrap.hidden = t !== 'signup';
+      el.submit.textContent = t === 'signup' ? 'Create account' : 'Log in';
+      el.pass.autocomplete = t === 'signup' ? 'new-password' : 'current-password';
+    }
+    function paint() {
+      var a = cur;
+      el.guest.hidden = !!a; el.userView.hidden = !a;
+      el.label.textContent = a ? a.display : 'Log in';
+      el.sub.textContent = a ? 'Signed in as @' + a.username + (role.owner ? ' \u00b7 owner' : role.admin ? ' \u00b7 admin' : '') : 'Log in or make an account';
+      el.title.textContent = a ? 'Hi, ' + a.display + '!' : 'Account';
+      if (a) {
+        el.avatar.textContent = a.display.charAt(0);
+        el.dispName.textContent = a.display;
+        el.userName.textContent = '@' + a.username;
+        el.displayIn.value = a.display;
+        el.emailIn.value = a.email || '';
+        el.sync.setAttribute('aria-pressed', a.sync ? 'true' : 'false');
+        el.sync.classList.toggle('active', !!a.sync);
+      }
+    }
+    function applySaved() {
+      if (cur && cur.sync && cur.prefs && Object.keys(cur.prefs).length) {
+        Object.assign(prefs, cur.prefs);
+        try { localStorage.setItem(CUSTOMIZE_STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+        if (el.ready) applyPrefs();
+      }
+    }
+    function open() {
+      paint();
+      el.overlay.classList.add('open'); el.overlay.setAttribute('aria-hidden', 'false');
+      setTimeout(function () { (cur ? el.displayIn : el.user).focus(); }, 50);
+    }
+    function close() {
+      el.overlay.classList.remove('open'); el.overlay.setAttribute('aria-hidden', 'true');
+      showError(''); el.pass.value = ''; el.pass2.value = ''; el.email.value = '';
+    }
+    function done() { busy = false; el.submit.disabled = false; }
+    function fail(e) { showError(e.message || 'Something went wrong.'); }
+
+    function enter(profile, key) {
+      cur = profile; curKey = key || null;
+      if (REMOTE && (!cur.prefs || !Object.keys(cur.prefs).length)) { cur.prefs = clone(prefs); pushProfile({ prefs: cur.prefs }); }
+      role = { admin: false, owner: false };
+      applySaved(); paint(); notify();
+      loadRole();
+    }
+
+    /* what this account may do is decided by the database, not by the page */
+    function loadRole() {
+      if (!REMOTE || !sess) return;
+      token().then(function (t) {
+        return Promise.all([
+          sb('/rest/v1/rpc/is_admin', { method: 'POST', body: {} }, t),
+          sb('/rest/v1/rpc/is_owner', { method: 'POST', body: {} }, t).catch(function () { return false; })
+        ]);
+      }).then(function (r) {
+        role = { admin: r[0] === true, owner: r[1] === true };
+        paint(); notify();
+      }).catch(function () {});
+    }
+
+    /* ---- submit ---- */
+    function submit(ev) {
+      ev.preventDefault();
+      if (busy) return;
+      var name = el.user.value.trim(), pw = el.pass.value, email = el.email.value.trim();
+      var nameOk = /^[A-Za-z0-9_]{3,20}$/.test(name);
+      if (!nameOk) return showError('Username must be 3-20 letters, numbers or underscores.');
+      if (tab === 'signup') {
+        if (email && !validEmail(email)) return showError('That email address doesn\'t look right. Leave it empty if you prefer.');
+        if (pw.length < 6) return showError('Password must be at least 6 characters.');
+        if (pw !== el.pass2.value) return showError('Passwords do not match.');
+      } else if (!pw) return showError('Enter your password.');
+      busy = true; el.submit.disabled = true; showError('');
+      (REMOTE ? remoteSubmit(name, pw, email) : localSubmit(name, pw, email)).catch(fail).then(done);
+    }
+
+    function remoteSubmit(name, pw, contact) {
+      var email = aliasEmail(name);
+      if (tab === 'signup') {
+        return sb('/rest/v1/rpc/username_available', { method: 'POST', body: { name: name } }).then(function (ok) {
+          if (ok === false) throw new Error('That username is taken.');
+          return sb('/auth/v1/signup', { method: 'POST', body: { email: email, password: pw, data: { username: name } } });
+        }).then(function (j) {
+          if (!j || !j.access_token) throw new Error('Sign-up needs email confirmation turned off in Supabase (Authentication > Sign In / Providers > Email).');
+          setSession(j);
+          return fetchProfile().then(function (p) {
+            if (contact && emailOk) { p.email = contact; pushProfile({ email: contact }); }
+            enter(p); close();
+          });
+        });
+      }
+      return sb('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email, password: pw } }).catch(function (e) {
+        if (/invalid login/i.test(e.message)) throw new Error('Wrong username or password.');
+        throw e;
+      }).then(function (j) {
+        setSession(j);
+        return fetchProfile().then(function (p) { enter(p); close(); });
+      });
+    }
+
+    function localSubmit(name, pw, contact) {
+      var key = name.toLowerCase();
+      if (tab === 'signup') {
+        if (accounts[key]) return Promise.reject(new Error('That username is taken.'));
+        var salt = crypto.getRandomValues(new Uint8Array(16));
+        return hash(pw, salt).then(function (h) {
+          accounts[key] = { username: name, display: name, salt: b64(salt), hash: h, created: Date.now(), sync: true, prefs: clone(prefs), email: contact || '' };
+          if (!persist()) { delete accounts[key]; throw new Error('Could not save. Is browser storage blocked?'); }
+          save(SESSION_KEY, key); enter(accounts[key], key); close();
+        });
+      }
+      var a = accounts[key];
+      return hash(pw, a ? unb64(a.salt) : new Uint8Array(16)).then(function (h) {
+        if (!a || !same(h, a.hash)) throw new Error('Wrong username or password.');
+        save(SESSION_KEY, key); enter(a, key); close();
+      });
+    }
+
+    function logout() {
+      if (REMOTE && sess) { var t = sess.access_token; sb('/auth/v1/logout', { method: 'POST' }, t).catch(function () {}); }
+      cur = null; curKey = null; sess = null; drop(SESSION_KEY); drop(SB_KEY);
+      role = { admin: false, owner: false };
+      paint(); close(); notify();
+    }
+
+    function saveName() {
+      var v = el.displayIn.value.trim().slice(0, 24);
+      if (!cur || !v) return;
+      cur.display = v;
+      if (REMOTE) pushProfile({ display: v }); else persist();
+      paint();
+    }
+    function saveEmail() {
+      if (!cur) return;
+      var v = el.emailIn.value.trim();
+      function msg(t) { el.emailMsg.textContent = t; }
+      if (v && !validEmail(v)) return msg('That email address doesn\'t look right.');
+      if (REMOTE) {
+        if (!emailOk) return msg('Saving an email isn\'t set up yet.');
+        token().then(function (t) { return sb('/rest/v1/profiles?id=eq.' + sess.uid, { method: 'PATCH', body: { email: v || null }, headers: { Prefer: 'return=minimal' } }, t); })
+          .then(function () { cur.email = v || null; msg(v ? 'Saved.' : 'Email removed.'); })
+          .catch(function (e) { msg(e.message || 'Could not save.'); });
+      } else {
+        cur.email = v; persist(); msg(v ? 'Saved.' : 'Email removed.');
+      }
+    }
+    function toggleSync() {
+      if (!cur) return;
+      cur.sync = !cur.sync;
+      if (cur.sync) cur.prefs = clone(prefs);
+      if (REMOTE) pushProfile({ sync: cur.sync, prefs: cur.prefs || {} }); else persist();
+      paint();
+    }
+    function deleteAccount() {
+      if (!cur || !window.confirm('Delete the account @' + cur.username + '? This cannot be undone.')) return;
+      if (REMOTE) {
+        token().then(function (t) { return sb('/rest/v1/rpc/delete_own_account', { method: 'POST', body: {} }, t); })
+          .then(logout).catch(function (e) { window.alert(e.message || 'Could not delete the account.'); });
+      } else { delete accounts[curKey]; persist(); logout(); }
+    }
+
+    return {
+      init: function () {
+        var $ = function (i) { return document.getElementById(i); };
+        el = { overlay: $('account-overlay'), guest: $('acct-guest'), userView: $('acct-user-view'), form: $('acct-form'), user: $('acct-user'),
+          pass: $('acct-pass'), pass2: $('acct-pass2'), confirmWrap: $('acct-confirm-wrap'),
+          error: $('acct-error'), submit: $('acct-submit'), label: $('acct-label'), sub: $('account-sub'), title: $('account-title'), avatar: $('acct-avatar'),
+          dispName: $('acct-display-name'), userName: $('acct-username'), displayIn: $('acct-display'), sync: $('acct-sync'), note: $('acct-note'),
+          emailWrap: $('acct-email-wrap'), email: $('acct-email'), emailIn: $('acct-email-in'), emailMsg: $('acct-email-msg') };
+        if (!el.overlay) return;
+        el.note.textContent = REMOTE ? 'Your account is stored securely online, so it works on any device.' : 'Accounts are stored in this browser only. They don\'t sync between devices.';
+        el.ready = false;
+        if (REMOTE) {
+          try { sess = JSON.parse(load(SB_KEY) || 'null'); } catch (e) { sess = null; }
+        } else {
+          try { accounts = JSON.parse(load(ACC_KEY) || '{}') || {}; } catch (e) { accounts = {}; }
+          var k = load(SESSION_KEY);
+          if (k && accounts[k]) { cur = accounts[k]; curKey = k; applySaved(); }
+        }
+        paint();
+        el.ready = true;
+
+        $('side-account').addEventListener('click', open);
+        $('close-account').addEventListener('click', close);
+        el.overlay.addEventListener('click', function (e) { if (e.target === el.overlay) close(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && el.overlay.classList.contains('open')) close(); });
+        document.querySelectorAll('[data-acct-tab]').forEach(function (b) { b.addEventListener('click', function () { setTab(b.getAttribute('data-acct-tab')); }); });
+        el.form.addEventListener('submit', submit);
+        $('acct-logout').addEventListener('click', logout);
+        $('acct-save-name').addEventListener('click', saveName);
+        $('acct-save-email').addEventListener('click', saveEmail);
+        el.sync.addEventListener('click', toggleSync);
+        $('acct-delete').addEventListener('click', deleteAccount);
+        setTab('login');
+
+        if (REMOTE && sess) {
+          fetchProfile().then(function (p) { enter(p); }).catch(function (e) {
+            if (/fetch|reach|server|connection/i.test(e.message)) return;
+            sess = null; drop(SB_KEY);
+          });
+        }
+      },
+      remote: REMOTE,
+      username: function () { return cur ? cur.username : ''; },
+      loggedIn: function () { return !!cur; },
+      open: open,
+      isAdmin: function () { return REMOTE && !!cur && role.admin; },
+      isOwner: function () { return REMOTE && !!cur && role.owner; },
+      onChange: function (f) { listeners.push(f); },
+      api: function (path, opts, authed) {
+        return authed ? token().then(function (t) { return sb(path, opts, t); }) : sb(path, opts);
+      },
+      syncPrefs: function () {
+        if (!cur || !cur.sync) return;
+        cur.prefs = clone(prefs);
+        if (REMOTE) { clearTimeout(pushTimer); pushTimer = setTimeout(function () { pushProfile({ prefs: cur.prefs }); }, 600); }
+        else persist();
+      }
+    };
+  })();
+
+  /* ---- Link editing (admin) --------------------------------- *
+   * Links in index.html are the defaults. The `link_edits` table in
+   * Supabase layers changes on top: 'add' rows appear, 'remove' rows
+   * hide a default link. Everyone reads it; only the admin account can
+   * write (enforced by row-level security, see supabase-admin.sql).
+   */
+  var Links = (function () {
+    var edits = [], origGames = null, origSites = {}, genre = null;
+    var X = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+
+    function norm(u) { try { return new URL(u, location.href).href; } catch (e) { return u; } }
+    function make(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function mine(kind, target, op) { return edits.filter(function (e) { return e.kind === kind && e.target === target && e.op === op; }); }
+    function removedSet(kind, target) { var r = {}; mine(kind, target, 'remove').forEach(function (e) { r[norm(e.url)] = 1; }); return r; }
+
+    function apply() {
+      if (!origGames) origGames = JSON.parse(JSON.stringify(GENRE_GAMES));
+      var keys = {};
+      Object.keys(origGames).forEach(function (k) { keys[k] = 1; });
+      edits.forEach(function (e) { if (e.kind === 'game') keys[e.target] = 1; });
+      Object.keys(keys).forEach(function (g) {
+        var gone = removedSet('game', g);
+        var list = (origGames[g] || []).filter(function (x) { return !gone[norm(x.url)]; });
+        mine('game', g, 'add').forEach(function (e) { list.push({ label: e.label || e.url, url: e.url, img: e.img || undefined, editId: e.id }); });
+        GENRE_GAMES[g] = ordered(list, orders['game:' + g], function (x) { return norm(x.url); });
+      });
+    }
+
+    function rebuildSite(id) {
+      var panel = document.getElementById('panel-' + id);
+      var sec = panel && panel.querySelector('.links-section');
+      if (!sec || origSites[id] == null) return;
+      sec.innerHTML = origSites[id];
+      var gone = removedSet('site', id);
+      sec.querySelectorAll('a.site-link').forEach(function (a) {
+        if (gone[norm(a.getAttribute('href'))]) (a.closest('.link-row') || a).remove();
+      });
+      mine('site', id, 'add').forEach(function (e) {
+        var a = make('a', 'site-link', e.url);
+        a.href = e.url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.dataset.editId = e.id;
+        sec.appendChild(a);
+      });
+      var ord = orders['site:' + id];
+      if (ord) {
+        var nodes = Array.prototype.map.call(sec.querySelectorAll('a.site-link'), function (a) { return { n: a.closest('.link-row') || a, k: norm(a.getAttribute('href')) }; });
+        ordered(nodes, ord, function (o) { return o.k; }).forEach(function (o) { sec.appendChild(o.n); });
+      }
+      buildLinksBoard(sec, id);
+      updatePanelMeta(panel);
+    }
+
+    function rebuildAll() {
+      Object.keys(origSites).forEach(rebuildSite);
+      var gv = document.getElementById('itchio-genre-view');
+      if (genre && gv && gv.style.display !== 'none') showGenre(genre);
+    }
+
+    function refresh() {
+      return Account.api('/rest/v1/link_edits?select=*&order=id.asc').then(function (rows) {
+        edits = rows || []; apply(); rebuildAll();
+      });
+    }
+
+    function write(req) {
+      return req.then(refresh).catch(function (e) { window.alert(e.message || 'Could not save that change.'); });
+    }
+
+    /* ---- ordering ---- */
+    var ORD_KEY = 'whiskered-order-cache', orders = {}, orderOpen = false;
+    var CHEV = {
+      up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
+      left: '<path d="m15 6-6 6 6 6"/>', right: '<path d="m9 6 6 6-6 6"/>'
+    };
+    function icon(name) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + CHEV[name] + '</svg>'; }
+    function keyOf(el) { return el.dataset.key || el.dataset.url || ''; }
+    function ordered(arr, keys, kf) {
+      if (!keys || !keys.length) return arr;
+      var rank = {}; keys.forEach(function (k, i) { rank[k] = i; });
+      return arr.map(function (x, i) { var k = kf(x); return { x: x, i: i, r: k in rank ? rank[k] : 1e6 }; })
+        .sort(function (a, b) { return a.r - b.r || a.i - b.i; })
+        .map(function (o) { return o.x; });
+    }
+    function applySiteOrder() {
+      var before = SITES.map(function (x) { return x.id; }).join();
+      var sorted = ordered(SITES.slice(), orders['sites'], function (x) { return x.id; });
+      Array.prototype.splice.apply(SITES, [0, SITES.length].concat(sorted));
+      return before !== SITES.map(function (x) { return x.id; }).join();
+    }
+    function keysIn(container, sel) {
+      return Array.prototype.filter.call(container.children, function (n) { return n.matches(sel); }).map(keyOf);
+    }
+    function saveOrder(scope, keys) {
+      return Account.api('/rest/v1/order_edits?on_conflict=scope',
+        { method: 'POST', body: { scope: scope, items: keys, updated_at: new Date().toISOString() }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }, true)
+        .then(refreshOrders).catch(function (e) { window.alert(e.message || 'Could not save the new order.'); });
+    }
+    function applyOrders(rows) {
+      orders = {};
+      (rows || []).forEach(function (r) { orders[r.scope] = r.items; });
+      try { localStorage.setItem(ORD_KEY, JSON.stringify(rows || [])); } catch (e) {}
+      applySiteOrder();
+      apply();
+      rebuildAll();
+      buildWebsitesView();
+      document.querySelectorAll('.content-panel').forEach(updatePanelMeta);
+    }
+    function refreshOrders() {
+      return Account.api('/rest/v1/order_edits?select=*').then(applyOrders);
+    }
+    function visibleSibling(el, dir, sel) {
+      var n = dir < 0 ? el.previousElementSibling : el.nextElementSibling;
+      while (n && (!n.matches(sel) || n.hidden || n.style.display === 'none')) n = dir < 0 ? n.previousElementSibling : n.nextElementSibling;
+      return n;
+    }
+    function shift(el, sel, scope, dir) {
+      var t = visibleSibling(el, dir, sel);
+      if (!t) return;
+      el.parentNode.insertBefore(el, dir < 0 ? t : t.nextElementSibling);
+      saveOrder(scope, keysIn(el.parentNode, sel));
+    }
+    function moveBtns(el, sel, scope, axis) {
+      var w = make('span', 'admin-move');
+      [['Move earlier', axis === 'x' ? 'left' : 'up', -1], ['Move later', axis === 'x' ? 'right' : 'down', 1]].forEach(function (c) {
+        var b = make('button', 'admin-mv'); b.type = 'button'; b.title = c[0]; b.setAttribute('aria-label', c[0]); b.innerHTML = icon(c[1]);
+        b.addEventListener('click', function (ev) { ev.preventDefault(); ev.stopPropagation(); shift(el, sel, scope, c[2]); });
+        w.appendChild(b);
+      });
+      return w;
+    }
+    function sortable(container, sel, scope, axis) {
+      var drag = null;
+      Array.prototype.forEach.call(container.children, function (el) {
+        if (!el.matches(sel)) return;
+        el.draggable = true; el.classList.add('sortable');
+        el.addEventListener('dragstart', function (e) {
+          drag = el; el.classList.add('dragging');
+          if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', keyOf(el)); } catch (x) {} }
+        });
+        el.addEventListener('dragover', function (e) {
+          if (!drag || drag === el) return;
+          e.preventDefault();
+          var r = el.getBoundingClientRect();
+          var after = axis === 'x' ? e.clientX > r.left + r.width / 2 : e.clientY > r.top + r.height / 2;
+          container.insertBefore(drag, after ? el.nextElementSibling : el);
+        });
+        el.addEventListener('drop', function (e) { e.preventDefault(); });
+        el.addEventListener('dragend', function () {
+          if (!drag) return;
+          drag.classList.remove('dragging'); drag = null;
+          saveOrder(scope, keysIn(container, sel));
+        });
+      });
+    }
+
+    /* ---- site edits (name, tagline, description) ---- */
+    var OV_KEY = 'whiskered-site-overrides', overrides = {};
+    function paintSite(site) {
+      var panel = document.getElementById('panel-' + site.id);
+      var d = panel && panel.querySelector('.panel-description');
+      if (!site.base) site.base = { label: site.label, tagline: site.tagline, icon: site.icon, description: d ? d.textContent : (site.description || '') };
+      var o = overrides[site.id], b = site.base;
+      site.label = o ? o.label : b.label;
+      site.tagline = o ? o.tagline : b.tagline;
+      site.icon = o ? (o.label.charAt(0).toUpperCase() || b.icon) : b.icon;
+      if (!panel) return;
+      var h2 = panel.querySelector('.panel-header h2'); if (h2) h2.textContent = site.label;
+      var tg = panel.querySelector('.ph-tagline'); if (tg) tg.textContent = site.tagline;
+      var ic = panel.querySelector('.ph-icon'); if (ic) ic.textContent = site.icon;
+      if (d) d.textContent = o ? o.description : b.description;
+    }
+    function applyOverrides(rows) {
+      overrides = {};
+      (rows || []).forEach(function (r) { overrides[r.slug] = r; });
+      try { localStorage.setItem(OV_KEY, JSON.stringify(rows || [])); } catch (e) {}
+      SITES.forEach(paintSite);
+      buildWebsitesView();
+      document.querySelectorAll('.content-panel').forEach(updatePanelMeta);
+    }
+    function refreshOverrides() {
+      return Account.api('/rest/v1/site_overrides?select=*').then(applyOverrides);
+    }
+    function editForm(site, onClose) {
+      var box = make('form', 'admin-bar admin-edit');
+      box.autocomplete = 'off';
+      var name = make('input', 'admin-input'); name.maxLength = 40; name.required = true; name.value = site.label; name.setAttribute('aria-label', 'Site name');
+      var tag = make('input', 'admin-input'); tag.maxLength = 120; tag.value = site.tagline; tag.setAttribute('aria-label', 'Tagline');
+      var desc = make('textarea', 'admin-input'); desc.maxLength = 600; desc.rows = 4; desc.setAttribute('aria-label', 'Description');
+      var panel = document.getElementById('panel-' + site.id), d = panel && panel.querySelector('.panel-description');
+      desc.value = d ? d.textContent : (site.description || '');
+      var save = make('button', 'admin-add', 'Save changes'); save.type = 'submit';
+      var cancel = make('button', 'admin-ghost', 'Cancel'); cancel.type = 'button';
+      var msg = make('span', 'admin-msg'); msg.setAttribute('role', 'alert');
+      [name, tag, desc, save, cancel].forEach(function (n) { box.appendChild(n); });
+      if (overrides[site.id] && !site.custom) {
+        var reset = make('button', 'admin-ghost', 'Reset to original'); reset.type = 'button';
+        reset.addEventListener('click', function () {
+          if (!window.confirm('Put the original text back?')) return;
+          Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(site.id), { method: 'DELETE' }, true)
+            .then(refreshOverrides).then(onClose).catch(function (e) { msg.textContent = e.message || 'Could not reset.'; });
+        });
+        box.appendChild(reset);
+      }
+      box.appendChild(msg);
+      cancel.addEventListener('click', onClose);
+      box.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var label = name.value.trim();
+        if (!label) { msg.textContent = 'The site needs a name.'; return; }
+        save.disabled = true; msg.textContent = '';
+        Account.api('/rest/v1/site_overrides?on_conflict=slug',
+          { method: 'POST', body: { slug: site.id, label: label, tagline: tag.value.trim(), description: desc.value.trim(), updated_at: new Date().toISOString() },
+            headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }, true)
+          .then(refreshOverrides).then(onClose)
+          .catch(function (e) { save.disabled = false; msg.textContent = e.message || 'Could not save.'; });
+      });
+      return box;
+    }
+
+    /* ---- custom sites ---- */
+    var CACHE_KEY = 'whiskered-custom-sites';
+    function siteOf(id) { return SITES.find(function (x) { return x.id === id; }); }
+    function toSite(r) { return { id: r.slug, label: r.label, icon: (r.label || '?').charAt(0).toUpperCase(), tagline: r.tagline || '', description: r.description || '', custom: true, dbId: r.id }; }
+    function makePanel(site) {
+      var sec = make('section', 'content-panel');
+      sec.id = 'panel-' + site.id; sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'tab-' + site.id); sec.tabIndex = -1; sec.hidden = true;
+      var inner = make('div', 'panel-inner');
+      var head = make('div', 'panel-header'); head.appendChild(make('h2', null, site.label));
+      inner.appendChild(head);
+      inner.appendChild(make('p', 'panel-description', site.description || 'A site added by the cats.'));
+      inner.appendChild(make('div', 'links-section'));
+      sec.appendChild(inner);
+      var all = document.querySelectorAll('.content-panel');
+      var last = all[all.length - 1];
+      last.parentNode.insertBefore(sec, last.nextSibling);
+      return sec;
+    }
+    function syncSites(rows) {
+      rows = rows || [];
+      var want = {}, changed = false;
+      rows.forEach(function (r) { want[r.slug] = r; });
+      SITES.filter(function (x) { return x.custom && !want[x.id]; }).forEach(function (x) {
+        var pn = document.getElementById('panel-' + x.id);
+        if (pn) pn.remove();
+        SITES.splice(SITES.indexOf(x), 1);
+        delete origSites[x.id];
+        changed = true;
+      });
+      rows.forEach(function (r) {
+        if (siteOf(r.slug)) return;
+        var st = toSite(r);
+        SITES.push(st);
+        enhancePanels([makePanel(st)]);
+        paintSite(st);
+        changed = true;
+      });
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(rows)); } catch (e) {}
+      if (changed) {
+        buildWebsitesView(); updateSiteCounts();
+        document.querySelectorAll('.content-panel').forEach(updatePanelMeta);
+      }
+    }
+    function refreshSites() {
+      return Account.api('/rest/v1/custom_sites?select=*&order=id.asc').then(syncSites);
+    }
+    function slugFor(name) {
+      var base = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 36) || 'site';
+      if (base.length < 2) base += '-x';
+      var slug = base, n = 2;
+      while (siteOf(slug)) slug = base + '-' + (n++);
+      return slug;
+    }
+
+    Account.onChange(function () { rebuildAll(); buildWebsitesView(); });
+
+    return {
+      admin: function () { return Account.isAdmin(); },
+      remember: function (id, sec) { origSites[id] = sec.innerHTML; },
+      setGenre: function (g) { genre = g; },
+      load: function () {
+        if (!Account.remote) return;
+        refresh().catch(function () {});
+        refreshSites().catch(function () {});
+        refreshOverrides().catch(function () {});
+        refreshOrders().catch(function () {});
+      },
+      applyCachedOrder: function () {
+        if (!Account.remote) return;
+        var rows = [];
+        try { rows = JSON.parse(localStorage.getItem(ORD_KEY) || '[]') || []; } catch (e) {}
+        rows.forEach(function (r) { orders[r.scope] = r.items; });
+        applySiteOrder();
+      },
+      norm: norm,
+      moveBtns: moveBtns,
+      sortable: sortable,
+      applyCachedOverrides: function () {
+        if (!Account.remote) return;
+        var rows = [];
+        try { rows = JSON.parse(localStorage.getItem(OV_KEY) || '[]') || []; } catch (e) {}
+        if (rows.length) applyOverrides(rows);
+      },
+      applyCachedSites: function () {
+        if (!Account.remote) return;
+        var rows = [];
+        try { rows = JSON.parse(localStorage.getItem(CACHE_KEY) || '[]') || []; } catch (e) {}
+        rows.forEach(function (r) {
+          if (!r || !r.slug || siteOf(r.slug)) return;
+          var st = toSite(r);
+          SITES.push(st);
+          makePanel(st);
+        });
+      },
+      siteForm: function () {
+        var f = make('form', 'admin-bar');
+        f.autocomplete = 'off';
+        f.appendChild(make('span', 'admin-tag', 'Admin'));
+        var name = make('input', 'admin-input'); name.placeholder = 'Site name'; name.maxLength = 40; name.required = true; name.setAttribute('aria-label', 'Site name');
+        var tag = make('input', 'admin-input'); tag.placeholder = 'Tagline'; tag.maxLength = 120; tag.setAttribute('aria-label', 'Tagline');
+        var desc = make('input', 'admin-input'); desc.placeholder = 'Short description'; desc.maxLength = 600; desc.setAttribute('aria-label', 'Description');
+        var btn = make('button', 'admin-add', 'Add site'); btn.type = 'submit';
+        var ro = make('button', 'admin-ghost', 'Reorder sites'); ro.type = 'button';
+        var msg = make('span', 'admin-msg'); msg.setAttribute('role', 'alert');
+        [name, tag, desc, btn, ro, msg].forEach(function (n) { f.appendChild(n); });
+        var wrap = make('div', 'admin-wrap');
+        wrap.appendChild(f);
+        function orderBox() {
+          var box = make('div', 'admin-bar admin-orderbox');
+          box.appendChild(make('p', 'admin-note', 'Drag a site, or use the arrows. Changes save as you go.'));
+          var ol = make('ol', 'admin-order');
+          SITES.forEach(function (st) {
+            var li = make('li', 'admin-order-item'); li.dataset.key = st.id;
+            li.appendChild(make('span', 'admin-order-name', st.label));
+            li.appendChild(moveBtns(li, 'li.admin-order-item', 'sites', 'y'));
+            ol.appendChild(li);
+          });
+          sortable(ol, 'li.admin-order-item', 'sites', 'y');
+          box.appendChild(ol);
+          return box;
+        }
+        if (orderOpen) wrap.appendChild(orderBox());
+        ro.addEventListener('click', function () {
+          var ex = wrap.querySelector('.admin-orderbox');
+          if (ex) { ex.remove(); orderOpen = false; } else { wrap.appendChild(orderBox()); orderOpen = true; }
+        });
+        f.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var label = name.value.trim();
+          if (label.length < 1) { msg.textContent = 'Give the site a name.'; return; }
+          btn.disabled = true; msg.textContent = '';
+          var slug = slugFor(label);
+          Account.api('/rest/v1/custom_sites', { method: 'POST', body: { slug: slug, label: label, tagline: tag.value.trim(), description: desc.value.trim() }, headers: { Prefer: 'return=minimal' } }, true)
+            .then(refreshSites)
+            .then(function () { showPanel(slug); })
+            .catch(function (e) { btn.disabled = false; msg.textContent = e.message || 'Could not add that site.'; });
+        });
+        return wrap;
+      },
+      form: function (kind, target) {
+        var f = make('form', 'admin-bar');
+        f.autocomplete = 'off';
+        var title = make('span', 'admin-tag', 'Admin');
+        var name = null, img = null;
+        f.appendChild(title);
+        if (kind === 'game') {
+          name = make('input', 'admin-input'); name.placeholder = 'Game name'; name.maxLength = 80; name.required = true; name.setAttribute('aria-label', 'Game name');
+          f.appendChild(name);
+        }
+        var url = make('input', 'admin-input'); url.type = 'url'; url.placeholder = 'https://...'; url.required = true; url.maxLength = 2000; url.setAttribute('aria-label', 'Link URL');
+        f.appendChild(url);
+        if (kind === 'game') {
+          img = make('input', 'admin-input'); img.type = 'url'; img.placeholder = 'Cover image URL (optional)'; img.maxLength = 2000; img.setAttribute('aria-label', 'Cover image URL');
+          f.appendChild(img);
+        }
+        var btn = make('button', 'admin-add', 'Add link'); btn.type = 'submit';
+        var msg = make('span', 'admin-msg'); msg.setAttribute('role', 'alert');
+        f.appendChild(btn);
+        var cs = kind === 'site' && siteOf(target);
+        if (cs) {
+          var ed = make('button', 'admin-ghost', 'Edit site'); ed.type = 'button';
+          function closeEdit() { var x = f.nextElementSibling; if (x && x.classList.contains('admin-edit')) x.remove(); }
+          ed.addEventListener('click', function () {
+            var x = f.nextElementSibling;
+            if (x && x.classList.contains('admin-edit')) { x.remove(); return; }
+            f.after(editForm(cs, closeEdit));
+          });
+          f.appendChild(ed);
+        }
+        if (cs && cs.custom) {
+          var del = make('button', 'admin-danger', 'Delete site'); del.type = 'button';
+          del.addEventListener('click', function () {
+            if (!window.confirm('Delete the site "' + cs.label + '" and all its links for everyone?')) return;
+            Account.api('/rest/v1/link_edits?kind=eq.site&target=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true)
+              .then(function () { return Account.api('/rest/v1/site_overrides?slug=eq.' + encodeURIComponent(target), { method: 'DELETE' }, true).catch(function () {}); })
+              .then(function () { return Account.api('/rest/v1/custom_sites?id=eq.' + cs.dbId, { method: 'DELETE' }, true); })
+              .then(function () { return Promise.all([refresh(), refreshSites()]); })
+              .then(function () { setMode('websites'); })
+              .catch(function (e) { msg.textContent = e.message || 'Could not delete that site.'; });
+          });
+          f.appendChild(del);
+        }
+        f.appendChild(msg);
+        f.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          msg.textContent = '';
+          var u = url.value.trim(), im = img ? img.value.trim() : '';
+          if (!/^https?:\/\//i.test(u) || (im && !/^https?:\/\//i.test(im))) { msg.textContent = 'Links must start with http:// or https://'; return; }
+          var row = { kind: kind, target: target, op: 'add', url: u };
+          if (name) row.label = name.value.trim();
+          if (im) row.img = im;
+          btn.disabled = true;
+          Account.api('/rest/v1/link_edits', { method: 'POST', body: row, headers: { Prefer: 'return=minimal' } }, true)
+            .then(refresh)
+            .catch(function (e) { btn.disabled = false; msg.textContent = /duplicate|unique/i.test(e.message) ? 'That link is already added.' : (e.message || 'Could not add that link.'); });
+        });
+        return f;
+      },
+      removeBtn: function (kind, target, url, editId) {
+        var b = make('button', 'admin-del'); b.type = 'button'; b.title = 'Remove this link'; b.setAttribute('aria-label', 'Remove this link');
+        b.innerHTML = X;
+        b.addEventListener('click', function (ev) {
+          ev.preventDefault(); ev.stopPropagation();
+          if (!window.confirm('Remove this link for everyone?')) return;
+          write(editId
+            ? Account.api('/rest/v1/link_edits?id=eq.' + editId, { method: 'DELETE' }, true)
+            : Account.api('/rest/v1/link_edits', { method: 'POST', body: { kind: kind, target: target, op: 'remove', url: norm(url) }, headers: { Prefer: 'return=minimal' } }, true));
+        });
+        return b;
+      }
+    };
+  })();
+
+  /* ---- Changelog (admin editable) --------------------------- *
+   * CHANGELOG above is the default. Once the admin clicks "Start editing",
+   * the entries move into the `changelog_entries` table in Supabase and
+   * that becomes the source of truth for everyone.
+   */
+  var Changelog = (function () {
+    var KEY = 'whiskered-changelog-cache', rows = null, list = null, busy = false;
+    var ICON = {
+      up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
+      edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>'
+    };
+    function make(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function svg(name) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + ICON[name] + '</svg>'; }
+    function iconBtn(cls, name, label, fn) {
+      var b = make('button', cls); b.type = 'button'; b.title = label; b.setAttribute('aria-label', label); b.innerHTML = svg(name);
+      b.addEventListener('click', fn);
+      return b;
+    }
+    function managed() { return !!(rows && rows.length); }
+    function items() {
+      return managed() ? rows.map(function (r) { return { row: r, badge: r.badge, text: r.body }; })
+                       : CHANGELOG.map(function (e) { return { badge: e.badge, text: e.text }; });
+    }
+
+    function whatsNew(first) {
+      var box = document.getElementById('whats-new-body');
+      if (!box) return;
+      box.textContent = '';
+      if (!first) { box.appendChild(make('p', null, 'Nothing new yet.')); return; }
+      box.appendChild(make('span', 'link-badge', first.badge));
+      box.appendChild(make('p', null, first.text));
+    }
+
+    function call(req) {
+      if (busy) return;
+      busy = true;
+      req.then(reload).catch(function (e) { window.alert(e.message || 'Could not save that change.'); }).then(function () { busy = false; });
+    }
+    function api(path, opts) { return Account.api('/rest/v1/changelog_entries' + path, opts, true); }
+    function reload() {
+      return Account.api('/rest/v1/changelog_entries?select=*&order=position.asc,id.asc').then(function (r) {
+        rows = r || [];
+        try { localStorage.setItem(KEY, JSON.stringify(rows)); } catch (e) {}
+        render();
+      });
+    }
+
+    function addForm() {
+      var f = make('form', 'admin-bar');
+      f.autocomplete = 'off';
+      f.appendChild(make('span', 'admin-tag', 'Admin'));
+      var badge = make('input', 'admin-input'); badge.placeholder = 'Label (e.g. New game)'; badge.maxLength = 30; badge.required = true; badge.setAttribute('aria-label', 'Label');
+      var body = make('textarea', 'admin-input'); body.placeholder = 'What changed?'; body.maxLength = 500; body.rows = 3; body.required = true; body.setAttribute('aria-label', 'Entry text');
+      var add = make('button', 'admin-add', 'Add entry'); add.type = 'submit';
+      [badge, body, add].forEach(function (n) { f.appendChild(n); });
+      f.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var b = badge.value.trim(), t = body.value.trim();
+        if (!b || !t) return;
+        var top = rows.reduce(function (m, r) { return Math.min(m, r.position); }, 0);
+        call(api('', { method: 'POST', body: { position: top - 1, badge: b, body: t }, headers: { Prefer: 'return=minimal' } }));
+      });
+      return f;
+    }
+
+    function editForm(r) {
+      var f = make('form', 'admin-bar admin-edit');
+      f.autocomplete = 'off';
+      var badge = make('input', 'admin-input'); badge.maxLength = 30; badge.required = true; badge.value = r.badge; badge.setAttribute('aria-label', 'Label');
+      var body = make('textarea', 'admin-input'); body.maxLength = 500; body.rows = 3; body.required = true; body.value = r.body; body.setAttribute('aria-label', 'Entry text');
+      var save = make('button', 'admin-add', 'Save'); save.type = 'submit';
+      var cancel = make('button', 'admin-ghost', 'Cancel'); cancel.type = 'button';
+      [badge, body, save, cancel].forEach(function (n) { f.appendChild(n); });
+      cancel.addEventListener('click', render);
+      f.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var b = badge.value.trim(), t = body.value.trim();
+        if (!b || !t) return;
+        call(api('?id=eq.' + r.id, { method: 'PATCH', body: { badge: b, body: t }, headers: { Prefer: 'return=minimal' } }));
+      });
+      return f;
+    }
+
+    function swap(a, b) {
+      call(Promise.all([
+        api('?id=eq.' + a.id, { method: 'PATCH', body: { position: b.position }, headers: { Prefer: 'return=minimal' } }),
+        api('?id=eq.' + b.id, { method: 'PATCH', body: { position: a.position }, headers: { Prefer: 'return=minimal' } })
+      ]));
+    }
+
+    function render() {
+      list = list || document.getElementById('changelog-list');
+      if (!list) return;
+      var admin = Account.isAdmin(), data = items();
+      list.textContent = '';
+      if (admin) {
+        var top = make('li');
+        if (managed()) top.appendChild(addForm());
+        else {
+          var start = make('div', 'admin-bar');
+          start.appendChild(make('span', 'admin-tag', 'Admin'));
+          start.appendChild(make('span', 'admin-note', 'Move the changelog online so you can add, edit and reorder entries.'));
+          var go = make('button', 'admin-add', 'Start editing'); go.type = 'button';
+          go.addEventListener('click', function () {
+            call(api('', { method: 'POST', body: CHANGELOG.map(function (e, i) { return { position: i, badge: e.badge, body: e.text }; }), headers: { Prefer: 'return=minimal' } }));
+          });
+          start.appendChild(go);
+          top.appendChild(start);
+        }
+        list.appendChild(top);
+      }
+      data.forEach(function (it, i) {
+        var li = make('li', 'changelog-entry');
+        var meta = make('div', 'changelog-meta');
+        meta.appendChild(make('span', 'link-badge', it.badge));
+        if (admin && it.row) {
+          var tools = make('span', 'cl-tools');
+          if (i > 0) tools.appendChild(iconBtn('admin-mv', 'up', 'Move up', function () { swap(it.row, data[i - 1].row); }));
+          if (i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
+          tools.appendChild(iconBtn('admin-mv', 'edit', 'Edit entry', function () { li.textContent = ''; li.appendChild(editForm(it.row)); }));
+          tools.appendChild(iconBtn('admin-del', 'x', 'Delete entry', function () {
+            if (window.confirm('Delete this changelog entry for everyone?')) call(api('?id=eq.' + it.row.id, { method: 'DELETE' }));
+          }));
+          meta.appendChild(tools);
+        }
+        li.appendChild(meta);
+        li.appendChild(make('p', null, it.text));
+        list.appendChild(li);
+      });
+      whatsNew(data[0]);
+    }
+
+    return {
+      init: function () {
+        if (Account.remote) {
+          try { var c = JSON.parse(localStorage.getItem(KEY) || 'null'); if (c && c.length) rows = c; } catch (e) {}
+        }
+        render();
+        if (Account.remote) {
+          Account.onChange(render);
+          Account.api('/rest/v1/changelog_entries?select=*&order=position.asc,id.asc').then(function (r) {
+            rows = r || [];
+            try { localStorage.setItem(KEY, JSON.stringify(rows)); } catch (e) {}
+            render();
+          }).catch(function () {});
+        }
+      }
+    };
+  })();
+
+  /* ---- Support page ----------------------------------------- *
+   * Messages go to the `support_requests` table (see supabase-support.sql).
+   * Anyone can send one; only the admin can read them.
+   */
+  var Support = (function () {
+    var LAST_KEY = 'whiskered-support-last', COOLDOWN = 30000, el = {};
+    var KINDS = { broken: 'Broken link', suggest: 'Suggestion', account: 'Account help', other: 'Other' };
+    function make(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function note(msg) { el.note.textContent = msg || ''; el.note.hidden = !msg; }
+
+    function gate() {
+      var on = Account.loggedIn();
+      el.user.value = Account.username();
+      el.form.hidden = !on;
+      el.gate.hidden = on;
+      if (on) note('');
+    }
+
+    function loadInbox() {
+      var admin = Account.isAdmin();
+      if (el.navBtn) el.navBtn.hidden = !admin;
+      if (!admin) {
+        if (el.navCount) el.navCount.textContent = '';
+        var iv = document.getElementById('admin-view');
+        if (iv && iv.style.display !== 'none') setMode('support');
+        loadAdmins();
+        return;
+      }
+      loadAdmins();
+      Promise.all([
+        Account.api('/rest/v1/support_requests?select=*&order=id.desc&limit=100', {}, true),
+        Account.api('/rest/v1/profiles?select=username,email&email=not.is.null', {}, true).catch(function () { return []; })
+      ]).then(function (res) {
+          var map = {};
+          (res[1] || []).forEach(function (p) { map[p.username.toLowerCase()] = p.email; });
+          renderInbox(res[0], map);
+        })
+        .catch(function (e) { el.list.textContent = ''; el.list.appendChild(make('li', 'support-empty', e.message || 'Could not load messages.')); });
+    }
+    function loadAdmins() {
+      var card = document.getElementById('admins-card');
+      if (!card) return;
+      card.hidden = !Account.isOwner();
+      if (!Account.isOwner()) return;
+      var list = document.getElementById('admins-list');
+      Account.api('/rest/v1/rpc/list_admins', { method: 'POST', body: {} }, true).then(function (rows) {
+        list.textContent = '';
+        (rows || []).forEach(function (r) {
+          var li = make('li', 'support-item');
+          var head = make('div', 'support-item-head');
+          head.appendChild(make('span', 'support-who', '@' + r.name));
+          head.appendChild(make('span', 'link-badge', r.owner ? 'Owner' : 'Admin'));
+          if (!r.owner) {
+            var rm = make('button', 'admin-ghost', 'Remove admin'); rm.type = 'button';
+            rm.style.marginLeft = 'auto';
+            rm.addEventListener('click', function () {
+              if (!window.confirm('Remove admin rights from @' + r.name + '?')) return;
+              Account.api('/rest/v1/rpc/demote_admin', { method: 'POST', body: { target: r.name } }, true)
+                .then(loadAdmins).catch(function (e) { window.alert(e.message || 'Could not remove that admin.'); });
+            });
+            head.appendChild(rm);
+          }
+          li.appendChild(head);
+          list.appendChild(li);
+        });
+      }).catch(function (e) { list.textContent = ''; list.appendChild(make('li', 'support-empty', e.message || 'Could not load admins.')); });
+    }
+    function bindAdmins() {
+      var form = document.getElementById('admins-form');
+      if (!form) return;
+      form.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var input = document.getElementById('admins-name'), msg = document.getElementById('admins-msg');
+        var name = input.value.trim();
+        if (!name) return;
+        msg.textContent = '';
+        Account.api('/rest/v1/rpc/promote_admin', { method: 'POST', body: { target: name } }, true)
+          .then(function () { input.value = ''; msg.textContent = '@' + name + ' is now an admin.'; loadAdmins(); })
+          .catch(function (e) { msg.textContent = e.message || 'Could not promote that account.'; });
+      });
+    }
+    function act(req) { req.then(loadInbox).catch(function (e) { window.alert(e.message || 'Could not save that change.'); }); }
+
+    function renderInbox(rows, emails) {
+      emails = emails || {};
+      rows = rows || [];
+      var open = rows.filter(function (r) { return r.status === 'open'; }).length;
+      el.count.textContent = open + ' open';
+      if (el.navCount) el.navCount.textContent = open || '';
+      el.list.textContent = '';
+      if (!rows.length) { el.list.appendChild(make('li', 'support-empty', 'No messages yet.')); return; }
+      rows.forEach(function (r) {
+        var li = make('li', 'support-item' + (r.status === 'done' ? ' done' : ''));
+        var head = make('div', 'support-item-head');
+        head.appendChild(make('span', 'link-badge', KINDS[r.kind] || r.kind));
+        head.appendChild(make('span', 'support-who', r.username ? '@' + r.username : 'anonymous'));
+        var em = r.username && emails[r.username.toLowerCase()];
+        if (em) head.appendChild(make('span', 'support-email', em));
+        head.appendChild(make('span', 'support-when', new Date(r.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })));
+        li.appendChild(head);
+        li.appendChild(make('p', 'support-msg', r.message));
+        var tools = make('div', 'support-tools');
+        var toggle = make('button', 'admin-ghost', r.status === 'done' ? 'Reopen' : 'Mark done'); toggle.type = 'button';
+        toggle.addEventListener('click', function () {
+          act(Account.api('/rest/v1/support_requests?id=eq.' + r.id, { method: 'PATCH', body: { status: r.status === 'done' ? 'open' : 'done' }, headers: { Prefer: 'return=minimal' } }, true));
+        });
+        var del = make('button', 'admin-ghost', 'Delete'); del.type = 'button';
+        del.addEventListener('click', function () {
+          if (window.confirm('Delete this message?')) act(Account.api('/rest/v1/support_requests?id=eq.' + r.id, { method: 'DELETE' }, true));
+        });
+        tools.appendChild(toggle); tools.appendChild(del);
+        li.appendChild(tools);
+        el.list.appendChild(li);
+      });
+    }
+
+    function submit(ev) {
+      ev.preventDefault();
+      var msg = el.message.value.trim();
+      if (!Account.loggedIn()) { gate(); return; }
+      if (msg.length < 5) return note('Please write a little more so we can help.');
+      var last = 0; try { last = +localStorage.getItem(LAST_KEY) || 0; } catch (e) {}
+      if (Date.now() - last < COOLDOWN) return note('Hang on a few seconds before sending another message.');
+      if (el.hp.value) { note('Thanks! Your message was sent.'); el.message.value = ''; return; }
+      el.send.disabled = true; note('');
+      Account.api('/rest/v1/support_requests', {
+        method: 'POST', headers: { Prefer: 'return=minimal' },
+        body: { kind: el.kind.value, message: msg, username: Account.username() }
+      }, true).then(function () {
+        try { localStorage.setItem(LAST_KEY, String(Date.now())); } catch (e) {}
+        el.message.value = '';
+        note('Thanks! Your message was sent.');
+        loadInbox();
+      }).catch(function (e) {
+        note(e.message || 'Could not send that. Please try again.');
+      }).then(function () { el.send.disabled = false; });
+    }
+
+    return {
+      init: function () {
+        var $ = function (i) { return document.getElementById(i); };
+        el = { form: $('support-form'), kind: $('support-kind'), message: $('support-message'), user: $('support-user'), hp: $('support-website'),
+          send: $('support-send'), note: $('support-note'), list: $('support-list'), count: $('support-count'), wrap: $('support-form-wrap'),
+          navBtn: document.getElementById('admin-group'), navCount: $('nav-count-inbox'), gate: $('support-gate'), login: $('support-login') };
+        if (!el.form) return;
+        if (!Account.remote) { el.wrap.hidden = true; return; }
+        el.form.addEventListener('submit', submit);
+        el.login.addEventListener('click', Account.open);
+        bindAdmins();
+        gate();
+        Account.onChange(function () { gate(); loadInbox(); });
+      },
+      show: function () { gate(); },
+      showInbox: function () { loadInbox(); }
+    };
+  })();
+
+  /* ---- Team page --------------------------------------------- *
+   * Lists the owner and admins (see team_members() in supabase-team.sql).
+   * Only names and roles are public.
+   */
+  var Team = (function () {
+    var KEY = 'whiskered-team-cache', grid = null, note = null, members = null;
+    function make(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function render() {
+      grid = grid || document.getElementById('team-grid');
+      note = note || document.getElementById('team-note');
+      if (!grid) return;
+      grid.textContent = '';
+      note.hidden = true;
+      if (!members) { note.textContent = Account.remote ? 'Loading the team...' : 'Team info needs the online setup.'; note.hidden = false; return; }
+      if (!members.length) { note.textContent = 'No team members to show yet.'; note.hidden = false; return; }
+      members.forEach(function (m, i) {
+        var li = make('li', 'team-card' + (m.owner ? ' owner' : ''));
+        li.style.animationDelay = Math.min(i * 40, 320) + 'ms';
+        var av = make('span', 'team-avatar', (m.display || m.name || '?').charAt(0)); av.setAttribute('aria-hidden', 'true');
+        var text = make('div', 'team-text');
+        text.appendChild(make('strong', 'team-name', m.display || m.name));
+        text.appendChild(make('span', 'team-handle', '@' + m.name));
+        li.appendChild(av); li.appendChild(text);
+        li.appendChild(make('span', 'link-badge', m.owner ? 'Owner' : 'Admin'));
+        grid.appendChild(li);
+      });
+    }
+    return {
+      show: function () {
+        if (!members) { try { members = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { members = null; } }
+        render();
+        if (!Account.remote) return;
+        Account.api('/rest/v1/rpc/team_members', { method: 'POST', body: {} }).then(function (rows) {
+          members = rows || [];
+          try { localStorage.setItem(KEY, JSON.stringify(members)); } catch (e) {}
+          render();
+        }).catch(function () {
+          if (!members) { grid.textContent = ''; note.textContent = 'Could not load the team right now.'; note.hidden = false; }
+        });
+      }
+    };
+  })();
 
   /* ---- Boot ------------------------------------------------ */
   function init() {
@@ -2255,8 +3701,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     var homeLink = document.querySelector('.topbar-link[data-nav="home"]');
     if (homeLink) homeLink.classList.add('active');
     loadPrefs();
+    Account.init();
     applyPrefs();
+    Links.applyCachedSites();
+    Links.applyCachedOrder();
     enhancePanels();
+    Links.applyCachedOverrides();
     buildItchioView();
     var qj = document.getElementById('quick-jump-list');
     if (qj) {
@@ -2265,60 +3715,24 @@ body.hide-welcome-guidance .how-to-use { display: none; }
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'widget-item';
-        b.innerHTML = '<span class="widget-item-icon" aria-hidden="true">' + site.icon + '</span><span>' + site.label + '</span>';
+        b.innerHTML = '<span class="widget-item-icon" aria-hidden="true">' + escHtml(site.icon) + '</span><span>' + escHtml(site.label) + '</span>';
         b.addEventListener('click', function () { showPanel(site.id); });
         li.appendChild(b);
         qj.appendChild(li);
       });
     }
-    var clList = document.getElementById('changelog-list');
-    if (clList) {
-      CHANGELOG.forEach(function (entry) {
-        var li = document.createElement('li');
-        li.className = 'changelog-entry';
-        var meta = document.createElement('div');
-        meta.className = 'changelog-meta';
-        var badge = document.createElement('span');
-        badge.className = 'link-badge';
-        badge.textContent = entry.badge;
-        meta.appendChild(badge);
-        var p = document.createElement('p');
-        p.textContent = entry.text;
-        li.appendChild(meta);
-        li.appendChild(p);
-        clList.appendChild(li);
-      });
-    }
-    var newsBody = document.getElementById('whats-new-body');
-    var latest = document.querySelector('#changelog-modal .changelog-entry');
-    if (newsBody) {
-      var badge = latest && latest.querySelector('.link-badge');
-      var text = latest && latest.querySelector('p');
-      if (badge && text) {
-        newsBody.innerHTML = '';
-        var b = document.createElement('span');
-        b.className = 'link-badge';
-        b.textContent = badge.textContent;
-        var p = document.createElement('p');
-        p.textContent = text.textContent;
-        newsBody.appendChild(b);
-        newsBody.appendChild(p);
-      } else {
-        newsBody.innerHTML = '<p>Nothing new yet.</p>';
-      }
-    }
+    Changelog.init();
+    Support.init();
     var openCl = document.getElementById('open-changelog');
     if (openCl) openCl.addEventListener('click', function () {
       var m = document.getElementById('changelog-modal');
       if (m) { m.style.display = 'flex'; m.style.opacity = '1'; m.style.pointerEvents = 'auto'; }
     });
     var cg = document.getElementById('count-games');
-    var cs = document.getElementById('count-sites');
     if (cg) cg.textContent = GENRES.length + ' genres';
-    if (cs) cs.textContent = SITES.length + ' sites';
-    var ncg = document.getElementById('nav-count-games'), ncs = document.getElementById('nav-count-sites');
+    var ncg = document.getElementById('nav-count-games');
     if (ncg) ncg.textContent = GENRES.length;
-    if (ncs) ncs.textContent = SITES.length;
+    updateSiteCounts();
     var sideTheme = document.getElementById('side-theme');
     if (sideTheme) sideTheme.addEventListener('click', function () {
       prefs.theme = prefs.theme === 'light' ? 'dark' : 'light';
@@ -2330,6 +3744,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     if (sideCat) sideCat.addEventListener('click', function () { sideCat.classList.remove('purr'); void sideCat.offsetWidth; sideCat.classList.add('purr'); });
     buildWebsitesView();
     bindEvents();
+    Links.load();
   }
 
   /* ---- Inject links button + back link into every panel ---- */
@@ -2350,10 +3765,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
     }
   }
 
-  function buildLinksBoard(section) {
+  function buildLinksBoard(section, siteId) {
     var anchors = Array.prototype.slice.call(section.querySelectorAll('a.site-link'));
     var creds = section.querySelector('.link-credentials');
-    if (!anchors.length && !creds) return;
+    var isAdmin = !!siteId && Links.admin();
+    if (!anchors.length && !creds && !isAdmin) return;
     section.textContent = '';
 
     if (creds) {
@@ -2366,7 +3782,7 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       });
       section.appendChild(creds);
     }
-    if (!anchors.length) return;
+    if (!anchors.length) { if (isAdmin) section.appendChild(Links.form('site', siteId)); return; }
 
     var bar = document.createElement('div');
     bar.className = 'links-bar';
@@ -2381,10 +3797,8 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       filter.placeholder = 'Filter links...'; filter.setAttribute('aria-label', 'Filter links');
       bar.appendChild(filter);
     }
-    var copyAll = document.createElement('button');
-    copyAll.type = 'button'; copyAll.className = 'links-copyall'; copyAll.textContent = 'Copy all';
-    bar.appendChild(copyAll);
     section.appendChild(bar);
+    if (isAdmin) section.appendChild(Links.form('site', siteId));
 
     var list = document.createElement('ol');
     list.className = 'link-list';
@@ -2422,10 +3836,12 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       cp.addEventListener('click', function () { copyText(href, cp, 'Copy'); });
 
       li.appendChild(a); li.appendChild(cp);
+      if (isAdmin) { li.appendChild(Links.moveBtns(li, 'li.link-card', 'site:' + siteId, 'y')); li.appendChild(Links.removeBtn('site', siteId, href, a.dataset.editId)); }
       list.appendChild(li);
       cards.push(li);
     });
     section.appendChild(list);
+    if (isAdmin) Links.sortable(list, 'li.link-card', 'site:' + siteId, 'y');
 
     var nomatch = document.createElement('p');
     nomatch.className = 'link-nomatch'; nomatch.textContent = 'No links match. Try another sniff?'; nomatch.hidden = true;
@@ -2442,14 +3858,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
       cards.forEach(function (c) { c.hidden = !!q && c.dataset.url.toLowerCase().indexOf(q) === -1; });
       updateCount();
     });
-    copyAll.addEventListener('click', function () {
-      copyText(visibleCards().map(function (c) { return c.dataset.url; }).join('\n'), copyAll, 'Copy all');
-    });
     updateCount();
   }
 
-  function enhancePanels() {
-    var panels = document.querySelectorAll('.content-panel');
+  function enhancePanels(list) {
+    var panels = list || document.querySelectorAll('.content-panel');
     panels.forEach(function (panel) {
       var inner = panel.querySelector('.panel-inner');
       var header = panel.querySelector('.panel-header');
@@ -2522,22 +3935,11 @@ body.hide-welcome-guidance .how-to-use { display: none; }
 
         var pager = document.createElement('div');
         pager.className = 'pager';
-        [['prev', siteIdx - 1, 'Previous'], ['next', siteIdx + 1, 'Next']].forEach(function (cfg) {
-          var target = SITES[cfg[1]];
-          var b = document.createElement('button');
-          b.type = 'button'; b.className = 'pager-btn ' + cfg[0];
-          b.innerHTML = '<span></span><strong></strong>';
-          b.firstChild.textContent = cfg[2];
-          if (target) {
-            b.lastChild.textContent = (cfg[0] === 'prev' ? '\u2190 ' : '') + target.label + (cfg[0] === 'next' ? ' \u2192' : '');
-            b.addEventListener('click', function () { showPanel(target.id); });
-          } else { b.disabled = true; b.lastChild.textContent = '-'; }
-          pager.appendChild(b);
-        });
+        fillPager(pager, siteIdx);
         about.appendChild(pager);
       }
 
-      if (linksSection) buildLinksBoard(linksSection);
+      if (linksSection) { Links.remember(siteId, linksSection); buildLinksBoard(linksSection, siteId); }
     });
   }
 
