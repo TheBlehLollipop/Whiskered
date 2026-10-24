@@ -1014,6 +1014,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
       </div>
 
       <p class="customize-note acct-note" id="acct-note"></p>
+      <p class="customize-note acct-note" id="acct-diag"></p>
     </div>
   </div>
 
@@ -2633,6 +2634,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
     /* Supabase Auth wants an email, so each username maps to a placeholder address that can never receive mail. */
     function aliasEmail(name) { return name.toLowerCase() + '@users.whiskered.invalid'; }
     var ACC_KEY = 'whiskered-accounts', SESSION_KEY = 'whiskered-session', SB_KEY = 'whiskered-sb-session', ITER = 150000;
+    var APP_VERSION = '2026.10.24-d';
     var emailOk = true, role = { admin: false, owner: false };
     function validEmail(v) { return v.length <= 120 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
     var accounts = {}, cur = null, curKey = null, sess = null, tab = 'login', busy = false, el = {}, pushTimer = null, listeners = [];
@@ -2747,7 +2749,18 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         if (el.ready) applyPrefs();
       }
     }
+    function checkServer() {
+      if (!el.diag) return;
+      el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: checking...';
+      var t0 = Date.now();
+      sb('/auth/v1/settings').then(function () {
+        el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: reachable (' + (Date.now() - t0) + ' ms)';
+      }).catch(function (e) {
+        el.diag.textContent = 'Page version ' + APP_VERSION + ' \u00b7 Server: ' + (e.message || 'not reachable');
+      });
+    }
     function open() {
+      checkServer();
       paint();
       el.overlay.classList.add('open'); el.overlay.setAttribute('aria-hidden', 'false');
       setTimeout(function () { (cur ? el.displayIn : el.user).focus(); }, 50);
@@ -2893,7 +2906,7 @@ textarea.admin-input { border-radius: 16px; resize: vertical; min-height: 84px; 
         el = { overlay: $('account-overlay'), guest: $('acct-guest'), userView: $('acct-user-view'), form: $('acct-form'), user: $('acct-user'),
           pass: $('acct-pass'), pass2: $('acct-pass2'), confirmWrap: $('acct-confirm-wrap'),
           error: $('acct-error'), submit: $('acct-submit'), label: $('acct-label'), initial: $('acct-initial'), sub: $('account-sub'), title: $('account-title'), avatar: $('acct-avatar'),
-          dispName: $('acct-display-name'), userName: $('acct-username'), displayIn: $('acct-display'), sync: $('acct-sync'), note: $('acct-note'),
+          dispName: $('acct-display-name'), userName: $('acct-username'), displayIn: $('acct-display'), sync: $('acct-sync'), note: $('acct-note'), diag: $('acct-diag'),
           emailWrap: $('acct-email-wrap'), email: $('acct-email'), emailIn: $('acct-email-in'), emailMsg: $('acct-email-msg') };
         if (!el.overlay) return;
         el.note.textContent = REMOTE ? 'Your account is stored securely online, so it works on any device.' : 'Accounts are stored in this browser only. They don\'t sync between devices.';
