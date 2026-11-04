@@ -2537,7 +2537,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     wallpaper: 'paws',
     wallStrength: 5,
     welcome: true,
-    reducedMotion: false
+    reducedMotion: false,
+    favs: []
   };
   var prefs = Object.assign({}, DEFAULT_PREFS);
   var accentPalettes = {
@@ -2756,6 +2757,21 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     if (isNaN(prefs.wallStrength)) prefs.wallStrength = DEFAULT_PREFS.wallStrength;
     if (typeof prefs.welcome !== 'boolean') prefs.welcome = true;
     if (typeof prefs.reducedMotion !== 'boolean') prefs.reducedMotion = false;
+    prefs.favs = cleanFavs(prefs.favs);
+  }
+
+  /* favourite games live in prefs, so they save with the account like every other setting */
+  function cleanFavs(list) {
+    var seen = {}, out = [];
+    (Array.isArray(list) ? list : []).forEach(function (f) {
+      if (!f || typeof f.url !== 'string' || !/^https?:\/\//i.test(f.url) || f.url.length > 2000) return;
+      var k = f.url.trim().toLowerCase();
+      if (seen[k] || out.length >= 300) return;
+      seen[k] = 1;
+      var img = typeof f.img === 'string' && /^https?:\/\//i.test(f.img) && f.img.length <= 2000 ? f.img : '';
+      out.push({ label: String(f.label || '').slice(0, 100), url: f.url, img: img });
+    });
+    return out;
   }
 
   function loadPrefs() {
@@ -2908,7 +2924,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
   function applyTheme(id) {
     var theme = THEMES.filter(function (t) { return t.id === id; })[0];
     if (!theme) return;
-    var keep = { mode: prefs.mode, textSize: prefs.textSize, density: prefs.density, welcome: prefs.welcome, reducedMotion: prefs.reducedMotion, accentCustom: prefs.accentCustom };
+    var keep = { mode: prefs.mode, textSize: prefs.textSize, density: prefs.density, welcome: prefs.welcome, reducedMotion: prefs.reducedMotion, accentCustom: prefs.accentCustom, favs: prefs.favs };
     var next = Object.assign({}, DEFAULT_PREFS, keep, theme.set, { themeId: theme.id });
     Object.keys(prefs).forEach(function (k) { delete prefs[k]; });
     Object.assign(prefs, next);
@@ -3870,10 +3886,16 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     }
     function applySaved() {
       if (cur && cur.sync && cur.prefs && Object.keys(cur.prefs).length) {
+        var localFavs = cleanFavs(prefs.favs);
         Object.assign(prefs, cur.prefs);
+        /* keep favourites picked before logging in alongside the account's own */
+        prefs.favs = cleanFavs((Array.isArray(cur.prefs.favs) ? cur.prefs.favs : []).concat(localFavs));
+        var added = prefs.favs.length !== cleanFavs(cur.prefs.favs).length;
         sanitizePrefs();
+        if (added) { cur.prefs = clone(prefs); if (REMOTE) pushProfile({ prefs: cur.prefs }); }
         try { localStorage.setItem(CUSTOMIZE_STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
         if (el.ready) applyPrefs();
+        if (typeof Favs !== 'undefined' && Favs) { refreshGamesMenu(); Favs.sync(); }
       }
     }
     var lastError = '';
@@ -5464,7 +5486,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       var chip = e.target.closest('[data-mode-choice], [data-accent-choice], [data-density-choice], [data-pref], [data-theme-pick], [data-toggle], [data-reset]');
       if (!chip) return;
       if (chip.hasAttribute('data-reset')) {
-        var fresh = Object.assign({}, DEFAULT_PREFS);
+        var fresh = Object.assign({}, DEFAULT_PREFS, { favs: prefs.favs });
         Object.keys(prefs).forEach(function (k) { delete prefs[k]; });
         Object.assign(prefs, fresh);
       } else if (chip.hasAttribute('data-theme-pick')) {
@@ -5507,8 +5529,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
   var Favs = (function () {
     var KEY = 'whiskered-favs', ICON_STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 16.9 6.6 19.8l1.1-6.1L3.2 9.4l6.1-.8z"/></svg>',
       ICON_FLAG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>';
-    function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
-    function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+    function load() { return Array.isArray(prefs.favs) ? prefs.favs : []; }
+    function save(v) { prefs.favs = cleanFavs(v); savePrefs(); }
     function key(u) { return Links.norm(u); }
     function has(game) { var k = key(game.url); return load().some(function (f) { return key(f.url) === k; }); }
     /* keep every star on the page (shelves, favourites row, genre page) in step with the saved list */
@@ -5558,6 +5580,15 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       return wrap;
     }
     function init() {
+      /* favourites used to live only in this browser: fold them into the account-synced settings once */
+      try {
+        var old = JSON.parse(localStorage.getItem(KEY) || 'null');
+        if (Array.isArray(old)) {
+          if (old.length) save(load().concat(old));
+          localStorage.removeItem(KEY);
+          refreshGamesMenu(); sync();
+        }
+      } catch (e) {}
       var t = document.getElementById('side-toggle');
       function apply(c) {
         document.documentElement.classList.toggle('side-collapsed', c);
@@ -5580,7 +5611,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       Object.keys(by).forEach(function (k) { out.push(by[k]); });
       save(out);
     }
-    return { init: init, tools: tools, list: load, setOrder: setOrder };
+    return { init: init, tools: tools, list: load, setOrder: setOrder, sync: sync };
   })();
 
   var Find = (function () {
