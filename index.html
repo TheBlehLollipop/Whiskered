@@ -3,7 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Whiskered</title>
+  <script>
+/* When the page is injected into an iframe (srcdoc / blob / data) relative asset paths have no home, so point them at the CDN copy of the repo. */
+(function () {
+  if (!/^(about|blob|data):$/.test(location.protocol)) return;
+  var b = document.createElement('base');
+  b.href = 'https://cdn.jsdelivr.net/gh/TheBlehLollipop/Whiskered@main/';
+  document.head.insertBefore(b, document.head.firstChild);
+  /* a <base> turns "#section" links into CDN URLs, so handle them in place */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    var t = a.getAttribute('href').length > 1 && document.getElementById(a.getAttribute('href').slice(1));
+    if (t) t.scrollIntoView();
+  }, true);
+})();
+</script>
+<title>Whiskered</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20x='3'%20y='3'%20width='58'%20height='58'%20rx='16'%20fill='%23FF9F45'%20stroke='%2324160D'%20stroke-width='4'/%3E%3Cg%20transform='translate(11%2011)%20scale(1.05)'%20fill='none'%20stroke='%2324160D'%20stroke-width='2.6'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M7%2017%206%205l8%205.5a14%2014%200%200%201%2012%200L34%205l-1%2012c1.4%202%202%204%202%206.5C35%2031%2028%2035%2020%2035S5%2031%205%2023.5C5%2021%205.6%2019%207%2017Z'/%3E%3Ccircle%20cx='14'%20cy='22'%20r='1.6'%20fill='%2324160D'%20stroke='none'/%3E%3Ccircle%20cx='26'%20cy='22'%20r='1.6'%20fill='%2324160D'%20stroke='none'/%3E%3Cpath%20d='M18.5%2026.5h3L20%2028.5ZM20%2028.5v1.5M20%2030c-1.2%201.4-3%201.4-4%20.4M20%2030c1.2%201.4%203%201.4%204%20.4'/%3E%3Cpath%20d='M2%2025l7%201M2%2029l7-1.5M38%2025l-7%201M38%2029l-7-1.5'%20stroke-width='1.8'/%3E%3C/g%3E%3C/svg%3E">
   <meta name="description" content="Whiskered – a curated directory of creative platforms and communities">
   <link rel="preconnect" href="https://fonts.googleapis.com">
