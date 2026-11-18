@@ -813,6 +813,12 @@ body[data-wallpaper="theme"] .content-area::before { background: var(--text); }
 
 .side-cat.purr svg { animation: purr .6s ease-in-out; }
 @keyframes purr { 20%, 60% { transform: scale(1.06, .96) rotate(-1deg); } 40%, 80% { transform: scale(.98, 1.04) rotate(1deg); } }
+.side-online { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0 0; padding: 0; color: var(--muted); font: 700 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.side-online[hidden] { display: none; }
+.online-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 0 3px rgba(63,185,80,.25); animation: online-pulse 2.4s ease-in-out infinite; }
+@keyframes online-pulse { 50% { box-shadow: 0 0 0 5px rgba(63,185,80,0); } }
+@media (prefers-reduced-motion: reduce) { .online-dot { animation: none; } }
+@media (max-height: 420px) { .side-online { display: none; } }
 .side-tools { display: flex; gap: 8px; margin-top: 4px; }
 .side-tool {
   display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; padding: 10px 12px; cursor: pointer;
@@ -838,6 +844,23 @@ body[data-wallpaper="theme"] .content-area::before { background: var(--text); }
 .side-account-row .side-tool { width: 100%; }
 .acct-initial { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-accent); border: 2px solid var(--ink); font-size: 12px; font-weight: 800; text-transform: uppercase; }
 .acct-initial[hidden] { display: none; }
+.has-img { background-size: cover; background-position: center; background-repeat: no-repeat; color: transparent; }
+.crop-overlay { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.62); }
+.crop-box { width: min(100%, 340px); padding: 20px; background: var(--bg); color: var(--text); border: 2px solid var(--ink); border-radius: calc(24px * var(--rk)); box-shadow: calc(5px * var(--shk)) calc(5px * var(--shk)) 0 var(--hard); }
+.crop-title { font-size: 20px; font-weight: 800; letter-spacing: -.02em; text-align: center; }
+.crop-stage { position: relative; width: 260px; height: 260px; max-width: 100%; margin: 14px auto; overflow: hidden; background: #000; border-radius: calc(12px * var(--rk)); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.crop-stage.drag { cursor: grabbing; }
+.crop-img { position: absolute; max-width: none; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.crop-mask { position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 400px rgba(0,0,0,.62); outline: 2px solid rgba(255,255,255,.9); outline-offset: -2px; pointer-events: none; }
+.crop-zoom { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.crop-zoom input { flex: 1; min-width: 0; accent-color: var(--accent); }
+.crop-hint { margin-top: 6px; color: var(--muted); font-size: 13px; text-align: center; }
+.crop-err { margin-top: 8px; color: #d63b3b; font-size: 13px; text-align: center; }
+.crop-err[hidden] { display: none; }
+.crop-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.crop-actions .acct-submit { margin-top: 0; }
+.acct-pic-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 4px; }
+.acct-pic-msg { flex-basis: 100%; min-height: 1em; color: var(--muted); font-size: 13px; }
 #side-account.logged-in .acct-ico { display: none; }
 .dialog-overlay { z-index: 700; }
 .dialog-panel { width: min(92vw, 400px); }
@@ -880,6 +903,9 @@ body[data-wallpaper="theme"] .content-area::before { background: var(--text); }
 .team-note { color: var(--muted); font-weight: 700; }
 .team-note[hidden] { display: none; }
 .support-view { max-width: 760px; }
+.apply-intro { margin-bottom: 6px; color: var(--muted); }
+.apply-state { margin-bottom: 4px; padding: 14px 16px; border: 2px dashed var(--ink); border-radius: calc(18px * var(--rk)); background: var(--soft); font-weight: 700; }
+.apply-state[hidden] { display: none; }
 .support-card { margin-bottom: 22px; padding: 22px; background: var(--surface); border: 2px solid var(--ink); border-radius: calc(24px * var(--rk)); box-shadow: calc(5px * var(--shk)) calc(5px * var(--shk)) 0 var(--hard); }
 .support-card[hidden] { display: none; }
 .support-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: 22px; font-weight: 800; letter-spacing: -.03em; }
@@ -972,6 +998,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 
 @media (max-height: 780px) { .topbar { gap: 14px; padding-top: 20px; } }
 @media (max-height: 420px) { .side-cat { display: none; } .side-tools { margin-top: auto; } }
+@media (max-height: 880px) { .side-cat { min-height: 44px; } .side-cat-note { display: none; } }
 @media (max-width: 900px) {
   .topbar-name, .side-label, .topbar-count, .side-tools { display: none; }
   .topbar { overflow-x: auto; scrollbar-width: none; }
@@ -986,7 +1013,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 }
 
 /* cat grows to fill the free space in the sidebar (and is bigger overall) */
-.side-cat { flex: 1 1 auto; min-height: 96px; display: flex; flex-direction: column; justify-content: flex-end; margin: 0 -10px; padding: 0; }
+.side-cat { flex: 1 1 auto; min-height: 64px; display: flex; flex-direction: column; justify-content: flex-end; margin: 0 -10px; padding: 0; }
 .side-cat svg { flex: 1 1 auto; min-height: 0; width: 100%; height: 100%; }
 .side-cat-note { flex: none; font-size: 11px; }
 
@@ -1105,6 +1132,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       <nav class="topbar-nav" aria-label="Help">
         <button type="button" class="topbar-link" data-nav="support"><span class="topbar-text">Support</span><span class="topbar-count" id="nav-count-support"></span></button>
         <button type="button" class="topbar-link" data-nav="team"><span class="topbar-text">Team</span></button>
+        <button type="button" class="topbar-link" data-nav="apply"><span class="topbar-text">Apply</span></button>
       </nav>
     </div>
     <div class="side-group" id="admin-group" hidden>
@@ -1133,6 +1161,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       <button type="button" id="side-account" class="side-tool" aria-haspopup="dialog" aria-controls="account-overlay"><span aria-hidden="true" class="acct-ico"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.6-7 8-7s8 2.5 8 7"/></svg></span> <span class="acct-initial" id="acct-initial" aria-hidden="true" hidden></span><span class="acct-label" id="acct-label">Log in</span></button>
     </div>
     <button id="open-customize" class="customize-pill" type="button" aria-haspopup="dialog" aria-controls="customize-overlay" aria-label="Customize"><span aria-hidden="true"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></span><span class="pill-label">Customize</span></button>
+    <p class="side-online" id="side-online" hidden role="status" aria-live="polite"><span class="online-dot" aria-hidden="true"></span><span id="side-online-text"></span></p>
   </header>
 
   <div id="find-overlay" class="find-overlay" aria-hidden="true">
@@ -1317,6 +1346,12 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           <span class="acct-avatar" id="acct-avatar" aria-hidden="true"></span>
           <div><b id="acct-display-name"></b><small id="acct-username"></small></div>
         </div>
+        <div class="acct-pic-row">
+          <button id="acct-pic" class="choice-chip" type="button">Change picture</button>
+          <button id="acct-pic-x" class="choice-chip" type="button" hidden>Remove</button>
+          <input id="acct-pic-file" type="file" accept="image/*" hidden>
+          <small id="acct-pic-msg" class="acct-pic-msg" role="status"></small>
+        </div>
         <div class="customize-section">
           <label class="customize-label" for="acct-display">Display name</label>
           <div class="acct-row">
@@ -1470,6 +1505,35 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         <ul id="users-list" class="support-list"></ul>
         <h4 class="support-sub">Banned accounts</h4>
         <ul id="bans-list" class="support-list"></ul>
+      </section>
+    </div>
+
+    <div id="apply-view" class="support-view" style="display:none">
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Apply</h2>
+        <p class="itchio-subheading">Want to help run Whiskered? Apply to become an admin</p>
+      </header>
+      <section class="support-card" aria-labelledby="apply-title">
+        <h3 id="apply-title" class="support-title">Admin application</h3>
+        <div id="apply-gate" class="support-gate">
+          <p>You need an account to apply, so we know who to reply to.</p>
+          <button id="apply-login" class="acct-submit" type="button">Log in or sign up</button>
+        </div>
+        <p id="apply-state" class="apply-state" hidden></p>
+        <form id="apply-form" class="support-form" autocomplete="off" novalidate>
+          <p class="apply-intro">Admins add and fix links, answer support messages and keep the site tidy. Tell us a bit about you. We read every application and reply on the Support page.</p>
+          <label class="customize-label" for="apply-why">Why do you want to be an admin?</label>
+          <textarea id="apply-why" class="acct-input" rows="4" maxlength="450" placeholder="What would you help with?"></textarea>
+          <label class="customize-label" for="apply-exp">Any experience? (optional)</label>
+          <textarea id="apply-exp" class="acct-input" rows="3" maxlength="300" placeholder="Moderating, coding, running a community, anything useful."></textarea>
+          <label class="customize-label" for="apply-time">When are you usually around?</label>
+          <input id="apply-time" class="acct-input" type="text" maxlength="100" placeholder="e.g. evenings, weekends, UTC-5">
+          <label class="customize-label" for="apply-user">Your username</label>
+          <input id="apply-user" class="acct-input" type="text" maxlength="30" readonly>
+          <input id="apply-website" class="support-hp" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p id="apply-note" class="acct-error" role="status" hidden></p>
+          <button id="apply-send" class="acct-submit" type="submit">Send application</button>
+        </form>
       </section>
     </div>
 
@@ -2586,6 +2650,19 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
             'body[data-theme-id="hollow-knight"] :is(.topbar-link, .side-tool, .customize-pill, .choice-chip):hover { box-shadow: 0 0 12px rgba(127,231,214,.45); }',
             'body[data-theme-id="hollow-knight"] :is(.topbar-link.active, .choice-chip.active) { box-shadow: 0 0 0 1px #7FE7D6, 0 0 16px rgba(127,231,214,.5); }'
           ].join('\n') },
+    /* Celeste: a dusk-purple mountain sky with a strawberry-pink accent; always dark. */
+    { id: 'celeste', name: 'Celeste', pv: ['#20122E', '#37204A', '#FF6F9C'], pvx: { img: 'assets/themes/celeste/background.jpg?v=3', imgsize: 'cover', side: '#1F1230', btn: '#3A2150', act: '#FF6F9C', tx: '#FBEAF5', card: '#2E1A40', card1: '#3A2150' }, set: { wallpaper: 'none' }, mode: 'dark', accent: '#FF6F9C',
+          css: [
+            'body[data-theme-id="celeste"] { --bg: #1A0F26; --surface: rgba(34,19,48,.84); --surface-2: rgba(54,32,74,.9); --line: #6A4A8C; --ink: #6A4A8C; --hard: #0E0716; --muted: #C3A9D6; --text: #FBEAF5; background-color: #1A0F26; }',
+            'body[data-theme-id="celeste"]::before { content: ""; position: fixed; inset: 0; z-index: -1; background: url("assets/themes/celeste/background.jpg?v=3") center / cover no-repeat; transform: translateZ(0); pointer-events: none; }',
+            'body[data-theme-id="celeste"] .content-area::before { display: none; }',
+            'body[data-theme-id="celeste"] .content-panel { background: transparent; }',
+            'body[data-theme-id="celeste"] .topbar-mark { background: url("assets/themes/celeste/icon.png") center / contain no-repeat; border: 0; box-shadow: none; image-rendering: pixelated; }',
+            'body[data-theme-id="celeste"] .topbar-mark svg { display: none; }',
+            'body[data-theme-id="celeste"] :is(.site-title, .itchio-heading, .itchio-genre-title, .itchio-subheading) { color: #FFF1F8; text-shadow: 0 2px 0 #0E0716, 0 0 18px rgba(255,111,156,.4); }',
+            'body[data-theme-id="celeste"] :is(.topbar-link, .side-tool, .customize-pill, .choice-chip):hover { box-shadow: 0 0 12px rgba(255,111,156,.4); }',
+            'body[data-theme-id="celeste"] :is(.topbar-link.active, .choice-chip.active) { box-shadow: 0 0 0 1px #FF6F9C, 0 0 14px rgba(255,111,156,.4); }'
+          ].join('\n') },
     /* Doom: a hellfire wallpaper with a molten orange-red accent; always dark. */
     { id: 'doom', name: 'Doom', pv: ['#140806', '#2A110B', '#FF4A1C'], pvx: { img: 'assets/themes/doom/background.jpg', imgsize: 'cover', side: '#16090A', btn: '#2E120C', act: '#FF4A1C', tx: '#FFE9DC', card: '#241009', card1: '#2E120C' }, set: { wallpaper: 'none' }, mode: 'dark', accent: '#FF4A1C',
           css: [
@@ -2638,6 +2715,29 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
             'body[data-theme-id="backrooms"] :is(.topbar, .customize-panel, .changelog-box, .find-box, .websites-grid, .team-card, .sites-card, .support-card) { box-shadow: 0 0 0 1px #6E6A22; }',
             'body[data-theme-id="backrooms"] :is(.topbar-link, .side-tool, .customize-pill, .choice-chip):hover { box-shadow: 0 0 12px rgba(217,216,74,.45); }',
             'body[data-theme-id="backrooms"] :is(.topbar-link.active, .choice-chip.active) { box-shadow: 0 0 0 1px #D9D84A, 0 0 16px rgba(217,216,74,.5); }'
+          ].join('\n') },
+    /* Minecraft: a cherry-grove sunset with a grass-green accent and square, blocky corners; always dark. */
+    { id: 'minecraft', name: 'Minecraft', pv: ['#1B1710', '#2F2A1C', '#7BC043'], pvx: { img: 'assets/themes/minecraft/background.jpg', imgsize: 'cover', side: '#1A150E', btn: '#34301F', act: '#7BC043', tx: '#F4F0DD', card: '#2A2518', card1: '#34301F' }, set: { wallpaper: 'none' }, mode: 'dark', accent: '#7BC043',
+          css: [
+            '@font-face { font-family: "Whiskered Minecraft"; src: url("assets/themes/minecraft/font.woff") format("woff"); font-display: swap; }',
+            'body[data-theme-id="minecraft"] { --font: "Whiskered Minecraft", "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --mono: "Whiskered Minecraft", "Space Mono", ui-monospace, monospace; font-synthesis: none; -webkit-font-smoothing: none; }',
+            '@font-face { font-family: "Whiskered Minecraft Title"; src: url("assets/themes/minecraft/title.woff2") format("woff2"); font-display: swap; }',
+            'body[data-theme-id="minecraft"] :is(.site-title, .itchio-heading, .itchio-genre-title, .topbar-name) { font-family: "Whiskered Minecraft Title", "Whiskered Minecraft", sans-serif; font-synthesis: none; letter-spacing: 0; }',
+            'body[data-theme-id="minecraft"] { --rk: 0; --bg: #14110B; --surface: rgba(30,26,17,.86); --surface-2: rgba(50,44,28,.92); --line: #5C5236; --ink: #0B0905; --hard: #050402; --muted: #BDB48F; --text: #F4F0DD; background-color: #14110B; }',
+            'body[data-theme-id="minecraft"]::before { content: ""; position: fixed; inset: 0; z-index: -1; background: url("assets/themes/minecraft/background.jpg") center / cover no-repeat; transform: translateZ(0); pointer-events: none; }',
+            'body[data-theme-id="minecraft"] .content-area::before { display: none; }',
+            'body[data-theme-id="minecraft"] .content-panel { background: transparent; }',
+            'body[data-theme-id="minecraft"] .topbar-mark { background: url("assets/themes/minecraft/icon.png") center / contain no-repeat; border: 0; box-shadow: none; image-rendering: pixelated; }',
+            'body[data-theme-id="minecraft"] .topbar-mark svg { display: none; }',
+            'body[data-theme-id="minecraft"] .site-title { font-size: 0; line-height: 0; text-shadow: none; }',
+            'body[data-theme-id="minecraft"] .site-title::before { content: ""; display: block; width: min(100%, 760px); aspect-ratio: 860 / 144; background: url("assets/themes/minecraft/title.png") left center / contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 6px 0 rgba(0,0,0,.35)); }',
+            'body[data-theme-id="minecraft"] .site-title em { margin-top: 22px; line-height: 1.2; text-shadow: none; }',
+            'body[data-theme-id="minecraft"] .side-cat svg { display: none; }',
+            'body[data-theme-id="minecraft"] .side-cat::before { content: ""; flex: 1 1 auto; min-height: 70px; background: url("assets/themes/minecraft/cat.png?v=3") center bottom / contain no-repeat; filter: drop-shadow(0 4px 0 rgba(0,0,0,.35)); transition: transform .3s; }',
+            'body[data-theme-id="minecraft"] .side-cat:hover::before { transform: scale(1.06) rotate(-2deg); }',
+            'body[data-theme-id="minecraft"] .side-cat.purr::before { animation: purr .6s ease-in-out; }',
+            'body[data-theme-id="minecraft"] :is(.site-title, .itchio-heading, .itchio-genre-title, .itchio-subheading) { color: #FFFFFF; text-shadow: 3px 3px 0 #3A3A3A; }',
+            'body[data-theme-id="minecraft"] :is(.topbar-link.active, .choice-chip.active) { box-shadow: inset 0 -4px 0 rgba(0,0,0,.3), inset 0 3px 0 rgba(255,255,255,.25); }'
           ].join('\n') },
     /* Windows XP: Bliss wallpaper, Luna blue sidebar, beige XP buttons and a green accent; always light. */
     { id: 'windows-xp', name: 'Windows XP', pv: ['#5A9BEA', '#ECE9D8', '#3C9A2C'], pvx: { img: 'assets/themes/windows-xp/background.jpg', imgsize: 'cover', side: '#1F55CC', btn: '#ECE9D8', act: '#3C9A2C', tx: '#FFFFFF', card: '#ECE9D8', card1: '#F7F6EE' }, set: { wallpaper: 'none' }, mode: 'light', accent: '#3C9A2C',
@@ -3119,7 +3219,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       document.getElementById('websites-view'),
       document.getElementById('support-view'),
       document.getElementById('admin-view'),
-      document.getElementById('team-view')
+      document.getElementById('team-view'),
+      document.getElementById('apply-view')
     ];
     for (var i = 0; i < views.length; i++) {
       if (views[i] && views[i].style.display !== 'none') return views[i];
@@ -3159,7 +3260,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 
   function setMode(mode) {
     if (mode === 'itchio') refreshGamesMenu();
-    try { if (/^(home|itchio|websites|support|team)$/.test(mode)) localStorage.setItem('whiskered-last-view', mode); } catch (e) {}
+    try { if (/^(home|itchio|websites|support|team|apply)$/.test(mode)) localStorage.setItem('whiskered-last-view', mode); } catch (e) {}
     document.querySelectorAll('.topbar-link').forEach(function (l) {
       var n = l.getAttribute('data-nav');
       var on = n === mode || (n === 'itchio' && mode === 'itchio-genre');
@@ -3172,6 +3273,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     var supportView = document.getElementById('support-view');
     var inboxView = document.getElementById('admin-view');
     var teamView = document.getElementById('team-view');
+    var applyView = document.getElementById('apply-view');
     var currentView = getActiveView();
 
     animateOut(currentView, function () {
@@ -3183,6 +3285,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       if (supportView) supportView.style.display = 'none';
       if (inboxView) inboxView.style.display = 'none';
       if (teamView) teamView.style.display = 'none';
+      if (applyView) applyView.style.display = 'none';
       document.querySelectorAll('.content-panel').forEach(function (p) {
         p.hidden = true;
         p.classList.remove('active');
@@ -3197,6 +3300,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         if (websitesView) { websitesView.style.display = ''; target = websitesView; }
       } else if (mode === 'support') {
         if (supportView) { supportView.style.display = ''; target = supportView; Support.show(); }
+      } else if (mode === 'apply') {
+        if (applyView) { applyView.style.display = ''; target = applyView; Apply.show(); }
       } else if (mode === 'team') {
         if (teamView) { teamView.style.display = ''; target = teamView; Team.show(); }
       } else if (mode === 'admin' && Account.isAdmin()) {
@@ -3226,6 +3331,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       if (inboxEl) inboxEl.style.display = 'none';
       var teamEl = document.getElementById('team-view');
       if (teamEl) teamEl.style.display = 'none';
+      var applyEl = document.getElementById('apply-view');
+      if (applyEl) applyEl.style.display = 'none';
 
       if (prevPanel && prevPanel !== panel) {
         prevPanel.classList.remove('active');
@@ -3753,9 +3860,10 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           throw e;
         });
     }
-    function fetchProfile() {
+    var avatarOk = true;
+    function fetchProfileWith(extra) {
       return token().then(function (t) {
-        var base = '/rest/v1/profiles?id=eq.' + sess.uid + '&select=username,display,prefs,sync';
+        var base = '/rest/v1/profiles?id=eq.' + sess.uid + '&select=username,display,prefs,sync' + extra;
         return sb(base + ',email,email_verified', {}, t).catch(function (e) {
           if (!/email|column/i.test(e.message)) throw e;
           return sb(base + ',email', {}, t).catch(function (e2) {
@@ -3765,6 +3873,103 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           });
         });
       }).then(function (rows) { if (!rows || !rows[0]) throw new Error('Profile not found.'); return rows[0]; });
+    }
+    function fetchProfile() {
+      if (!avatarOk) return fetchProfileWith('');
+      return fetchProfileWith(',avatar').catch(function (e) {
+        if (!/avatar|column/i.test(e.message)) throw e;
+        avatarOk = false;
+        return fetchProfileWith('');
+      });
+    }
+    /* profile pictures are small data: URLs; anything else is ignored so it can never inject CSS */
+    var AVATAR_RE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/=]+$/;
+    function setAvatar(node, name, url) {
+      if (!node) return;
+      var ok = typeof url === 'string' && url.length < 60000 && AVATAR_RE.test(url);
+      node.classList.toggle('has-img', ok);
+      node.style.backgroundImage = ok ? 'url("' + url + '")' : '';
+      node.style.backgroundSize = ok ? 'cover' : '';
+      node.style.backgroundPosition = ok ? 'center' : '';
+      node.style.backgroundRepeat = ok ? 'no-repeat' : '';
+      node.style.backgroundOrigin = ok ? 'border-box' : '';
+      node.textContent = ok ? '' : (name || '?').charAt(0);
+    }
+    function loadImage(file) {
+      return new Promise(function (resolve, reject) {
+        if (!/^image\//.test(file.type)) return reject(new Error('Pick an image file.'));
+        if (file.size > 12 * 1024 * 1024) return reject(new Error('That image is too big.'));
+        var url = URL.createObjectURL(file), img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Could not read that image.')); };
+        img.src = url;
+      });
+    }
+    /* Discord-style crop: drag to move, slider or scroll to zoom, round preview. Resolves a data: URL, or null on cancel. */
+    function openCropper(img) {
+      return new Promise(function (resolve) {
+        var V = 260, OUT = 128, ox = 0, oy = 0, z = 1;
+        var ov = document.createElement('div'); ov.className = 'crop-overlay'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', 'Crop your picture');
+        ov.innerHTML = '<div class="crop-box"><h3 class="crop-title">Adjust your picture</h3>' +
+          '<div class="crop-stage"><img class="crop-img" alt="" draggable="false"><div class="crop-mask"></div></div>' +
+          '<label class="crop-zoom"><span>Zoom</span><input type="range" min="100" max="400" value="100" step="1" aria-label="Zoom"></label>' +
+          '<p class="crop-hint">Drag to move. Scroll or use the slider to zoom.</p><p class="crop-err" role="status" hidden></p>' +
+          '<div class="crop-actions"><button type="button" class="choice-chip" data-act="cancel">Cancel</button><button type="button" class="acct-submit" data-act="save">Save picture</button></div></div>';
+        var stage = ov.querySelector('.crop-stage'), im = ov.querySelector('.crop-img'), range = ov.querySelector('input'), err = ov.querySelector('.crop-err');
+        im.src = img.src;
+        var base = V / Math.min(img.width, img.height);
+        function clamp() {
+          var w = img.width * base * z, h = img.height * base * z, mx = Math.max(0, (w - V) / 2), my = Math.max(0, (h - V) / 2);
+          ox = Math.max(-mx, Math.min(mx, ox)); oy = Math.max(-my, Math.min(my, oy));
+        }
+        function place() {
+          clamp();
+          var w = img.width * base * z, h = img.height * base * z;
+          im.style.width = w + 'px'; im.style.height = h + 'px';
+          im.style.left = (V / 2 - w / 2 + ox) + 'px'; im.style.top = (V / 2 - h / 2 + oy) + 'px';
+        }
+        function setZoom(v) { z = Math.max(1, Math.min(4, v)); range.value = String(Math.round(z * 100)); place(); }
+        var drag = null;
+        stage.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY, ox: ox, oy: oy }; stage.setPointerCapture(e.pointerId); stage.classList.add('drag'); });
+        stage.addEventListener('pointermove', function (e) { if (!drag) return; ox = drag.ox + (e.clientX - drag.x); oy = drag.oy + (e.clientY - drag.y); place(); });
+        function end() { drag = null; stage.classList.remove('drag'); }
+        stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+        stage.addEventListener('wheel', function (e) { e.preventDefault(); setZoom(z - e.deltaY / 400); }, { passive: false });
+        range.addEventListener('input', function () { setZoom(range.value / 100); });
+        function done(v) { document.removeEventListener('keydown', onKey); ov.remove(); try { URL.revokeObjectURL(img.src); } catch (e) {} resolve(v); }
+        function onKey(e) { if (e.key === 'Escape') { e.stopPropagation(); done(null); } }
+        document.addEventListener('keydown', onKey);
+        ov.addEventListener('mousedown', function (e) { if (e.target === ov) done(null); });
+        ov.querySelector('[data-act=cancel]').addEventListener('click', function () { done(null); });
+        ov.querySelector('[data-act=save]').addEventListener('click', function () {
+          var s = base * z, left = V / 2 - img.width * s / 2 + ox, top = V / 2 - img.height * s / 2 + oy;
+          var c = document.createElement('canvas'); c.width = c.height = OUT;
+          c.getContext('2d').drawImage(img, -left / s, -top / s, V / s, V / s, 0, 0, OUT, OUT);
+          var out = c.toDataURL('image/jpeg', 0.82);
+          if (out.length > 40000) out = c.toDataURL('image/jpeg', 0.6);
+          if (out.length > 40000) { err.textContent = 'That crop is too detailed. Try zooming in or another image.'; err.hidden = false; return; }
+          done(out);
+        });
+        document.body.appendChild(ov); place();
+        ov.querySelector('[data-act=save]').focus();
+      });
+    }
+    function picMsg(t, bad) { var m = document.getElementById('acct-pic-msg'); if (m) { m.textContent = t || ''; m.style.color = bad ? '#d63b3b' : ''; } }
+    function savePicture(dataUrl) {
+      if (!cur) return;
+      var prev = cur.avatar || null;
+      cur.avatar = dataUrl; paint();
+      if (!REMOTE) { persist(); picMsg(dataUrl ? 'Picture updated.' : 'Picture removed.'); return; }
+      if (!avatarOk) { cur.avatar = prev; paint(); picMsg('Pictures need the avatar column added in Supabase (ask the owner).', true); return; }
+      token().then(function (t) { return sb('/rest/v1/profiles?id=eq.' + sess.uid, { method: 'PATCH', body: { avatar: dataUrl }, headers: { Prefer: 'return=minimal' } }, t); })
+        .then(function () { picMsg(dataUrl ? 'Picture updated.' : 'Picture removed.'); })
+        .catch(function (e) { cur.avatar = prev; paint(); picMsg(/avatar|column/i.test(e.message) ? 'Pictures need the avatar column added in Supabase (ask the owner).' : e.message, true); });
+    }
+    function pickPicture(e) {
+      var f = e.target.files && e.target.files[0]; e.target.value = '';
+      if (!f) return;
+      picMsg('');
+      loadImage(f).then(openCropper).then(function (out) { if (out) savePicture(out); }).catch(function (err) { picMsg(err.message, true); });
     }
     function pushProfile(fields) {
       if (!REMOTE || !sess) return;
@@ -3867,14 +4072,15 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       var a = cur;
       el.guest.hidden = !!a; el.userView.hidden = !a;
       el.label.textContent = a ? a.display : 'Log in';
-      el.initial.textContent = a ? a.display.charAt(0) : '';
+      setAvatar(el.initial, a && a.display, a && a.avatar);
       el.initial.hidden = !a;
       var sideBtn = document.getElementById('side-account');
       if (sideBtn) sideBtn.classList.toggle('logged-in', !!a);
       el.sub.textContent = a ? 'Signed in as @' + a.username + (role.owner ? ' \u00b7 owner' : role.admin ? ' \u00b7 admin' : '') : 'Log in or make an account';
       el.title.textContent = a ? 'Hi, ' + a.display + '!' : 'Account';
       if (a) {
-        el.avatar.textContent = a.display.charAt(0);
+        setAvatar(el.avatar, a.display, a.avatar);
+        var px = document.getElementById('acct-pic-x'); if (px) px.hidden = !a.avatar;
         el.dispName.textContent = a.display;
         el.userName.textContent = '@' + a.username;
         el.displayIn.value = a.display;
@@ -4098,6 +4304,9 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         el.form.addEventListener('submit', submit);
         $('acct-logout').addEventListener('click', logout);
         $('acct-save-name').addEventListener('click', saveName);
+        $('acct-pic').addEventListener('click', function () { $('acct-pic-file').click(); });
+        $('acct-pic-file').addEventListener('change', pickPicture);
+        $('acct-pic-x').addEventListener('click', function () { savePicture(null); });
         $('acct-save-email').addEventListener('click', saveEmail);
         el.verifySend.addEventListener('click', sendVerification);
         el.verifyConfirm.addEventListener('click', confirmVerification);
@@ -4119,6 +4328,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       remote: REMOTE,
       username: function () { return cur ? cur.username : ''; },
       loggedIn: function () { return !!cur; },
+      setAvatar: setAvatar,
       open: open,
       isAdmin: function () { return REMOTE && !!cur && role.admin; },
       isOwner: function () { return REMOTE && !!cur && role.owner; },
@@ -5107,6 +5317,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         var li = make('li', 'team-card' + (m.owner ? ' owner' : ''));
         li.style.animationDelay = Math.min(i * 40, 320) + 'ms';
         var av = make('span', 'team-avatar', (m.display || m.name || '?').charAt(0)); av.setAttribute('aria-hidden', 'true');
+        if (m.avatar) Account.setAvatar(av, m.display || m.name, m.avatar);
         var text = make('div', 'team-text');
         text.appendChild(make('strong', 'team-name', m.display || m.name));
         text.appendChild(make('span', 'team-handle', '@' + m.name));
@@ -5130,6 +5341,89 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       }
     };
   })();
+
+  /* ---- Online counter: every open tab (accounts or not) checks in; the count is whoever checked in recently (supabase online_visitors) ---- */
+  var Online = (function () {
+    var ID_KEY = 'whiskered-visitor', EVERY = 45000, timer = null, pill = null, text = null, dead = false;
+    function vid() {
+      var v = null;
+      try { v = localStorage.getItem(ID_KEY); } catch (e) {}
+      if (!v || !/^[A-Za-z0-9]{8,40}$/.test(v)) {
+        v = ''; var a = new Uint8Array(12);
+        (window.crypto || window.msCrypto).getRandomValues(a);
+        for (var i = 0; i < a.length; i++) v += (a[i] % 36).toString(36);
+        try { localStorage.setItem(ID_KEY, v); } catch (e) {}
+      }
+      return v;
+    }
+    function show(n) {
+      if (!pill) return;
+      n = Math.max(1, +n || 1);
+      text.textContent = n + ' online';
+      pill.hidden = false;
+    }
+    function ping() {
+      if (dead || document.hidden) return;
+      Account.api('/rest/v1/rpc/ping_online', { method: 'POST', body: { vid: vid() } }).then(show).catch(function (e) {
+        if (/ping_online|function|schema cache/i.test(e.message)) { dead = true; clearInterval(timer); if (pill) pill.hidden = true; }
+      });
+    }
+    return {
+      init: function () {
+        pill = document.getElementById('side-online'); text = document.getElementById('side-online-text');
+        if (!pill || !Account.remote) return;
+        ping();
+        timer = setInterval(ping, EVERY);
+        document.addEventListener('visibilitychange', function () { if (!document.hidden) ping(); });
+      }
+    };
+  })();
+
+  /* ---- Apply: admin applications arrive in the Support inbox (kind "other", message starts with ADMIN APPLICATION) ---- */
+  var Apply = (function () {
+    var TAG = 'ADMIN APPLICATION', wired = false, el = {};
+    function note(msg) { el.note.textContent = msg || ''; el.note.hidden = !msg; }
+    function state(msg) { el.state.textContent = msg || ''; el.state.hidden = !msg; }
+    function refresh() {
+      var inn = Account.loggedIn();
+      el.gate.hidden = inn;
+      el.user.value = Account.username();
+      el.form.hidden = !inn; state('');
+      if (!inn) return;
+      if (Account.isAdmin()) { el.form.hidden = true; state("You're already on the team. Thank you for helping out!"); return; }
+      Account.api('/rest/v1/support_requests?select=id,status&username=eq.' + encodeURIComponent(Account.username()) + '&message=like.' + encodeURIComponent(TAG) + '*&order=id.desc&limit=1', {}, true).then(function (rows) {
+        if (rows && rows[0] && rows[0].status === 'open') { el.form.hidden = true; state('Your application is in. We will reply under "My messages" on the Support page.'); }
+      }).catch(function () {});
+    }
+    function submit(ev) {
+      ev.preventDefault();
+      if (!Account.loggedIn()) { refresh(); return; }
+      var why = el.why.value.trim(), exp = el.exp.value.trim(), when = el.time.value.trim();
+      if (why.length < 20) return note('Please tell us a little more about why you want to help.');
+      if (!when) return note('Let us know when you are usually around.');
+      if (el.hp.value) { state('Thanks! Your application was sent.'); el.form.hidden = true; return; }
+      var msg = TAG + '\nWhy: ' + why + '\nExperience: ' + (exp || 'none given') + '\nAround: ' + when;
+      el.send.disabled = true; note('');
+      Account.api('/rest/v1/support_requests', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: { kind: 'other', message: msg, username: Account.username() } }, true)
+        .then(function () {
+          el.why.value = ''; el.exp.value = ''; el.time.value = '';
+          el.form.hidden = true; state('Thanks! Your application was sent. We will reply under "My messages" on the Support page.');
+        })
+        .catch(function (e) { note(e.message || 'Could not send that. Please try again.'); })
+        .then(function () { el.send.disabled = false; });
+    }
+    function wire() {
+      if (wired) return; wired = true;
+      var $ = function (i) { return document.getElementById(i); };
+      el = { gate: $('apply-gate'), login: $('apply-login'), state: $('apply-state'), form: $('apply-form'), why: $('apply-why'), exp: $('apply-exp'), time: $('apply-time'),
+        user: $('apply-user'), hp: $('apply-website'), note: $('apply-note'), send: $('apply-send') };
+      el.form.addEventListener('submit', submit);
+      el.login.addEventListener('click', Account.open);
+      Account.onChange(function () { var v = $('apply-view'); if (v && v.style.display !== 'none') refresh(); });
+    }
+    return { show: function () { wire(); if (!Account.remote) { el.gate.hidden = true; el.form.hidden = true; state('Applications need the online setup.'); return; } refresh(); } };
+  })();
+
 
   /* ---- Forms inside sandboxed frames ------------------------- *
    * If this page is shown inside a frame that has no "allow-forms"
@@ -5188,6 +5482,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     }
     Changelog.init();
     Support.init();
+    Online.init();
     var openCl = document.getElementById('open-changelog');
     if (openCl) openCl.addEventListener('click', function () {
       var m = document.getElementById('changelog-modal');
