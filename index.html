@@ -626,21 +626,35 @@ kbd { padding: 1px 7px; border: 2px solid var(--line); border-radius: 6px; font:
 
 /* ---- Changelog -------------------------------------------- */
 .changelog-modal {
-  position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
+  display: none; position: fixed; inset: 0; z-index: 400; align-items: center; justify-content: center;
   background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; animation: fadeUp .35s var(--ease) forwards;
 }
 .changelog-box {
-  width: min(92%, 500px); max-height: calc(82vh / var(--zoom)); overflow-y: auto; padding: 26px;
+  width: min(94%, 720px); max-height: calc(86vh / var(--zoom)); overflow-y: auto; padding: 26px;
   background: var(--surface); border: 2px solid var(--ink); border-radius: calc(24px * var(--rk)); box-shadow: calc(8px * var(--shk)) calc(8px * var(--shk)) 0 var(--accent);
 }
 .changelog-header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px dashed var(--line); }
 .changelog-header h2 { font-size: 30px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
 .changelog-sub { margin-top: 4px; font-size: 14px; color: var(--muted); }
-.changelog-list { list-style: none; display: grid; gap: 12px; }
+.changelog-list { list-style: none; display: grid; gap: 10px; }
 .changelog-entry { padding: 14px 16px; border: 2px solid var(--ink); border-radius: var(--r-sm); background: var(--surface-2); }
 .changelog-entry p { margin-top: 8px; line-height: 1.45; }
 .changelog-meta { display: flex; align-items: center; gap: 6px; }
 .cl-tools { margin-left: auto; display: inline-flex; gap: 4px; }
+.changelog-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.changelog-filters .choice-chip { padding: 5px 12px; font-size: 13px; }
+.cl-group { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; margin-bottom: 8px; }
+.cl-day { padding-top: 14px; font: 700 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.4; }
+.cl-items { list-style: none; display: grid; gap: 10px; position: relative; padding: 0 0 0 22px; border-left: 2px solid var(--line); }
+.cl-group .changelog-entry { position: relative; }
+.cl-group .changelog-entry::before { content: ''; position: absolute; left: -31px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 3px solid var(--line); }
+.cl-group .changelog-entry.is-new::before { border-color: var(--accent); background: var(--accent); }
+.cl-empty { margin: 8px 0; color: var(--muted); font-weight: 700; }
+@media (max-width: 560px) { .cl-group { grid-template-columns: minmax(0, 1fr); gap: 6px; } .cl-day { text-align: left; padding-top: 4px; } }
+.changelog-entry.is-new { border-color: var(--accent); box-shadow: inset 4px 0 0 var(--accent); }
+.cl-new { padding: 2px 8px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font: 700 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.side-tool.has-new { position: relative; }
+.side-tool.has-new::after { content: ''; position: absolute; top: 8px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--surface); }
 .changelog-entry .admin-edit { margin: 0; border: 0; padding: 0; background: none; }
 .changelog-box .admin-bar { margin-bottom: 0; }
 .changelog-box .admin-input { flex-basis: 100%; }
@@ -859,12 +873,29 @@ body[data-wallpaper="theme"] .content-area::before { background: var(--text); }
 .crop-err[hidden] { display: none; }
 .crop-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
 .crop-actions .acct-submit { margin-top: 0; }
+.acct-pic-btns .acct-linkbtn { margin-top: 0; }
+.acct-pic-msg { display: block; margin-top: 6px; }
+.acct-pic-msg:empty { display: none; }
+.acct-pic-btns { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.acct-more > summary { display: flex; align-items: baseline; gap: 8px; cursor: pointer; font-weight: 800; list-style: none; }
+.acct-more > summary::-webkit-details-marker { display: none; }
+.acct-more > summary::after { content: '+'; margin-left: auto; color: var(--muted); }
+.acct-more[open] > summary::after { content: '\2212'; }
+.acct-more > summary small { color: var(--muted); font-weight: 600; }
+.acct-more[open] > summary { margin-bottom: 10px; }
 .acct-pic-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0 4px; }
 .acct-pic-msg { flex-basis: 100%; min-height: 1em; color: var(--muted); font-size: 13px; }
 #side-account.logged-in .acct-ico { display: none; }
 .dialog-overlay { z-index: 700; }
 .dialog-panel { width: min(92vw, 400px); }
-.dialog-text { margin-bottom: 18px; font-size: 17px; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+.notice-title { margin: 0 0 4px; font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+.notice-meta { margin: 0 0 18px; color: var(--muted); font: 400 13px var(--mono); }
+.notice-label { margin: 0 0 6px; font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.notice-pass { display: block; margin: 0 0 18px; padding: 12px 14px; border: 2px dashed var(--ink); border-radius: calc(12px * var(--rk)); background: var(--surface-2); font: 700 18px var(--mono); letter-spacing: .02em; user-select: all; overflow-wrap: anywhere; }
+.notice-hint { margin: 0 0 8px; color: var(--muted); font-size: 14px; font-weight: 600; line-height: 1.55; }
+.notice-hint:last-child { margin-bottom: 0; }
+.dialog-text:has(.notice-title) { font-weight: 400; }
+.dialog-text { white-space: pre-line; margin-bottom: 18px; font-size: 17px; font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .dialog-actions .acct-submit { margin-top: 0; }
 .dialog-actions [hidden] { display: none; }
@@ -937,6 +968,50 @@ select.acct-input { cursor: pointer; }
 .support-msg { margin: 8px 0 10px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
 .support-tools { display: flex; gap: 8px; }
 .support-empty { color: var(--muted); }
+#admin-view[data-tab="inbox"] > [data-tab]:not([data-tab="inbox"]), #admin-view[data-tab="chat"] > [data-tab]:not([data-tab="chat"]), #admin-view[data-tab="news"] > [data-tab]:not([data-tab="news"]), #admin-view[data-tab="users"] > [data-tab]:not([data-tab="users"]), #admin-view[data-tab="banned"] > [data-tab]:not([data-tab="banned"]) { display: none; }
+.chat-list { list-style: none; margin: 0 0 12px; padding: 8px 0; height: min(54vh, 480px); overflow-y: auto; display: flex; flex-direction: column; border: 2px solid var(--ink); border-radius: calc(14px * var(--rk)); background: var(--surface-2); }
+.chat-empty { margin: auto; color: var(--muted); font-weight: 700; text-align: center; }
+.chat-msg { position: relative; display: flex; gap: 14px; padding: 2px 16px 2px 14px; margin-top: 14px; }
+.chat-msg.cont { margin-top: 0; }
+.chat-msg:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+.chat-ava { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 800 17px var(--mono); text-transform: uppercase; margin-top: 2px; }
+.chat-msg.cont .chat-ava { display: none; }
+.chat-main { flex: 1; min-width: 0; }
+.chat-msg.cont .chat-main { margin-left: 54px; }
+.chat-head { display: flex; align-items: baseline; gap: 8px; }
+.chat-name { font-size: 16px; font-weight: 800; }
+.chat-when { font-size: 12px; color: var(--muted); }
+.chat-text { margin: 1px 0 0; line-height: 1.45; overflow-wrap: anywhere; white-space: pre-wrap; }
+.chat-side { position: absolute; left: 14px; top: 5px; width: 40px; text-align: center; font-size: 10px; color: var(--muted); display: none; }
+.chat-msg.cont:hover .chat-side { display: block; }
+.chat-del { position: absolute; right: 12px; top: -10px; padding: 2px 8px; border: 2px solid var(--ink); border-radius: calc(8px * var(--rk)); background: var(--surface); color: var(--text); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; display: none; }
+.chat-msg:hover .chat-del, .chat-del:focus-visible { display: block; }
+.chat-del:hover { background: var(--accent); color: var(--on-accent); }
+.chat-tool { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: calc(12px * var(--rk)); background: var(--surface-2); color: var(--text); cursor: pointer; }
+.chat-tool:hover { background: var(--accent); color: var(--on-accent); }
+.chat-pending { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 8px 12px; border: 2px dashed var(--ink); border-radius: calc(12px * var(--rk)); font-weight: 700; font-size: 14px; }
+.chat-pending span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-poll-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; padding: 12px; border: 2px solid var(--ink); border-radius: calc(14px * var(--rk)); background: var(--surface-2); }
+.chat-poll-form[hidden], .chat-pending[hidden] { display: none; }
+.poll-opts { display: flex; flex-direction: column; gap: 6px; }
+.poll-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.poll-actions .acct-submit { margin-top: 0; }
+.poll-spacer { flex: 1; }
+.chat-img { display: block; max-width: min(320px, 100%); max-height: 280px; margin-top: 4px; border-radius: calc(10px * var(--rk)); border: 2px solid var(--ink); cursor: zoom-in; background: var(--surface); min-height: 60px; min-width: 120px; }
+.chat-file { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; padding: 8px 12px; border: 2px solid var(--ink); border-radius: calc(10px * var(--rk)); background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; max-width: 100%; }
+.chat-file:hover { background: var(--accent); color: var(--on-accent); }
+.chat-poll { margin-top: 4px; max-width: 420px; padding: 12px; border: 2px solid var(--ink); border-radius: calc(12px * var(--rk)); background: var(--surface); }
+.chat-poll-q { margin: 0 0 10px; font-weight: 800; }
+.chat-poll-opt { position: relative; display: flex; justify-content: space-between; gap: 10px; width: 100%; margin-bottom: 6px; padding: 8px 12px; border: 2px solid var(--ink); border-radius: calc(10px * var(--rk)); background: var(--surface-2); color: var(--text); font: inherit; font-weight: 700; text-align: left; cursor: pointer; overflow: hidden; }
+.chat-poll-opt:disabled { cursor: default; }
+.chat-poll-opt.mine { border-color: var(--accent); }
+.chat-poll-bar { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--accent) 35%, transparent); z-index: 0; }
+.chat-poll-opt span:not(.chat-poll-bar) { position: relative; z-index: 1; }
+.chat-poll-foot { display: flex; align-items: center; gap: 10px; margin-top: 4px; font-size: 12px; color: var(--muted); }
+.chat-form { display: flex; gap: 8px; align-items: center; }
+.chat-input { flex: 1; min-width: 0; padding: 12px 16px; border: 2px solid var(--ink); border-radius: calc(12px * var(--rk)); background: var(--surface-2); color: var(--text); font: inherit; }
+.chat-send { flex: none; width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: calc(12px * var(--rk)); background: var(--accent); color: var(--on-accent); cursor: pointer; }
+.admin-tabs { margin-bottom: 16px; }
 .support-sub { margin: 20px 0 8px; font-size: 16px; letter-spacing: -.01em; }
 .ban-reason { flex: 1; min-width: 120px; padding: 6px 12px; border: 2px solid var(--ink); border-radius: calc(999px * var(--rk)); background: var(--bg); color: var(--text); font: inherit; font-size: 13px; }
 .ban-btn:disabled { opacity: .5; cursor: not-allowed; }
@@ -1133,6 +1208,12 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         <button type="button" class="topbar-link" data-nav="support"><span class="topbar-text">Support</span><span class="topbar-count" id="nav-count-support"></span></button>
         <button type="button" class="topbar-link" data-nav="team"><span class="topbar-text">Team</span></button>
         <button type="button" class="topbar-link" data-nav="apply"><span class="topbar-text">Apply</span></button>
+      </nav>
+    </div>
+    <div class="side-group" id="owner-group" hidden>
+      <p class="side-label">Owner</p>
+      <nav class="topbar-nav" aria-label="Owner">
+        <button type="button" class="topbar-link" data-nav="owner"><span class="topbar-text">Owner panel</span><span class="topbar-count" id="nav-count-apps"></span></button>
       </nav>
     </div>
     <div class="side-group" id="admin-group" hidden>
@@ -1345,13 +1426,13 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         <div class="acct-profile">
           <span class="acct-avatar" id="acct-avatar" aria-hidden="true"></span>
           <div><b id="acct-display-name"></b><small id="acct-username"></small></div>
+          <div class="acct-pic-btns">
+            <button id="acct-pic" class="acct-linkbtn" type="button">Change picture</button>
+            <button id="acct-pic-x" class="acct-linkbtn" type="button" hidden>Remove</button>
+          </div>
         </div>
-        <div class="acct-pic-row">
-          <button id="acct-pic" class="choice-chip" type="button">Change picture</button>
-          <button id="acct-pic-x" class="choice-chip" type="button" hidden>Remove</button>
-          <input id="acct-pic-file" type="file" accept="image/*" hidden>
-          <small id="acct-pic-msg" class="acct-pic-msg" role="status"></small>
-        </div>
+        <input id="acct-pic-file" type="file" accept="image/*" hidden>
+        <small id="acct-pic-msg" class="acct-pic-msg" role="status"></small>
         <div class="customize-section">
           <label class="customize-label" for="acct-display">Display name</label>
           <div class="acct-row">
@@ -1359,10 +1440,10 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
             <button id="acct-save-name" class="choice-chip" type="button">Save</button>
           </div>
         </div>
-        <div class="customize-section">
-          <label class="customize-label" for="acct-email-in">Email (optional)</label>
+        <details class="customize-section acct-more">
+          <summary>Email <small>optional</small></summary>
           <div class="acct-row">
-            <input id="acct-email-in" class="acct-input" type="email" maxlength="120" placeholder="you@example.com">
+            <input id="acct-email-in" class="acct-input" type="email" maxlength="120" placeholder="you@example.com" aria-label="Email">
             <button id="acct-save-email" class="choice-chip" type="button">Save</button>
           </div>
           <p id="acct-email-msg" class="acct-hint">Only the admin can see this. Verify it to reset your password by email.</p>
@@ -1374,7 +1455,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
               <button id="acct-verify-confirm" class="choice-chip" type="button">Confirm</button>
             </div>
           </div>
-        </div>
+        </details>
         <div class="customize-section switch-row">
           <span class="switch-text"><span class="switch-label">Sync my settings</span><span class="switch-desc">Theme, accent and layout follow this account in this browser</span></span>
           <button class="switch" type="button" id="acct-sync" aria-label="Toggle settings sync" aria-pressed="true"></button>
@@ -1454,7 +1535,12 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           <select id="support-kind" class="acct-input">
             <option value="broken">A link is broken</option>
             <option value="suggest">Suggest a link</option>
+            <option value="bug">Report a bug</option>
+            <option value="feature">Request a feature</option>
+            <option value="theme">Theme or look issue</option>
             <option value="account">Account help</option>
+            <option value="report">Report a user</option>
+            <option value="feedback">General feedback</option>
             <option value="other">Something else</option>
           </select>
           <label class="customize-label" for="support-message">Message</label>
@@ -1474,18 +1560,85 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 
     </div>
 
-    <div id="admin-view" class="support-view" style="display:none">
+    <div id="admin-view" class="support-view" style="display:none" data-tab="inbox">
       <header class="itchio-header">
         <h2 class="itchio-heading">Admin</h2>
-        <p class="itchio-subheading">Only you can see this</p>
+        <p class="itchio-subheading">Only admins can see this</p>
       </header>
-      <section class="support-card" id="support-inbox" aria-labelledby="inbox-title">
+      <div class="option-row segmented admin-tabs" role="tablist" aria-label="Admin sections">
+        <button type="button" class="choice-chip active" role="tab" aria-selected="true" data-admin-tab="inbox">Inbox <span id="admin-tab-inbox" class="support-count"></span></button>
+        <button type="button" class="choice-chip" role="tab" aria-selected="false" data-admin-tab="chat">Chat</button>
+        <button type="button" class="choice-chip" role="tab" aria-selected="false" data-admin-tab="news">Announcements</button>
+        <button type="button" class="choice-chip" role="tab" aria-selected="false" data-admin-tab="users">Users</button>
+        <button type="button" class="choice-chip" role="tab" aria-selected="false" data-admin-tab="banned">Banned <span id="admin-tab-banned" class="support-count"></span></button>
+      </div>
+      <section class="support-card" data-tab="inbox" id="support-inbox" aria-labelledby="inbox-title">
         <h3 id="inbox-title" class="support-title">Inbox <span id="support-count" class="support-count"></span></h3>
         <ul id="support-list" class="support-list"></ul>
       </section>
 
+
+      <section class="support-card" data-tab="chat" id="chat-card" aria-labelledby="chat-title">
+        <h3 id="chat-title" class="support-title">Admin chat <span class="admin-tag">Admins only</span></h3>
+        <ul id="chat-list" class="chat-list" aria-live="polite"></ul>
+        <div id="chat-pending" class="chat-pending" hidden></div>
+        <form id="chat-poll-form" class="chat-poll-form" autocomplete="off" hidden>
+          <input id="poll-q" class="acct-input" type="text" maxlength="200" placeholder="Poll question" aria-label="Poll question">
+          <div id="poll-opts" class="poll-opts"></div>
+          <div class="poll-actions">
+            <button id="poll-more" type="button" class="admin-ghost">Add option</button>
+            <span class="poll-spacer"></span>
+            <button id="poll-cancel" type="button" class="admin-ghost">Cancel</button>
+            <button class="acct-submit" type="submit">Create poll</button>
+          </div>
+        </form>
+        <form id="chat-form" class="chat-form" autocomplete="off">
+          <button id="chat-attach" class="chat-tool" type="button" aria-label="Attach a file" title="Attach a file (up to 5 MB)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 11-8.6 8.6a5 5 0 0 1-7.1-7.1l8.9-8.9a3.3 3.3 0 0 1 4.7 4.7l-8.9 8.9a1.7 1.7 0 0 1-2.4-2.4l8.2-8.2"/></svg></button>
+          <button id="chat-poll" class="chat-tool" type="button" aria-label="Create a poll" title="Create a poll"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></button>
+          <input id="chat-file" type="file" hidden>
+          <input id="chat-input" class="chat-input" type="text" maxlength="500" placeholder="Message the admins" aria-label="Message">
+          <button class="chat-send" type="submit" aria-label="Send"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+        </form>
+      </section>
+
+      <section class="support-card" data-tab="news" id="news-card" aria-labelledby="news-title">
+        <h3 id="news-title" class="support-title">Announcements</h3>
+        <form id="news-form" class="support-form" autocomplete="off" hidden>
+          <input id="news-title-in" class="acct-input" type="text" maxlength="80" placeholder="Title" aria-label="Title" required>
+          <textarea id="news-body" class="acct-input" rows="3" maxlength="1000" placeholder="What should the admins know?" aria-label="Announcement" required></textarea>
+          <button class="acct-submit" type="submit">Post announcement</button>
+        </form>
+        <ul id="news-list" class="support-list"></ul>
+      </section>
+
+      <section class="support-card" data-tab="users" id="users-card" aria-labelledby="users-title" hidden>
+        <h3 id="users-title" class="support-title">Users <span class="admin-tag">Admin</span></h3>
+        <p class="admin-note">Search for an account to ban it or set a new password. A banned account is signed out everywhere and can't log in or send messages. Only the owner can ban another admin.</p>
+        <form id="users-form" class="admin-bar" autocomplete="off">
+          <input id="users-q" class="admin-input" type="text" maxlength="20" placeholder="Search usernames (empty shows the newest)" aria-label="Search usernames">
+          <button class="admin-add" type="submit">Search</button>
+        </form>
+        <ul id="users-list" class="support-list"></ul>
+      </section>
+
+      <section class="support-card" data-tab="banned" id="bans-card" aria-labelledby="bans-title">
+        <h3 id="bans-title" class="support-title">Banned accounts</h3>
+        <ul id="bans-list" class="support-list"></ul>
+      </section>
+    </div>
+
+    <div id="owner-view" class="support-view" style="display:none">
+      <header class="itchio-header">
+        <h2 class="itchio-heading">Owner</h2>
+        <p class="itchio-subheading">Only you can see this</p>
+      </header>
+      <section class="support-card" id="apps-card" aria-labelledby="apps-title">
+        <h3 id="apps-title" class="support-title">Admin applications <span id="apps-count" class="support-count"></span></h3>
+        <ul id="apps-list" class="support-list"></ul>
+      </section>
+
       <section class="support-card" id="admins-card" aria-labelledby="admins-title" hidden>
-        <h3 id="admins-title" class="support-title">Admins <span class="admin-tag">Owner</span></h3>
+        <h3 id="admins-title" class="support-title">Admins</h3>
         <p class="admin-note">Admins can edit links, sites and the changelog, and read support messages. Only you can add or remove admins.</p>
         <form id="admins-form" class="admin-bar" autocomplete="off">
           <input id="admins-name" class="admin-input" type="text" maxlength="20" placeholder="Username to promote" aria-label="Username to promote" required>
@@ -1493,18 +1646,6 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           <span id="admins-msg" class="admin-msg" role="alert"></span>
         </form>
         <ul id="admins-list" class="support-list"></ul>
-      </section>
-
-      <section class="support-card" id="users-card" aria-labelledby="users-title" hidden>
-        <h3 id="users-title" class="support-title">Users <span class="admin-tag">Admin</span></h3>
-        <p class="admin-note">Search for an account to ban it. A banned account is signed out everywhere and can't log in or send messages. Only the owner can ban another admin.</p>
-        <form id="users-form" class="admin-bar" autocomplete="off">
-          <input id="users-q" class="admin-input" type="text" maxlength="20" placeholder="Search usernames (empty shows the newest)" aria-label="Search usernames">
-          <button class="admin-add" type="submit">Search</button>
-        </form>
-        <ul id="users-list" class="support-list"></ul>
-        <h4 class="support-sub">Banned accounts</h4>
-        <ul id="bans-list" class="support-list"></ul>
       </section>
     </div>
 
@@ -1521,7 +1662,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         </div>
         <p id="apply-state" class="apply-state" hidden></p>
         <form id="apply-form" class="support-form" autocomplete="off" novalidate>
-          <p class="apply-intro">Admins add and fix links, answer support messages and keep the site tidy. Tell us a bit about you. We read every application and reply on the Support page.</p>
+          <p class="apply-intro">Admins add and fix links, answer support messages and keep the site tidy. Tell us a bit about you. The owner reads every application.</p>
           <label class="customize-label" for="apply-why">Why do you want to be an admin?</label>
           <textarea id="apply-why" class="acct-input" rows="4" maxlength="450" placeholder="What would you help with?"></textarea>
           <label class="customize-label" for="apply-exp">Any experience? (optional)</label>
@@ -1604,11 +1745,12 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     <div class="changelog-header">
       <div>
         <h2 id="changelog-title">Changelog</h2>
-        <p class="changelog-sub">What's new in Whiskered</p>
+        <p class="changelog-sub" id="changelog-sub">What's new in Whiskered</p>
       </div>
       <button id="close-changelog" class="changelog-close" aria-label="Close changelog"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
 
+    <div id="changelog-filters" class="changelog-filters" role="group" aria-label="Filter updates"></div>
     <ul id="changelog-list" class="changelog-list"></ul>
 
   </div>
@@ -2785,6 +2927,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         'body[data-theme-id="geometry-dash"] :is(.link-card, .pager-btn, .links-bar, .link-nomatch) { border: 22px solid transparent; border-image: url("assets/themes/geometry-dash/popup.png") 62 fill / 22px stretch; border-radius: 0; background: none; box-shadow: none; color: #fff; --text: #fff; --muted: #C9D8F0; --accent-text: #FFE08A; --surface: #0E2A52; --surface-2: #17386B; --ink: #000; --line: #5B7DB5; }',
         'body[data-theme-id="geometry-dash"] .panel-header { color: #fff; --on-accent: #fff; } body[data-theme-id="geometry-dash"] .panel-header::before, body[data-theme-id="geometry-dash"] .panel-header::after { display: none; }',
         'body[data-theme-id="geometry-dash"] .ph-icon { border-width: 3px; }',
+        'body[data-theme-id="geometry-dash"] .pager { grid-template-columns: minmax(0, 1fr); }',
+        'body[data-theme-id="geometry-dash"] .pager-btn { padding: 4px 8px; }',
         'body[data-theme-id="geometry-dash"] :is(.link-card, .pager-btn):hover { box-shadow: none; filter: brightness(1.15); transform: none; background: none; color: #fff; }',
         'body[data-theme-id="geometry-dash"] :is(.ph-open, .links-filter) { border: 3px solid #000; background: #7ADE2D; color: #000; box-shadow: none; }',
         'body[data-theme-id="geometry-dash"] .websites-grid { border: 44px solid transparent; border-image: url("assets/themes/geometry-dash/popup.png") 62 fill / 44px stretch; border-radius: 0; background: none; color: #fff; --text: #fff; --muted: #C9D8F0; --accent-text: #FFE08A; --surface: #0E2A52; --surface-2: #17386B; --ink: #000; --line: #5B7DB5; }',
@@ -3220,7 +3364,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       document.getElementById('support-view'),
       document.getElementById('admin-view'),
       document.getElementById('team-view'),
-      document.getElementById('apply-view')
+      document.getElementById('apply-view'),
+      document.getElementById('owner-view')
     ];
     for (var i = 0; i < views.length; i++) {
       if (views[i] && views[i].style.display !== 'none') return views[i];
@@ -3274,6 +3419,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     var inboxView = document.getElementById('admin-view');
     var teamView = document.getElementById('team-view');
     var applyView = document.getElementById('apply-view');
+    var ownerView = document.getElementById('owner-view');
     var currentView = getActiveView();
 
     animateOut(currentView, function () {
@@ -3286,6 +3432,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       if (inboxView) inboxView.style.display = 'none';
       if (teamView) teamView.style.display = 'none';
       if (applyView) applyView.style.display = 'none';
+      if (ownerView) ownerView.style.display = 'none';
       document.querySelectorAll('.content-panel').forEach(function (p) {
         p.hidden = true;
         p.classList.remove('active');
@@ -3304,6 +3451,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         if (applyView) { applyView.style.display = ''; target = applyView; Apply.show(); }
       } else if (mode === 'team') {
         if (teamView) { teamView.style.display = ''; target = teamView; Team.show(); }
+      } else if (mode === 'owner' && Account.isOwner()) {
+        if (ownerView) { ownerView.style.display = ''; target = ownerView; Support.showOwner(); }
       } else if (mode === 'admin' && Account.isAdmin()) {
         if (inboxView) { inboxView.style.display = ''; target = inboxView; Support.showInbox(); }
       } else {
@@ -3333,6 +3482,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       if (teamEl) teamEl.style.display = 'none';
       var applyEl = document.getElementById('apply-view');
       if (applyEl) applyEl.style.display = 'none';
+      var ownerEl = document.getElementById('owner-view');
+      if (ownerEl) ownerEl.style.display = 'none';
 
       if (prevPanel && prevPanel !== panel) {
         prevPanel.classList.remove('active');
@@ -3757,8 +3908,9 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         return new Promise(function (resolve) {
           if (!overlay) build();
           last = document.activeElement;
-          text.textContent = message;
-          ok.textContent = opts.ok; cancel.hidden = !opts.cancel;
+          text.textContent = '';
+          if (typeof message === 'string') text.textContent = message; else text.appendChild(message);
+          ok.textContent = opts.ok; cancel.hidden = !opts.cancel; cancel.textContent = opts.cancelLabel || 'Cancel';
           done = resolve;
           overlay.classList.add('open'); overlay.setAttribute('aria-hidden', 'false');
           setTimeout(function () { ok.focus(); }, 30);
@@ -3768,7 +3920,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       return p;
     }
     return {
-      confirm: function (message, label) { return show(message, { cancel: true, ok: label || 'Confirm' }); },
+      confirm: function (message, label, cancelLabel) { return show(message, { cancel: true, ok: label || 'Confirm', cancelLabel: cancelLabel }); },
       alert: function (message) { return show(message, { cancel: false, ok: 'OK' }); }
     };
   })();
@@ -4333,6 +4485,13 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       isAdmin: function () { return REMOTE && !!cur && role.admin; },
       isOwner: function () { return REMOTE && !!cur && role.owner; },
       onChange: function (f) { listeners.push(f); },
+      file: function (path, init) {
+        return token().then(function (t) {
+          init = init || {};
+          init.headers = Object.assign({ apikey: SUPABASE_ANON_KEY, Authorization: 'Bearer ' + t }, init.headers || {});
+          return fetch(BASE + path, init);
+        });
+      },
       api: function (path, opts, authed) {
         return authed ? token().then(function (t) { return sb(path, opts, t); }) : sb(path, opts);
       },
@@ -4834,7 +4993,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
    * that becomes the source of truth for everyone.
    */
   var Changelog = (function () {
-    var KEY = 'whiskered-changelog-cache', rows = null, list = null, busy = false;
+    var KEY = 'whiskered-changelog-cache', SEEN = 'whiskered-changelog-seen', rows = null, list = null, busy = false, keys = [], filter = 'all';
     var ICON = {
       up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
       edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>'
@@ -4848,10 +5007,17 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     }
     function managed() { return !!(rows && rows.length); }
     function items() {
-      return managed() ? rows.map(function (r) { return { row: r, badge: r.badge, text: r.body }; })
+      return managed() ? rows.map(function (r) { return { row: r, badge: r.badge, text: r.body, date: r.created_at }; })
                        : CHANGELOG.map(function (e) { return { badge: e.badge, text: e.text }; });
     }
 
+    function keyOf(it) { return it.row ? 'r' + it.row.id : 'c' + it.text.slice(0, 40); }
+    function seenList() { try { return JSON.parse(localStorage.getItem(SEEN) || 'null'); } catch (e) { return null; } }
+    function markSeen() { try { localStorage.setItem(SEEN, JSON.stringify(items().map(keyOf).slice(0, 200))); } catch (e) {} render(); }
+    function unseenKeys(data) {
+      var s = seenList(), all = data.map(keyOf);
+      return s ? all.filter(function (k) { return s.indexOf(k) < 0; }) : all.slice(0, 3);
+    }
     function whatsNew(first) {
       var box = document.getElementById('whats-new-body');
       if (!box) return;
@@ -4922,6 +5088,9 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       list = list || document.getElementById('changelog-list');
       if (!list) return;
       var admin = Account.isAdmin(), data = items();
+      keys = unseenKeys(data);
+      var sideBtn = document.getElementById('side-changelog');
+      if (sideBtn) sideBtn.classList.toggle('has-new', keys.length > 0);
       list.textContent = '';
       if (admin) {
         var top = make('li');
@@ -4939,14 +5108,41 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         }
         list.appendChild(top);
       }
+      var sub = document.getElementById('changelog-sub');
+      if (sub) sub.textContent = "What's new in Whiskered \u00b7 " + data.length + (data.length === 1 ? ' update' : ' updates');
+      var bar = document.getElementById('changelog-filters'), types = [];
+      data.forEach(function (it) { if (types.indexOf(it.badge) < 0) types.push(it.badge); });
+      if (types.indexOf(filter) < 0) filter = 'all';
+      if (bar) {
+        bar.textContent = '';
+        bar.hidden = types.length < 2;
+        ['all'].concat(types).forEach(function (t) {
+          var c = make('button', 'choice-chip' + (t === filter ? ' active' : ''), t === 'all' ? 'All' : t); c.type = 'button';
+          c.addEventListener('click', function () { filter = t; render(); });
+          bar.appendChild(c);
+        });
+      }
+      var lastDay = null, col = null, shown = 0;
       data.forEach(function (it, i) {
-        var li = make('li', 'changelog-entry');
+        if (filter !== 'all' && it.badge !== filter) return;
+        shown++;
+        var day = it.date ? new Date(it.date).toLocaleDateString([], { dateStyle: 'medium' }) : 'Earlier';
+        if (day !== lastDay || !col) {
+          lastDay = day;
+          var group = make('li', 'cl-group');
+          group.appendChild(make('div', 'cl-day', day));
+          col = make('ul', 'cl-items'); group.appendChild(col);
+          list.appendChild(group);
+        }
+        var isNew = keys.indexOf(keyOf(it)) >= 0;
+        var li = make('li', 'changelog-entry' + (isNew ? ' is-new' : ''));
         var meta = make('div', 'changelog-meta');
         meta.appendChild(make('span', 'link-badge', it.badge));
+        if (isNew) meta.appendChild(make('span', 'cl-new', 'New'));
         if (admin && it.row) {
           var tools = make('span', 'cl-tools');
-          if (i > 0) tools.appendChild(iconBtn('admin-mv', 'up', 'Move up', function () { swap(it.row, data[i - 1].row); }));
-          if (i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
+          if (filter === 'all' && i > 0) tools.appendChild(iconBtn('admin-mv', 'up', 'Move up', function () { swap(it.row, data[i - 1].row); }));
+          if (filter === 'all' && i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
           tools.appendChild(iconBtn('admin-mv', 'edit', 'Edit entry', function () { li.textContent = ''; li.appendChild(editForm(it.row)); }));
           tools.appendChild(iconBtn('admin-del', 'x', 'Delete entry', function () {
             Dialog.confirm('Delete this changelog entry for everyone?', 'Delete').then(function (yes) { if (yes) call(api('?id=eq.' + it.row.id, { method: 'DELETE' })); });
@@ -4955,8 +5151,9 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         }
         li.appendChild(meta);
         li.appendChild(make('p', null, it.text));
-        list.appendChild(li);
+        col.appendChild(li);
       });
+      if (!shown) list.appendChild(make('li', 'cl-empty', 'Nothing here yet.'));
       whatsNew(data[0]);
     }
 
@@ -4966,6 +5163,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
           try { var c = JSON.parse(localStorage.getItem(KEY) || 'null'); if (c && c.length) rows = c; } catch (e) {}
         }
         render();
+        document.addEventListener('changelog-closed', markSeen);
         if (Account.remote) {
           Account.onChange(render);
           Account.api('/rest/v1/changelog_entries?select=*&order=position.asc,id.asc').then(function (r) {
@@ -4984,7 +5182,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
    */
   var Support = (function () {
     var LAST_KEY = 'whiskered-support-last', COOLDOWN = 30000, el = {};
-    var KINDS = { broken: 'Broken link', suggest: 'Suggestion', account: 'Account help', other: 'Other' };
+    var KINDS = { broken: 'Broken link', suggest: 'Suggestion', account: 'Account help', bug: 'Bug', feature: 'Feature request', theme: 'Theme issue', report: 'User report', feedback: 'Feedback', other: 'Other' };
     function make(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
     function note(msg) { el.note.textContent = msg || ''; el.note.hidden = !msg; }
 
@@ -5063,6 +5261,12 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     function loadInbox() {
       var admin = Account.isAdmin();
       if (el.navBtn) el.navBtn.hidden = !admin;
+      var og = document.getElementById('owner-group');
+      if (og) og.hidden = !Account.isOwner();
+      if (!Account.isOwner()) {
+        var ov = document.getElementById('owner-view');
+        if (ov && ov.style.display !== 'none') setMode('support');
+      } else loadApps();
       if (!admin) {
         if (el.navCount) el.navCount.textContent = '';
         var iv = document.getElementById('admin-view');
@@ -5095,7 +5299,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       var ul = document.getElementById('users-list'), bl = document.getElementById('bans-list');
       Account.api('/rest/v1/rpc/list_users', { method: 'POST', body: { q: q } }, true).then(function (rows) { renderUsers(ul, rows || []); })
         .catch(function (e) { ul.textContent = ''; ul.appendChild(make('li', 'support-empty', e.message || 'Could not load users.')); });
-      Account.api('/rest/v1/rpc/list_bans', { method: 'POST', body: {} }, true).then(function (rows) { renderBans(bl, rows || []); })
+      Account.api('/rest/v1/rpc/list_bans', { method: 'POST', body: {} }, true).then(function (rows) { var bc = document.getElementById('admin-tab-banned'); if (bc) bc.textContent = (rows || []).length || ''; renderBans(bl, rows || []); })
         .catch(function () { bl.textContent = ''; });
     }
     function banAction(path, body) {
@@ -5137,6 +5341,20 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
             });
             tools.appendChild(why); tools.appendChild(ban);
           }
+          if (!u.banned && !(u.is_admin && !Account.isOwner())) {
+            var pw = make('input', 'ban-reason'); pw.type = 'password'; pw.maxLength = 72; pw.placeholder = 'New password (8+ characters)'; pw.autocomplete = 'new-password'; pw.setAttribute('aria-label', 'New password for @' + u.name);
+            var setpw = make('button', 'admin-ghost', 'Set password'); setpw.type = 'button';
+            setpw.addEventListener('click', function () {
+              if (pw.value.length < 8) { Dialog.alert('The password must be at least 8 characters.'); return; }
+              Dialog.confirm('Change the password for @' + u.name + '? They stay signed in and will see a notice with the new password and your name.', 'Change password').then(function (yes) {
+                if (!yes) return;
+                Account.api('/rest/v1/rpc/set_user_password', { method: 'POST', body: { target: u.name, new_password: pw.value } }, true).then(function (r) {
+                  pw.value = ''; Dialog.alert(r.message);
+                }).catch(function (e) { Dialog.alert(e.message || 'Something went wrong.'); });
+              });
+            });
+            tools.appendChild(pw); tools.appendChild(setpw);
+          }
           li.appendChild(tools);
         }
         ul.appendChild(li);
@@ -5159,6 +5377,285 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     function bindUsers() {
       var f = document.getElementById('users-form');
       if (f) f.addEventListener('submit', function (ev) { ev.preventDefault(); loadUsers(); });
+    }
+    function loadApps() {
+      var list = document.getElementById('apps-list'), badge = document.getElementById('nav-count-apps'), cnt = document.getElementById('apps-count');
+      if (!list || !Account.isOwner()) return;
+      Account.api('/rest/v1/admin_applications?select=*&order=id.desc&limit=100', {}, true).then(function (rows) {
+        rows = rows || [];
+        var pend = rows.filter(function (r) { return r.status === 'pending'; }).length;
+        cnt.textContent = pend + ' pending';
+        if (badge) badge.textContent = pend || '';
+        list.textContent = '';
+        if (!rows.length) { list.appendChild(make('li', 'support-empty', 'No applications yet.')); return; }
+        rows.forEach(function (r) {
+          var li = make('li', 'support-item' + (r.status === 'pending' ? '' : ' done'));
+          var head = make('div', 'support-item-head');
+          head.appendChild(make('span', 'support-who', '@' + r.username));
+          head.appendChild(make('span', 'support-when', fmtTime(r.created_at)));
+          if (r.status !== 'pending') head.appendChild(make('span', 'link-badge', r.status === 'accepted' ? 'Accepted' : 'Declined'));
+          li.appendChild(head);
+          li.appendChild(make('p', 'support-msg', 'Why: ' + r.why + '\nExperience: ' + (r.experience || 'none given') + '\nAround: ' + r.around));
+          var tools = make('div', 'support-tools');
+          function setStatus(st) {
+            return Account.api('/rest/v1/admin_applications?id=eq.' + r.id, { method: 'PATCH', body: { status: st }, headers: { Prefer: 'return=minimal' } }, true);
+          }
+          function fail(e) { Dialog.alert(e.message || 'Something went wrong.'); }
+          if (r.status === 'pending') {
+            var yes = make('button', 'admin-add', 'Accept and make admin'); yes.type = 'button';
+            yes.addEventListener('click', function () {
+              Dialog.confirm('Make @' + r.username + ' an admin?', 'Make admin').then(function (ok) {
+                if (!ok) return;
+                Account.api('/rest/v1/rpc/promote_admin', { method: 'POST', body: { target: r.username } }, true)
+                  .then(function () { return setStatus('accepted'); }).then(function () { loadApps(); loadAdmins(); }).catch(fail);
+              });
+            });
+            var no = make('button', 'admin-ghost', 'Decline'); no.type = 'button';
+            no.addEventListener('click', function () { setStatus('declined').then(loadApps).catch(fail); });
+            tools.appendChild(yes); tools.appendChild(no);
+          }
+          var del = make('button', 'admin-ghost danger', 'Delete'); del.type = 'button';
+          del.addEventListener('click', function () {
+            Dialog.confirm('Delete this application?', 'Delete').then(function (ok) {
+              if (ok) Account.api('/rest/v1/admin_applications?id=eq.' + r.id, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, true).then(loadApps).catch(fail);
+            });
+          });
+          tools.appendChild(del);
+          li.appendChild(tools);
+          list.appendChild(li);
+        });
+      }).catch(function (e) { list.textContent = ''; list.appendChild(make('li', 'support-empty', e.message || 'Could not load applications.')); });
+    }
+    function bindApps() {}
+    var urlCache = {};
+    function fileUrl(path) {
+      if (!urlCache[path]) {
+        urlCache[path] = Account.file('/storage/v1/object/authenticated/admin-chat/' + path.split('/').map(encodeURIComponent).join('/')).then(function (r) {
+          if (!r.ok) throw new Error('Could not load that file.');
+          return r.blob();
+        }).then(function (b) { return URL.createObjectURL(b); });
+        urlCache[path].catch(function () { delete urlCache[path]; });
+      }
+      return urlCache[path];
+    }
+    function renderAttachment(r) {
+      var isImg = /^image\/(png|jpe?g|gif|webp)$/i.test(r.file_type || '');
+      if (isImg) {
+        var img = make('img', 'chat-img'); img.alt = r.file_name || 'Image'; img.title = 'Open full size';
+        fileUrl(r.file_path).then(function (u) { img.src = u; img.addEventListener('click', function () { window.open(u, '_blank'); }); }).catch(function () { img.replaceWith(make('p', 'chat-text', 'Could not load ' + (r.file_name || 'the image') + '.')); });
+        return img;
+      }
+      var b = make('button', 'chat-file', '📎 ' + (r.file_name || 'File')); b.type = 'button'; b.title = 'Download';
+      b.addEventListener('click', function () {
+        fileUrl(r.file_path).then(function (u) {
+          var a = document.createElement('a'); a.href = u; a.download = r.file_name || 'file'; document.body.appendChild(a); a.click(); a.remove();
+        }).catch(function (e) { Dialog.alert(e.message || 'Could not download that.'); });
+      });
+      return b;
+    }
+    function renderPoll(poll, votes, me) {
+      var box = make('div', 'chat-poll');
+      box.appendChild(make('p', 'chat-poll-q', poll.question));
+      var counts = poll.options.map(function () { return 0; }), mineIdx = -1;
+      votes.forEach(function (v) { if (counts[v.option] != null) counts[v.option]++; if (v.username.toLowerCase() === me) mineIdx = v.option; });
+      var total = votes.length;
+      poll.options.forEach(function (label, i) {
+        var o = make('button', 'chat-poll-opt' + (mineIdx === i ? ' mine' : '')); o.type = 'button'; o.disabled = poll.closed;
+        var bar = make('span', 'chat-poll-bar'); bar.style.width = (total ? Math.round(counts[i] * 100 / total) : 0) + '%';
+        o.appendChild(bar); o.appendChild(make('span', '', label)); o.appendChild(make('span', '', counts[i] + (total ? ' · ' + Math.round(counts[i] * 100 / total) + '%' : '')));
+        o.addEventListener('click', function () { vote(poll, i, mineIdx); });
+        box.appendChild(o);
+      });
+      var foot = make('div', 'chat-poll-foot');
+      foot.appendChild(make('span', '', total + (total === 1 ? ' vote' : ' votes') + (poll.closed ? ' · closed' : '')));
+      if (!poll.closed && (Account.isOwner() || poll.username.toLowerCase() === me)) {
+        var c = make('button', 'admin-ghost', 'Close poll'); c.type = 'button'; c.style.padding = '2px 10px'; c.style.fontSize = '12px';
+        c.addEventListener('click', function () {
+          Account.api('/rest/v1/admin_polls?id=eq.' + poll.id, { method: 'PATCH', body: { closed: true }, headers: { Prefer: 'return=minimal' } }, true).then(function () { loadChat(); }).catch(function (e) { Dialog.alert(e.message || 'Could not close that.'); });
+        });
+        foot.appendChild(c);
+      }
+      box.appendChild(foot);
+      return box;
+    }
+    function vote(poll, i, mineIdx) {
+      var me = Account.username(), q = '/rest/v1/admin_poll_votes?poll_id=eq.' + poll.id + '&username=eq.' + encodeURIComponent(me), req;
+      if (mineIdx === i) req = Account.api(q, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, true);
+      else if (mineIdx >= 0) req = Account.api(q, { method: 'PATCH', body: { option: i }, headers: { Prefer: 'return=minimal' } }, true);
+      else req = Account.api('/rest/v1/admin_poll_votes', { method: 'POST', body: { poll_id: poll.id, username: me, option: i }, headers: { Prefer: 'return=minimal' } }, true);
+      req.then(function () { loadChat(); }).catch(function (e) { Dialog.alert(e.message || 'Could not save your vote.'); });
+    }
+    function loadChat(stick) {
+      var list = document.getElementById('chat-list');
+      if (!list || !Account.isAdmin()) return;
+      Account.api('/rest/v1/admin_chat?select=*&order=id.desc&limit=60', {}, true).then(function (rows) {
+        rows = (rows || []).reverse();
+        var ids = rows.filter(function (r) { return r.poll_id; }).map(function (r) { return r.poll_id; });
+        if (!ids.length) return [rows, [], []];
+        var inn = '=in.(' + ids.join(',') + ')';
+        return Promise.all([Account.api('/rest/v1/admin_polls?select=*&id' + inn, {}, true), Account.api('/rest/v1/admin_poll_votes?select=*&poll_id' + inn, {}, true)])
+          .then(function (res) { return [rows, res[0] || [], res[1] || []]; });
+      }).then(function (res) {
+        var rows = res[0], polls = {}, votes = {};
+        res[1].forEach(function (p) { polls[p.id] = p; });
+        res[2].forEach(function (v) { (votes[v.poll_id] = votes[v.poll_id] || []).push(v); });
+        var sig = rows.map(function (r) { return r.id; }).join(',') + '|' + res[1].map(function (p) { return p.id + (p.closed ? 'c' : ''); }).join(',') + '|' + res[2].map(function (v) { return v.poll_id + ':' + v.username + ':' + v.option; }).join(',');
+        if (list.getAttribute('data-sig') === sig) return;
+        list.setAttribute('data-sig', sig);
+        var atEnd = stick || list.scrollTop + list.clientHeight >= list.scrollHeight - 30;
+        list.textContent = '';
+        if (!rows.length) { list.appendChild(make('li', 'chat-empty', 'No messages yet. Say hi!')); return; }
+        var me = Account.username().toLowerCase(), prev = null;
+        rows.forEach(function (r) {
+          var mine = r.username.toLowerCase() === me, at = new Date(r.created_at);
+          var cont = prev && prev.username === r.username && at - new Date(prev.created_at) < 5 * 60000;
+          prev = r;
+          var li = make('li', 'chat-msg' + (cont ? ' cont' : ''));
+          var hue = 0; for (var k = 0; k < r.username.length; k++) hue = (hue * 31 + r.username.charCodeAt(k)) % 360;
+          var ava = make('span', 'chat-ava', r.username.charAt(0)); ava.style.background = 'hsl(' + hue + ' 55% 45%)';
+          li.appendChild(ava);
+          var main = make('div', 'chat-main');
+          if (!cont) {
+            var head = make('div', 'chat-head');
+            head.appendChild(make('span', 'chat-name', r.username));
+            head.appendChild(make('span', 'chat-when', fmtTime(r.created_at)));
+            main.appendChild(head);
+          } else li.appendChild(make('span', 'chat-side', at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })));
+          if (r.body) main.appendChild(make('p', 'chat-text', r.body));
+          if (r.file_path) main.appendChild(renderAttachment(r));
+          if (r.poll_id && polls[r.poll_id]) main.appendChild(renderPoll(polls[r.poll_id], votes[r.poll_id] || [], me));
+          li.appendChild(main);
+          if (Account.isOwner() || mine) {
+            var d = make('button', 'chat-del', 'Delete'); d.type = 'button'; d.title = 'Delete message'; d.setAttribute('aria-label', 'Delete message');
+            d.addEventListener('click', function () {
+              var req = r.poll_id ? Account.api('/rest/v1/admin_polls?id=eq.' + r.poll_id, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, true)
+                : Account.api('/rest/v1/admin_chat?id=eq.' + r.id, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, true);
+              req.then(function () { loadChat(); }).catch(function (e) { Dialog.alert(e.message || 'Could not delete that.'); });
+            });
+            li.appendChild(d);
+          }
+          list.appendChild(li);
+        });
+        if (atEnd) list.scrollTop = list.scrollHeight;
+      }).catch(function (e) { list.textContent = ''; list.removeAttribute('data-sig'); list.appendChild(make('li', 'chat-empty', e.message || 'Could not load the chat.')); });
+    }
+    function loadNews() {
+      var list = document.getElementById('news-list'), form = document.getElementById('news-form');
+      if (!list || !Account.isAdmin()) return;
+      form.hidden = !Account.isOwner();
+      Account.api('/rest/v1/admin_announcements?select=*&order=id.desc&limit=30', {}, true).then(function (rows) {
+        list.textContent = '';
+        if (!rows || !rows.length) { list.appendChild(make('li', 'support-empty', 'No announcements yet.')); return; }
+        rows.forEach(function (r) {
+          var li = make('li', 'support-item');
+          var head = make('div', 'support-item-head');
+          head.appendChild(make('span', 'support-who', r.title));
+          head.appendChild(make('span', 'support-when', '@' + r.username + ' \u00b7 ' + fmtTime(r.created_at)));
+          if (Account.isOwner()) {
+            var d = make('button', 'admin-ghost chat-del', 'Delete'); d.type = 'button';
+            d.addEventListener('click', function () {
+              Dialog.confirm('Delete this announcement?', 'Delete').then(function (yes) {
+                if (yes) Account.api('/rest/v1/admin_announcements?id=eq.' + r.id, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, true).then(loadNews).catch(function (e) { Dialog.alert(e.message || 'Could not delete that.'); });
+              });
+            });
+            head.appendChild(d);
+          }
+          li.appendChild(head); li.appendChild(make('p', 'support-msg', r.body));
+          list.appendChild(li);
+        });
+      }).catch(function (e) { list.textContent = ''; list.appendChild(make('li', 'support-empty', e.message || 'Could not load announcements.')); });
+    }
+    function refreshTab(stick) {
+      var view = document.getElementById('admin-view');
+      if (!view || view.style.display === 'none') return;
+      var t = view.getAttribute('data-tab');
+      if (t === 'chat') loadChat(stick); else if (t === 'news') loadNews();
+    }
+    function bindChat() {
+      var cf = document.getElementById('chat-form'), nf = document.getElementById('news-form');
+      var pending = null, pendEl = document.getElementById('chat-pending'), fileIn = document.getElementById('chat-file'), pollForm = document.getElementById('chat-poll-form');
+      function showPending() {
+        pendEl.textContent = '';
+        pendEl.hidden = !pending;
+        if (!pending) return;
+        pendEl.appendChild(make('span', '', '📎 ' + pending.name + ' (' + (pending.size < 1048576 ? Math.max(1, Math.round(pending.size / 1024)) + ' KB' : (pending.size / 1048576).toFixed(1) + ' MB') + ')'));
+        var x = make('button', 'admin-ghost', 'Remove'); x.type = 'button';
+        x.addEventListener('click', function () { pending = null; fileIn.value = ''; showPending(); });
+        pendEl.appendChild(x);
+      }
+      document.getElementById('chat-attach').addEventListener('click', function () { fileIn.click(); });
+      fileIn.addEventListener('change', function () {
+        var f = fileIn.files && fileIn.files[0];
+        if (!f) return;
+        if (f.size > 5242880) { fileIn.value = ''; Dialog.alert('That file is over 5 MB.'); return; }
+        pending = f; showPending();
+      });
+      function pollOpt(val) {
+        var inp = make('input', 'acct-input'); inp.type = 'text'; inp.maxLength = 80; inp.placeholder = 'Option'; inp.setAttribute('aria-label', 'Poll option');
+        document.getElementById('poll-opts').appendChild(inp);
+      }
+      function resetPoll() {
+        document.getElementById('poll-q').value = ''; document.getElementById('poll-opts').textContent = '';
+        pollOpt(); pollOpt();
+      }
+      document.getElementById('chat-poll').addEventListener('click', function () {
+        pollForm.hidden = !pollForm.hidden;
+        if (!pollForm.hidden) { if (!document.getElementById('poll-opts').children.length) resetPoll(); document.getElementById('poll-q').focus(); }
+      });
+      document.getElementById('poll-more').addEventListener('click', function () { if (document.getElementById('poll-opts').children.length < 6) pollOpt(); });
+      document.getElementById('poll-cancel').addEventListener('click', function () { pollForm.hidden = true; resetPoll(); });
+      pollForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var q = document.getElementById('poll-q').value.trim();
+        var opts = Array.prototype.map.call(document.getElementById('poll-opts').children, function (i) { return i.value.trim(); }).filter(Boolean);
+        if (!q) { Dialog.alert('Add a question for the poll.'); return; }
+        if (opts.length < 2) { Dialog.alert('Add at least two options.'); return; }
+        Account.api('/rest/v1/admin_polls', { method: 'POST', body: { username: Account.username(), question: q, options: opts }, headers: { Prefer: 'return=representation' } }, true).then(function (rows) {
+          return Account.api('/rest/v1/admin_chat', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: { username: Account.username(), body: '', poll_id: rows[0].id } }, true);
+        }).then(function () { pollForm.hidden = true; resetPoll(); loadChat(true); }).catch(function (e) { Dialog.alert(e.message || 'Could not create that poll.'); });
+      });
+      if (cf) cf.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var input = document.getElementById('chat-input'), body = input.value.trim(), file = pending;
+        if (!body && !file) return;
+        var send = document.querySelector('#chat-form .chat-send'); send.disabled = true;
+        var up = Promise.resolve(null);
+        if (file) {
+          var ext = (file.name.match(/\.[A-Za-z0-9]{1,8}$/) || [''])[0].toLowerCase();
+          var path = Date.now() + '-' + Math.random().toString(36).slice(2, 10) + ext;
+          up = Account.file('/storage/v1/object/admin-chat/' + path, { method: 'POST', headers: { 'Content-Type': file.type || 'application/octet-stream' }, body: file }).then(function (r) {
+            if (!r.ok) throw new Error('Could not upload that file.');
+            return { file_path: path, file_name: file.name.slice(0, 100), file_type: file.type || 'application/octet-stream' };
+          });
+        }
+        up.then(function (extra) {
+          var row = { username: Account.username(), body: body };
+          if (extra) { row.file_path = extra.file_path; row.file_name = extra.file_name; row.file_type = extra.file_type; }
+          return Account.api('/rest/v1/admin_chat', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: row }, true);
+        }).then(function () { input.value = ''; pending = null; fileIn.value = ''; showPending(); loadChat(true); })
+          .catch(function (e) { Dialog.alert(e.message || 'Could not send that.'); })
+          .then(function () { send.disabled = false; });
+      });
+      if (nf) nf.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var t = document.getElementById('news-title-in'), b = document.getElementById('news-body');
+        Account.api('/rest/v1/admin_announcements', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: { username: Account.username(), title: t.value.trim(), body: b.value.trim() } }, true)
+          .then(function () { t.value = ''; b.value = ''; loadNews(); }).catch(function (e) { Dialog.alert(e.message || 'Could not post that.'); });
+      });
+      setInterval(function () { if (!document.hidden) refreshTab(); }, 5000);
+    }
+    function bindTabs() {
+      bindChat();
+      var view = document.getElementById('admin-view');
+      if (!view) return;
+      var tabs = view.querySelectorAll('[data-admin-tab]');
+      Array.prototype.forEach.call(tabs, function (t) {
+        t.addEventListener('click', function () {
+          view.setAttribute('data-tab', t.getAttribute('data-admin-tab'));
+          refreshTab(true);
+          Array.prototype.forEach.call(tabs, function (o) { var on = o === t; o.classList.toggle('active', on); o.setAttribute('aria-selected', on ? 'true' : 'false'); });
+        });
+      });
     }
     function loadAdmins() {
       var card = document.getElementById('admins-card');
@@ -5213,6 +5710,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       var open = rows.filter(function (r) { return r.status === 'open'; }).length;
       el.count.textContent = open + ' open';
       if (el.navCount) el.navCount.textContent = open || '';
+      var ic = document.getElementById('admin-tab-inbox'); if (ic) ic.textContent = open ? open + ' open' : '';
       el.list.textContent = '';
       if (!rows.length) { el.list.appendChild(make('li', 'support-empty', 'No messages yet.')); return; }
       rows.forEach(function (r) {
@@ -5289,12 +5787,15 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         el.form.addEventListener('submit', submit);
         el.login.addEventListener('click', Account.open);
         bindAdmins();
+        bindApps();
+        bindTabs();
         bindUsers();
         gate();
         Account.onChange(function () { gate(); loadInbox(); refreshMine(); });
       },
       show: function () { gate(); refreshMine(); },
-      showInbox: function () { loadInbox(); }
+      showInbox: function () { loadInbox(); refreshTab(true); },
+      showOwner: function () { loadAdmins(); loadApps(); }
     };
   })();
 
@@ -5344,7 +5845,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 
   /* ---- Online counter: every open tab (accounts or not) checks in; the count is whoever checked in recently (supabase online_visitors) ---- */
   var Online = (function () {
-    var ID_KEY = 'whiskered-visitor', EVERY = 45000, timer = null, pill = null, text = null, dead = false;
+    var ID_KEY = 'whiskered-visitor', EVERY = 10000, timer = null, pill = null, text = null, dead = false;
     function vid() {
       var v = null;
       try { v = localStorage.getItem(ID_KEY); } catch (e) {}
@@ -5379,9 +5880,9 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     };
   })();
 
-  /* ---- Apply: admin applications arrive in the Support inbox (kind "other", message starts with ADMIN APPLICATION) ---- */
+  /* ---- Apply: admin applications go to the owner panel (admin_applications table) ---- */
   var Apply = (function () {
-    var TAG = 'ADMIN APPLICATION', wired = false, el = {};
+    var wired = false, el = {};
     function note(msg) { el.note.textContent = msg || ''; el.note.hidden = !msg; }
     function state(msg) { el.state.textContent = msg || ''; el.state.hidden = !msg; }
     function refresh() {
@@ -5391,8 +5892,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       el.form.hidden = !inn; state('');
       if (!inn) return;
       if (Account.isAdmin()) { el.form.hidden = true; state("You're already on the team. Thank you for helping out!"); return; }
-      Account.api('/rest/v1/support_requests?select=id,status&username=eq.' + encodeURIComponent(Account.username()) + '&message=like.' + encodeURIComponent(TAG) + '*&order=id.desc&limit=1', {}, true).then(function (rows) {
-        if (rows && rows[0] && rows[0].status === 'open') { el.form.hidden = true; state('Your application is in. We will reply under "My messages" on the Support page.'); }
+      Account.api('/rest/v1/admin_applications?select=id,status&username=eq.' + encodeURIComponent(Account.username()) + '&order=id.desc&limit=1', {}, true).then(function (rows) {
+        if (rows && rows[0] && rows[0].status === 'pending') { el.form.hidden = true; state('Your application is in. The owner will take a look.'); }
       }).catch(function () {});
     }
     function submit(ev) {
@@ -5402,12 +5903,11 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       if (why.length < 20) return note('Please tell us a little more about why you want to help.');
       if (!when) return note('Let us know when you are usually around.');
       if (el.hp.value) { state('Thanks! Your application was sent.'); el.form.hidden = true; return; }
-      var msg = TAG + '\nWhy: ' + why + '\nExperience: ' + (exp || 'none given') + '\nAround: ' + when;
       el.send.disabled = true; note('');
-      Account.api('/rest/v1/support_requests', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: { kind: 'other', message: msg, username: Account.username() } }, true)
+      Account.api('/rest/v1/admin_applications', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: { username: Account.username(), why: why, experience: exp, around: when } }, true)
         .then(function () {
           el.why.value = ''; el.exp.value = ''; el.time.value = '';
-          el.form.hidden = true; state('Thanks! Your application was sent. We will reply under "My messages" on the Support page.');
+          el.form.hidden = true; state('Thanks! Your application was sent. The owner will take a look.');
         })
         .catch(function (e) { note(e.message || 'Could not send that. Please try again.'); })
         .then(function () { el.send.disabled = false; });
@@ -5424,6 +5924,62 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     return { show: function () { wire(); if (!Account.remote) { el.gate.hidden = true; el.form.hidden = true; state('Applications need the online setup.'); return; } refresh(); } };
   })();
 
+  /* ---- Notices: tells a signed-in person when an admin changed their password (never shows the password) ---- */
+  var Notices = (function () {
+    var busy = false, timer = null;
+    function check() {
+      if (busy || !Account.loggedIn()) return;
+      busy = true;
+      Account.api('/rest/v1/account_notices?select=id,by_admin,new_password,created_at&seen=eq.false&order=id.asc&limit=5', {}, true).then(function (rows) {
+        var chain = Promise.resolve();
+        (rows || []).forEach(function (n) {
+          chain = chain.then(function () {
+            var when = new Date(n.created_at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+            return Dialog.confirm(card(n.by_admin, when, n.new_password), 'Report this', 'Close').then(function (report) {
+              Account.api('/rest/v1/account_notices?id=eq.' + n.id, { method: 'PATCH', body: { seen: true }, headers: { Prefer: 'return=minimal' } }, true).catch(function () {});
+              if (report) {
+                setMode('support');
+                setTimeout(function () {
+                  var kind = document.getElementById('support-kind'), msg = document.getElementById('support-message');
+                  if (kind) kind.value = 'report';
+                  if (msg) { msg.value = 'The admin @' + n.by_admin + ' changed my password on ' + when + ' and I did not ask for this.'; msg.focus(); }
+                }, 320);
+              }
+            });
+          });
+        });
+        return chain;
+      }).catch(function () {}).then(function () { busy = false; });
+    }
+    function card(by, when, pass) {
+      var box = document.createElement('div');
+      function add(tag, cls, t) { var n = document.createElement(tag); n.className = cls; n.textContent = t; box.appendChild(n); }
+      add('h3', 'notice-title', 'Your password was changed');
+      add('p', 'notice-meta', 'By admin @' + by + ' \u00b7 ' + when);
+      add('p', 'notice-label', 'Your new password');
+      add('code', 'notice-pass', pass || '(not available)');
+      add('p', 'notice-hint', 'You are still signed in. This is the only time it is shown, so save it now or change it in your account settings.');
+      add('p', 'notice-hint', 'Did not expect this? Report it and the owner will look into it.');
+      return box;
+    }
+    function demo() {
+      Dialog.confirm(card('example', new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }), 'example-password'), 'Report this', 'Close');
+    }
+    return { init: function () {
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'h' && e.key !== 'H') return;
+        if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+        var t = e.target, tag = t && t.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+        if (document.querySelector('.dialog-overlay.open, .dialog-overlay.show')) return;
+        demo();
+      });
+      if (!Account.remote) return;
+      Account.onChange(function () { setTimeout(check, 600); });
+      if (!timer) timer = setInterval(check, 60000);
+      setTimeout(check, 1500);
+    } };
+  })();
 
   /* ---- Forms inside sandboxed frames ------------------------- *
    * If this page is shown inside a frame that has no "allow-forms"
@@ -5461,6 +6017,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
     buildCustomizeControls();
     if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', function () { if (prefs.mode === 'auto') applyPrefs(); });
     Account.init();
+    Notices.init();
     applyPrefs();
     Links.applyCachedSites();
     Links.applyCachedOrder();
@@ -6136,17 +6693,15 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
 
 }());
 
-window.addEventListener("load", () => {
-  const modal = document.getElementById("changelog-modal");
-  modal.style.pointerEvents = "auto";
-  modal.style.opacity = "1";
-});
-
 document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = document.getElementById("close-changelog");
   const modal = document.getElementById("changelog-modal");
 
-  const close = () => { modal.style.display = "none"; };
+  const close = () => {
+    if (modal.style.display !== "flex") return;
+    modal.style.display = "none";
+    document.dispatchEvent(new Event("changelog-closed"));
+  };
   closeBtn.addEventListener("click", close);
   modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
