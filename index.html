@@ -641,6 +641,9 @@ kbd { padding: 1px 7px; border: 2px solid var(--line); border-radius: 6px; font:
 .changelog-entry p { margin-top: 8px; line-height: 1.45; }
 .changelog-meta { display: flex; align-items: center; gap: 6px; }
 .cl-tools { margin-left: auto; display: inline-flex; gap: 4px; }
+.changelog-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+.changelog-filters .choice-chip { padding: 5px 12px; font-size: 13px; }
+.changelog-filters[hidden] { display: none; }
 .cl-group { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 18px; margin-bottom: 8px; }
 .cl-day { padding-top: 14px; font: 700 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: right; line-height: 1.4; }
 .cl-items { list-style: none; display: grid; gap: 10px; position: relative; padding: 0 0 0 22px; border-left: 2px solid var(--line); }
@@ -1749,6 +1752,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       <button id="close-changelog" class="changelog-close" aria-label="Close changelog"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     </div>
 
+    <div id="changelog-filters" class="changelog-filters" role="group" aria-label="Filter recent updates"></div>
     <ul id="changelog-list" class="changelog-list"></ul>
 
   </div>
@@ -4991,7 +4995,7 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
    * that becomes the source of truth for everyone.
    */
   var Changelog = (function () {
-    var KEY = 'whiskered-changelog-cache', SEEN = 'whiskered-changelog-seen', rows = null, list = null, busy = false, keys = [], showOlder = false, RECENT = 3;
+    var KEY = 'whiskered-changelog-cache', SEEN = 'whiskered-changelog-seen', rows = null, list = null, busy = false, keys = [], filter = 'all', showOlder = false, RECENT = 3;
     var ICON = {
       up: '<path d="m6 15 6-6 6 6"/>', down: '<path d="m6 9 6 6 6-6"/>',
       edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>'
@@ -5108,9 +5112,22 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
       }
       var sub = document.getElementById('changelog-sub');
       if (sub) sub.textContent = "What's new in Whiskered \u00b7 " + data.length + (data.length === 1 ? ' update' : ' updates');
+      var bar = document.getElementById('changelog-filters'), types = [];
+      data.slice(0, RECENT).forEach(function (it) { var t = it.badge.toLowerCase(); if (types.indexOf(t) < 0) types.push(t); });
+      if (showOlder || types.indexOf(filter) < 0) filter = 'all';
+      if (bar) {
+        bar.textContent = '';
+        bar.hidden = showOlder || types.length < 2;
+        ['all'].concat(types).forEach(function (t) {
+          var label = t === 'all' ? 'All' : data.filter(function (it) { return it.badge.toLowerCase() === t; })[0].badge;
+          var c = make('button', 'choice-chip' + (t === filter ? ' active' : ''), label); c.type = 'button';
+          c.addEventListener('click', function () { filter = t; render(); });
+          bar.appendChild(c);
+        });
+      }
       var lastDay = null, col = null, shown = 0;
       data.forEach(function (it, i) {
-        if (!showOlder && i >= RECENT) return;
+        if (!showOlder && (i >= RECENT || (filter !== 'all' && it.badge.toLowerCase() !== filter))) return;
         shown++;
         var day = it.date ? new Date(it.date).toLocaleDateString([], { dateStyle: 'medium' }) : 'Earlier';
         if (day !== lastDay || !col) {
@@ -5127,8 +5144,8 @@ textarea.admin-input { border-radius: calc(16px * var(--rk)); resize: vertical; 
         if (isNew) meta.appendChild(make('span', 'cl-new', 'New'));
         if (admin && it.row) {
           var tools = make('span', 'cl-tools');
-          if (i > 0) tools.appendChild(iconBtn('admin-mv', 'up', 'Move up', function () { swap(it.row, data[i - 1].row); }));
-          if (i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
+          if (filter === 'all' && i > 0) tools.appendChild(iconBtn('admin-mv', 'up', 'Move up', function () { swap(it.row, data[i - 1].row); }));
+          if (filter === 'all' && i < data.length - 1) tools.appendChild(iconBtn('admin-mv', 'down', 'Move down', function () { swap(it.row, data[i + 1].row); }));
           tools.appendChild(iconBtn('admin-mv', 'edit', 'Edit entry', function () { li.textContent = ''; li.appendChild(editForm(it.row)); }));
           tools.appendChild(iconBtn('admin-del', 'x', 'Delete entry', function () {
             Dialog.confirm('Delete this changelog entry for everyone?', 'Delete').then(function (yes) { if (yes) call(api('?id=eq.' + it.row.id, { method: 'DELETE' })); });
